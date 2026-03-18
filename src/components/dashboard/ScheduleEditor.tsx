@@ -294,6 +294,7 @@ export function ScheduleEditor() {
 
         // Calculate hours
         let totalMinutes = 0;
+        let workedDays = 0;
         for (const day of DAYS) {
           const startField = `${day.key}_start`;
           const endField = `${day.key}_end`;
@@ -304,10 +305,12 @@ export function ScheduleEditor() {
             const [eh, em] = endVal.split(":").map(Number);
             if (!isNaN(sh) && !isNaN(eh)) {
               totalMinutes += (eh * 60 + (em || 0)) - (sh * 60 + (sm || 0));
+              workedDays++;
             }
           }
         }
-        payload.hours_modified = Math.round((totalMinutes / 60) * 100) / 100;
+        const breakMinutes = workedDays * 60; // 1h de pause par jour travaillé
+        payload.hours_modified = Math.round(((totalMinutes - breakMinutes) / 60) * 100) / 100;
 
         // Find employee contract hours
         const emp = employees?.find((e) => e.id === empId);
@@ -536,6 +539,7 @@ export function ScheduleEditor() {
                 employees?.map((emp) => {
                   // Calculate total hours for this row
                   let totalMinutes = 0;
+                  let workedDays = 0;
                   for (const day of DAYS) {
                     const s = getValue(emp.id, `${day.key}_start`);
                     const e = getValue(emp.id, `${day.key}_end`);
@@ -544,10 +548,12 @@ export function ScheduleEditor() {
                       const [eh, em] = e.split(":").map(Number);
                       if (!isNaN(sh) && !isNaN(eh)) {
                         totalMinutes += (eh * 60 + (em || 0)) - (sh * 60 + (sm || 0));
+                        workedDays++;
                       }
                     }
                   }
-                  const totalH = Math.round((totalMinutes / 60) * 10) / 10;
+                  const breakMinutes = workedDays * 60; // 1h de pause par jour travaillé
+                  const totalH = Math.round(((totalMinutes - breakMinutes) / 60) * 10) / 10;
                   const diff = totalH - emp.contract_hours;
 
                   const deptColor = DEPT_COLORS[emp.role] ?? { bg: "", border: "border-l-muted" };
