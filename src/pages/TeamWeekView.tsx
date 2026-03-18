@@ -62,7 +62,7 @@ function addWeeks(date: Date, n: number): Date {
 }
 
 function formatWeekDate(date: Date): string {
-  return date.toISOString().split("T")[0];
+  return formatLocalDate(date);
 }
 
 function getDayDate(monday: Date, dayIndex: number): string {
