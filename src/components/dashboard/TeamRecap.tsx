@@ -18,6 +18,7 @@ const DAYS = [
 const SLOTS = Array.from({ length: 15 }, (_, i) => i + 7);
 
 const CATEGORIES = [
+  { key: "responsable", label: "Responsables", color: "text-rose-600 dark:text-rose-400" },
   { key: "technique", label: "Technique", color: "text-blue-600 dark:text-blue-400" },
   { key: "editorial", label: "Éditorial", color: "text-purple-600 dark:text-purple-400" },
   { key: "stock", label: "Stock", color: "text-amber-600 dark:text-amber-400" },
@@ -25,6 +26,7 @@ const CATEGORIES = [
 ];
 
 const ROLE_LABELS: Record<string, string> = {
+  responsable: "Responsables",
   technique: "Technique",
   editorial: "Éditorial",
   stock: "Stock",
@@ -124,7 +126,7 @@ export function TeamRecap() {
   });
 
   // Group employees by category for summary
-  const ROLE_ORDER = ["technique", "editorial", "stock", "caisse"];
+  const ROLE_ORDER = ["responsable", "technique", "editorial", "stock", "caisse"];
   const sortedEmpSummary = empSummary?.sort((a, b) => {
     const ra = ROLE_ORDER.indexOf(a.role);
     const rb = ROLE_ORDER.indexOf(b.role);
