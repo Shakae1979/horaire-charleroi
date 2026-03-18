@@ -123,6 +123,17 @@ const TeamWeekView = () => {
     },
   });
 
+  const { data: dayComments } = useQuery({
+    queryKey: ["team-week-day-comments", weekStr],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("day_comments").select("*")
+        .eq("week_start", weekStr);
+      if (error) throw error;
+      return data;
+    },
+  });
+
   const getConge = (empId: string, dayIndex: number): string | null => {
     if (!conges) return null;
     const dayDate = getDayDate(currentMonday, dayIndex);
