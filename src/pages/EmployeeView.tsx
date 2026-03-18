@@ -235,6 +235,9 @@ const EmployeeView = () => {
                           {hasShift ? (
                             <div className="font-mono-data font-medium">
                               {formatTimeBE(start)} — {formatTimeBE(end)}
+                              <div className="text-[10px] text-muted-foreground mt-0.5">
+                                {(timeToHours(end) - timeToHours(start) - BREAK_HOURS).toFixed(1)}h net
+                              </div>
                             </div>
                           ) : (
                             <div className="text-muted-foreground">Repos</div>
