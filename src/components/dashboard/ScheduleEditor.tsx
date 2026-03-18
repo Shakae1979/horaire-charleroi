@@ -312,26 +312,41 @@ export function ScheduleEditor() {
                         <div className="font-medium">{emp.name}</div>
                         <div className="text-xs text-muted-foreground font-mono-data">{emp.contract_hours}h contrat</div>
                       </td>
-                      {DAYS.map((day) => (
-                        <>
-                          <td key={`${day.key}-s`} className="py-1.5 px-0.5">
-                            <input
-                              type="time"
-                              value={getValue(emp.id, `${day.key}_start`)}
-                              onChange={(e) => handleChange(emp.id, `${day.key}_start`, e.target.value)}
-                              className="w-full px-1.5 py-1 text-xs rounded border bg-background focus:outline-none focus:ring-1 focus:ring-accent font-mono-data"
-                            />
-                          </td>
-                          <td key={`${day.key}-e`} className="py-1.5 px-0.5">
-                            <input
-                              type="time"
-                              value={getValue(emp.id, `${day.key}_end`)}
-                              onChange={(e) => handleChange(emp.id, `${day.key}_end`, e.target.value)}
-                              className="w-full px-1.5 py-1 text-xs rounded border bg-background focus:outline-none focus:ring-1 focus:ring-accent font-mono-data"
-                            />
-                          </td>
-                        </>
-                      ))}
+                      {DAYS.map((day, dayIndex) => {
+                        const leaveType = isOnLeave(emp.id, dayIndex);
+                        if (leaveType) {
+                          const leaveLabels: Record<string, string> = {
+                            conge: "CP", rtt: "RTT", maladie: "MAL", formation: "FORM",
+                          };
+                          return (
+                            <td key={`${day.key}-leave`} colSpan={2} className="py-1.5 px-0.5 text-center">
+                              <span className="inline-block px-2 py-1 text-xs font-semibold rounded bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-300">
+                                {leaveLabels[leaveType] ?? leaveType.toUpperCase()}
+                              </span>
+                            </td>
+                          );
+                        }
+                        return (
+                          <>
+                            <td key={`${day.key}-s`} className="py-1.5 px-0.5">
+                              <input
+                                type="time"
+                                value={getValue(emp.id, `${day.key}_start`)}
+                                onChange={(e) => handleChange(emp.id, `${day.key}_start`, e.target.value)}
+                                className="w-full px-1.5 py-1 text-xs rounded border bg-background focus:outline-none focus:ring-1 focus:ring-accent font-mono-data"
+                              />
+                            </td>
+                            <td key={`${day.key}-e`} className="py-1.5 px-0.5">
+                              <input
+                                type="time"
+                                value={getValue(emp.id, `${day.key}_end`)}
+                                onChange={(e) => handleChange(emp.id, `${day.key}_end`, e.target.value)}
+                                className="w-full px-1.5 py-1 text-xs rounded border bg-background focus:outline-none focus:ring-1 focus:ring-accent font-mono-data"
+                              />
+                            </td>
+                          </>
+                        );
+                      })}
                       <td className="py-1.5 text-center">
                         <span className="font-mono-data font-medium">{totalH || "—"}</span>
                         {totalH > 0 && diff !== 0 && (
