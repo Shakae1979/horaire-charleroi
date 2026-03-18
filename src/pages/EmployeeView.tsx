@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Calendar, ChevronLeft, ChevronRight, Clock, User } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { formatDateLongBE, formatDateMonthBE, formatTimeBE } from "@/lib/format";
 
 const DAYS = [
   { key: "lundi", label: "Lundi" },
