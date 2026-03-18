@@ -60,6 +60,18 @@ export function EmployeeManager() {
     },
   });
 
+  const updateRoleMutation = useMutation({
+    mutationFn: async ({ id, role }: { id: string; role: string }) => {
+      const { error } = await supabase.from("employees").update({ role }).eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["employees"] });
+      toast.success("Département mis à jour !");
+    },
+    onError: (err) => toast.error((err as Error).message),
+  });
+
   const active = employees?.filter((e) => e.is_active) ?? [];
   const inactive = employees?.filter((e) => !e.is_active) ?? [];
 
