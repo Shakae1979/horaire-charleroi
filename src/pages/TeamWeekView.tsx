@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { ChevronLeft, ChevronRight, Users, Printer, Palmtree, AlertTriangle } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { formatDateBE, formatTimeBE } from "@/lib/format";
+import { formatDateBE, formatTimeBE, formatLocalDate } from "@/lib/format";
 
 const ROLE_ORDER = ["responsable", "technique", "editorial", "stock", "caisse"];
 
