@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { ChevronLeft, ChevronRight, Save, Plus, Printer, Copy, ClipboardPaste, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Save, Plus, Printer, Copy, ClipboardPaste, X, MessageSquare } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { formatDateLongBE, formatDateMonthBE, formatDateBE, formatTimeBE, formatLocalDate, getWeekNumber } from "@/lib/format";
@@ -156,6 +156,21 @@ export function ScheduleEditor() {
       return data;
     },
   });
+
+  // Fetch day comments for this week
+  const { data: dayComments } = useQuery({
+    queryKey: ["day-comments", weekStr],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("day_comments")
+        .select("*")
+        .eq("week_start", weekStr);
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  const [localDayComments, setLocalDayComments] = useState<Record<string, string>>({});
 
   // Check if an employee is on leave for a specific day
   const isOnLeave = (empId: string, dayIndex: number): string | null => {
@@ -318,6 +333,7 @@ export function ScheduleEditor() {
 
   const saveMutation = useMutation({
     mutationFn: async () => {
+      // Save schedules
       const promises = Object.entries(localEdits).map(async ([empId, fields]) => {
         const existing = getScheduleForEmployee(empId);
         const payload: any = { employee_id: empId, week_start: weekStr, ...fields };
@@ -339,10 +355,9 @@ export function ScheduleEditor() {
             }
           }
         }
-        const breakMinutes = workedDays * 60; // 1h de pause par jour travaillé
+        const breakMinutes = workedDays * 60;
         payload.hours_modified = Math.round(((totalMinutes - breakMinutes) / 60) * 100) / 100;
 
-        // Find employee contract hours
         const emp = employees?.find((e) => e.id === empId);
         payload.hours_base = emp?.contract_hours ?? 36;
 
@@ -359,12 +374,32 @@ export function ScheduleEditor() {
           if (error) throw error;
         }
       });
-      await Promise.all(promises);
+
+      // Save day comments
+      const commentPromises = Object.entries(localDayComments).map(async ([dayKey, comment]) => {
+        const existing = dayComments?.find((dc) => dc.day_key === dayKey);
+        if (existing) {
+          const { error } = await supabase
+            .from("day_comments")
+            .update({ comment })
+            .eq("id", existing.id);
+          if (error) throw error;
+        } else if (comment.trim()) {
+          const { error } = await supabase
+            .from("day_comments")
+            .insert({ week_start: weekStr, day_key: dayKey, comment });
+          if (error) throw error;
+        }
+      });
+
+      await Promise.all([...promises, ...commentPromises]);
     },
     onSuccess: () => {
       setLocalEdits({});
+      setLocalDayComments({});
       queryClient.invalidateQueries({ queryKey: ["schedules", weekStr] });
       queryClient.invalidateQueries({ queryKey: ["all-schedules"] });
+      queryClient.invalidateQueries({ queryKey: ["day-comments", weekStr] });
       toast.success("Horaires sauvegardés !");
     },
     onError: (err) => {
@@ -465,14 +500,14 @@ export function ScheduleEditor() {
       {/* Week navigation */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Button variant="outline" size="icon" onClick={() => { setWeekOffset((w) => w - 1); setLocalEdits({}); cancelCopy(); }}>
+          <Button variant="outline" size="icon" onClick={() => { setWeekOffset((w) => w - 1); setLocalEdits({}); setLocalDayComments({}); cancelCopy(); }}>
             <ChevronLeft className="h-4 w-4" />
           </Button>
           <div className="text-center">
             <div className="text-sm font-semibold">S{getWeekNumber(currentMonday)} — {weekLabel} — {weekEndLabel}</div>
             <div className="text-xs text-muted-foreground">Semaine du {formatDateBE(currentMonday)}</div>
           </div>
-          <Button variant="outline" size="icon" onClick={() => { setWeekOffset((w) => w + 1); setLocalEdits({}); cancelCopy(); }}>
+          <Button variant="outline" size="icon" onClick={() => { setWeekOffset((w) => w + 1); setLocalEdits({}); setLocalDayComments({}); cancelCopy(); }}>
             <ChevronRight className="h-4 w-4" />
           </Button>
         </div>
@@ -555,7 +590,31 @@ export function ScheduleEditor() {
                   </th>
                 ))}
                 <th className="pb-2 text-center font-semibold text-muted-foreground min-w-[60px]">Total</th>
-                <th className="pb-2 text-center font-semibold text-muted-foreground min-w-[120px]">Commentaire</th>
+              </tr>
+              {/* Day comments row */}
+              <tr className="border-b bg-muted/30">
+                <td className="py-1 pr-2 sticky left-0 bg-muted/30 z-10">
+                  <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                    <MessageSquare className="h-3 w-3" />
+                    <span>Notes</span>
+                  </div>
+                </td>
+                {DAYS.map((day) => {
+                  const savedComment = dayComments?.find((dc) => dc.day_key === day.key)?.comment ?? "";
+                  const value = localDayComments[day.key] ?? savedComment;
+                  return (
+                    <td key={day.key + "-comment"} colSpan={2} className="py-1 px-0.5">
+                      <input
+                        type="text"
+                        value={value}
+                        onChange={(e) => setLocalDayComments((prev) => ({ ...prev, [day.key]: e.target.value }))}
+                        placeholder="—"
+                        className="w-full px-1.5 py-0.5 text-xs rounded border bg-background focus:outline-none focus:ring-1 focus:ring-accent"
+                      />
+                    </td>
+                  );
+                })}
+                <td></td>
               </tr>
               <tr className="border-b">
                 <th className="pb-1 sticky left-0 bg-card z-10"></th>
@@ -565,19 +624,18 @@ export function ScheduleEditor() {
                   </th>
                 ))}
                 <th></th>
-                <th></th>
               </tr>
             </thead>
             <tbody>
               {isLoading ? (
                 <tr>
-                   <td colSpan={17} className="py-8 text-center text-muted-foreground">
+                   <td colSpan={16} className="py-8 text-center text-muted-foreground">
                     Chargement...
                   </td>
                 </tr>
               ) : employees?.length === 0 ? (
                 <tr>
-                  <td colSpan={17} className="py-8 text-center text-muted-foreground">
+                  <td colSpan={16} className="py-8 text-center text-muted-foreground">
                     Aucun employé trouvé.
                   </td>
                 </tr>
@@ -718,15 +776,6 @@ export function ScheduleEditor() {
                             {diff > 0 ? "+" : ""}{diff}h
                           </div>
                         )}
-                      </td>
-                      <td className="py-1.5 px-1">
-                        <input
-                          type="text"
-                          value={getDisplayValue(emp.id, "notes")}
-                          onChange={(e) => handleChange(emp.id, "notes", e.target.value)}
-                          placeholder="—"
-                          className="w-full px-1.5 py-1 text-xs rounded border bg-background focus:outline-none focus:ring-1 focus:ring-accent"
-                        />
                       </td>
                     </tr>
                   );
