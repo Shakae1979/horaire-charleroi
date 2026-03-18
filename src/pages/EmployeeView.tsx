@@ -6,6 +6,32 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { formatDateLongBE, formatDateMonthBE, formatTimeBE } from "@/lib/format";
 
+const BREAK_HOURS = 1; // 1h de pause table par jour presté
+
+/** Parse "HH:MM" to decimal hours */
+function timeToHours(t: string | null): number {
+  if (!t) return 0;
+  const [h, m] = t.split(":").map(Number);
+  return h + (m || 0) / 60;
+}
+
+/** Compute net hours for a schedule (subtract 1h break per worked day) */
+function computeNetHours(schedule: any): { gross: number; breaks: number; net: number } {
+  const days = ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"];
+  let gross = 0;
+  let workedDays = 0;
+  for (const d of days) {
+    const start = schedule[`${d}_start`];
+    const end = schedule[`${d}_end`];
+    if (start && end) {
+      gross += timeToHours(end) - timeToHours(start);
+      workedDays++;
+    }
+  }
+  const breaks = workedDays * BREAK_HOURS;
+  return { gross, breaks, net: gross - breaks };
+}
+
 const DAYS = [
   { key: "lundi", label: "Lundi" },
   { key: "mardi", label: "Mardi" },
