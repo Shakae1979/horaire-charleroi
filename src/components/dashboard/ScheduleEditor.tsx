@@ -590,7 +590,31 @@ export function ScheduleEditor() {
                   </th>
                 ))}
                 <th className="pb-2 text-center font-semibold text-muted-foreground min-w-[60px]">Total</th>
-                <th className="pb-2 text-center font-semibold text-muted-foreground min-w-[120px]">Commentaire</th>
+              </tr>
+              {/* Day comments row */}
+              <tr className="border-b bg-muted/30">
+                <td className="py-1 pr-2 sticky left-0 bg-muted/30 z-10">
+                  <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                    <MessageSquare className="h-3 w-3" />
+                    <span>Notes</span>
+                  </div>
+                </td>
+                {DAYS.map((day) => {
+                  const savedComment = dayComments?.find((dc) => dc.day_key === day.key)?.comment ?? "";
+                  const value = localDayComments[day.key] ?? savedComment;
+                  return (
+                    <td key={day.key + "-comment"} colSpan={2} className="py-1 px-0.5">
+                      <input
+                        type="text"
+                        value={value}
+                        onChange={(e) => setLocalDayComments((prev) => ({ ...prev, [day.key]: e.target.value }))}
+                        placeholder="—"
+                        className="w-full px-1.5 py-0.5 text-xs rounded border bg-background focus:outline-none focus:ring-1 focus:ring-accent"
+                      />
+                    </td>
+                  );
+                })}
+                <td></td>
               </tr>
               <tr className="border-b">
                 <th className="pb-1 sticky left-0 bg-card z-10"></th>
@@ -599,7 +623,6 @@ export function ScheduleEditor() {
                     <span className="text-xs text-muted-foreground">Début — Fin</span>
                   </th>
                 ))}
-                <th></th>
                 <th></th>
               </tr>
             </thead>
