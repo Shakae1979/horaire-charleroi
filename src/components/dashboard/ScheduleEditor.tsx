@@ -500,7 +500,7 @@ export function ScheduleEditor() {
       {/* Week navigation */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Button variant="outline" size="icon" onClick={() => { setWeekOffset((w) => w - 1); setLocalEdits({}); cancelCopy(); }}>
+          <Button variant="outline" size="icon" onClick={() => { setWeekOffset((w) => w - 1); setLocalEdits({}); setLocalDayComments({}); cancelCopy(); }}>
             <ChevronLeft className="h-4 w-4" />
           </Button>
           <div className="text-center">
