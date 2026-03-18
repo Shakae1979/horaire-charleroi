@@ -15,6 +15,13 @@ const DAYS = [
   { key: "dimanche", label: "Dim" },
 ] as const;
 
+const DEPT_COLORS: Record<string, { bg: string; border: string }> = {
+  technique: { bg: "bg-blue-50 dark:bg-blue-950/30", border: "border-l-blue-500" },
+  editorial: { bg: "bg-purple-50 dark:bg-purple-950/30", border: "border-l-purple-500" },
+  stock: { bg: "bg-amber-50 dark:bg-amber-950/30", border: "border-l-amber-500" },
+  caisse: { bg: "bg-emerald-50 dark:bg-emerald-950/30", border: "border-l-emerald-500" },
+};
+
 type DayKey = (typeof DAYS)[number]["key"];
 
 function getMonday(date: Date): Date {
