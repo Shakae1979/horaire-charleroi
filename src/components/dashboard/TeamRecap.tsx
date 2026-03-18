@@ -164,7 +164,7 @@ export function TeamRecap() {
             <ChevronLeft className="h-4 w-4" />
           </Button>
           <div className="text-center">
-            <div className="text-sm font-semibold">Semaine du {weekLabel}</div>
+            <div className="text-sm font-semibold">S{getWeekNumber(currentMonday)} — Semaine du {weekLabel}</div>
             <div className="text-xs text-muted-foreground">{formatDateBE(currentMonday)}</div>
           </div>
           <Button variant="outline" size="icon" onClick={() => setWeekOffset((w) => w + 1)}>

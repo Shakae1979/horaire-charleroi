@@ -232,7 +232,7 @@ const EmployeeView = () => {
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
                     <Calendar className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-sm font-semibold">Semaine du {label}</span>
+                    <span className="text-sm font-semibold">S{getWeekNumber(monday)} — Semaine du {label}</span>
                     {isCurrentWeek && <span className="badge-positive">Cette semaine</span>}
                   </div>
                   {schedule && (() => {
