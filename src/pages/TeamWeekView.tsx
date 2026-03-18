@@ -68,7 +68,7 @@ function formatWeekDate(date: Date): string {
 function getDayDate(monday: Date, dayIndex: number): string {
   const d = new Date(monday);
   d.setDate(d.getDate() + dayIndex);
-  return d.toISOString().split("T")[0];
+  return formatLocalDate(d);
 }
 
 function timeToMinutes(t: string | null): number {
