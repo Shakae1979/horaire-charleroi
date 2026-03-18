@@ -5,10 +5,18 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Plus, Trash2 } from "lucide-react";
 
+const ROLES = [
+  { value: "technique", label: "Technique", color: "bg-blue-100 text-blue-800" },
+  { value: "editorial", label: "Éditorial", color: "bg-purple-100 text-purple-800" },
+  { value: "stock", label: "Stock", color: "bg-amber-100 text-amber-800" },
+  { value: "caisse", label: "Caisse", color: "bg-emerald-100 text-emerald-800" },
+] as const;
+
 export function EmployeeManager() {
   const queryClient = useQueryClient();
   const [newName, setNewName] = useState("");
   const [newHours, setNewHours] = useState("36");
+  const [newRole, setNewRole] = useState("technique");
 
   const { data: employees } = useQuery({
     queryKey: ["employees"],
@@ -27,12 +35,14 @@ export function EmployeeManager() {
       const { error } = await supabase.from("employees").insert({
         name: trimmed,
         contract_hours: Number(newHours) || 36,
+        role: newRole,
       });
       if (error) throw error;
     },
     onSuccess: () => {
       setNewName("");
       setNewHours("36");
+      setNewRole("technique");
       queryClient.invalidateQueries({ queryKey: ["employees"] });
       toast.success("Collaborateur ajouté !");
     },
@@ -79,6 +89,18 @@ export function EmployeeManager() {
               className="w-full mt-1 px-3 py-2 text-sm rounded-md border bg-background focus:outline-none focus:ring-2 focus:ring-accent font-mono-data"
             />
           </div>
+          <div className="w-40">
+            <label className="text-xs text-muted-foreground">Département</label>
+            <select
+              value={newRole}
+              onChange={(e) => setNewRole(e.target.value)}
+              className="w-full mt-1 px-3 py-2 text-sm rounded-md border bg-background focus:outline-none focus:ring-2 focus:ring-accent"
+            >
+              {ROLES.map((r) => (
+                <option key={r.value} value={r.value}>{r.label}</option>
+              ))}
+            </select>
+          </div>
           <Button size="sm" onClick={() => addMutation.mutate()} disabled={addMutation.isPending}>
             <Plus className="h-3.5 w-3.5 mr-1" /> Ajouter
           </Button>
@@ -99,7 +121,12 @@ export function EmployeeManager() {
                 </div>
                 <div>
                   <div className="text-sm font-medium">{emp.name}</div>
-                  <div className="text-xs text-muted-foreground">{emp.role} · <span className="font-mono-data">{emp.contract_hours}h</span></div>
+                  <div className="text-xs text-muted-foreground">
+                    <span className={`inline-block px-1.5 py-0.5 rounded text-[10px] font-medium ${ROLES.find(r => r.value === emp.role)?.color ?? "bg-muted text-muted-foreground"}`}>
+                      {ROLES.find(r => r.value === emp.role)?.label ?? emp.role}
+                    </span>
+                    {" · "}<span className="font-mono-data">{emp.contract_hours}h</span>
+                  </div>
                 </div>
               </div>
               <Button
