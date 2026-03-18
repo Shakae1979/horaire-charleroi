@@ -400,6 +400,7 @@ export function ScheduleEditor() {
       queryClient.invalidateQueries({ queryKey: ["schedules", weekStr] });
       queryClient.invalidateQueries({ queryKey: ["all-schedules"] });
       queryClient.invalidateQueries({ queryKey: ["day-comments", weekStr] });
+      queryClient.invalidateQueries({ queryKey: ["team-week-day-comments", weekStr] });
       toast.success("Horaires sauvegardés !");
     },
     onError: (err) => {
