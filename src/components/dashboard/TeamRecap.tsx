@@ -77,7 +77,7 @@ export function TeamRecap() {
     },
   });
 
-  const weekLabel = currentMonday.toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
+  const weekLabel = formatDateLongBE(currentMonday);
 
   // Build coverage data: for each day/hour, which employees are working
   const coverage: Record<string, Record<number, string[]>> = {};
