@@ -157,6 +157,21 @@ export function ScheduleEditor() {
     },
   });
 
+  // Fetch day comments for this week
+  const { data: dayComments } = useQuery({
+    queryKey: ["day-comments", weekStr],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("day_comments")
+        .select("*")
+        .eq("week_start", weekStr);
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  const [localDayComments, setLocalDayComments] = useState<Record<string, string>>({});
+
   // Check if an employee is on leave for a specific day
   const isOnLeave = (empId: string, dayIndex: number): string | null => {
     if (!conges) return null;
