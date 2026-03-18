@@ -35,6 +35,7 @@ export function EmployeeManager() {
       const { error } = await supabase.from("employees").insert({
         name: trimmed,
         contract_hours: Number(newHours) || 36,
+        role: newRole,
       });
       if (error) throw error;
     },
