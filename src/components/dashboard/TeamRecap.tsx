@@ -3,6 +3,8 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { ChevronLeft, ChevronRight, Users, AlertTriangle, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { formatDateLongBE } from "@/lib/format";
+import { Button } from "@/components/ui/button";
 
 const DAYS = [
   { key: "lundi", label: "Lundi" },
