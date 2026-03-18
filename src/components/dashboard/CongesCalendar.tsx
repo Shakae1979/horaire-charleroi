@@ -123,6 +123,9 @@ export function CongesCalendar() {
               </span>
             ))}
           </div>
+          <Button variant="outline" size="sm" onClick={() => window.print()}>
+            <Printer className="h-3.5 w-3.5 mr-1" /> Imprimer
+          </Button>
           <Button size="sm" onClick={() => setShowForm(!showForm)}>
             <Plus className="h-3.5 w-3.5 mr-1" /> Ajouter
           </Button>

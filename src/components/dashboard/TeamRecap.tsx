@@ -216,7 +216,7 @@ export function TeamRecap() {
                 <th className="pb-2 pr-2 text-left font-semibold text-muted-foreground sticky left-0 bg-card z-10 min-w-[90px]">Jour</th>
                 {SLOTS.map((h) => (
                   <th key={h} className="pb-2 text-center font-semibold text-muted-foreground min-w-[40px]">
-                    {h}h
+                    {String(h).padStart(2, "0")}h00
                   </th>
                 ))}
               </tr>

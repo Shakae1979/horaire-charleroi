@@ -242,6 +242,9 @@ export function ScheduleEditor() {
           </Button>
         </div>
         <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm" onClick={() => window.print()}>
+            <Printer className="h-3.5 w-3.5 mr-1" /> Imprimer
+          </Button>
           <Button variant="outline" size="sm" onClick={() => initAllMutation.mutate()}>
             <Plus className="h-3.5 w-3.5 mr-1" /> Initialiser la semaine
           </Button>
