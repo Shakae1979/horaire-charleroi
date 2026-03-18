@@ -2,9 +2,9 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { ChevronLeft, ChevronRight, Save, Plus } from "lucide-react";
+import { ChevronLeft, ChevronRight, Save, Plus, Printer } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { formatDateLongBE, formatDateMonthBE } from "@/lib/format";
+import { formatDateLongBE, formatDateMonthBE, formatDateBE } from "@/lib/format";
 
 const DAYS = [
   { key: "lundi", label: "Lun" },
@@ -235,13 +235,16 @@ export function ScheduleEditor() {
           </Button>
           <div className="text-center">
             <div className="text-sm font-semibold">{weekLabel} — {weekEndLabel}</div>
-            <div className="text-xs text-muted-foreground">Semaine du {weekStr}</div>
+            <div className="text-xs text-muted-foreground">Semaine du {formatDateBE(currentMonday)}</div>
           </div>
           <Button variant="outline" size="icon" onClick={() => { setWeekOffset((w) => w + 1); setLocalEdits({}); }}>
             <ChevronRight className="h-4 w-4" />
           </Button>
         </div>
         <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm" onClick={() => window.print()}>
+            <Printer className="h-3.5 w-3.5 mr-1" /> Imprimer
+          </Button>
           <Button variant="outline" size="sm" onClick={() => initAllMutation.mutate()}>
             <Plus className="h-3.5 w-3.5 mr-1" /> Initialiser la semaine
           </Button>

@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { ChevronLeft, ChevronRight, Users, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, Users, AlertTriangle, CheckCircle2, Printer } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { formatDateLongBE } from "@/lib/format";
+import { formatDateLongBE, formatDateBE } from "@/lib/format";
 
 const DAYS = [
   { key: "lundi", label: "Lundi" },
@@ -163,11 +163,15 @@ export function TeamRecap() {
           </Button>
           <div className="text-center">
             <div className="text-sm font-semibold">Semaine du {weekLabel}</div>
+            <div className="text-xs text-muted-foreground">{formatDateBE(currentMonday)}</div>
           </div>
           <Button variant="outline" size="icon" onClick={() => setWeekOffset((w) => w + 1)}>
             <ChevronRight className="h-4 w-4" />
           </Button>
         </div>
+        <Button variant="outline" size="sm" onClick={() => window.print()}>
+          <Printer className="h-3.5 w-3.5 mr-1" /> Imprimer
+        </Button>
       </div>
 
       {/* KPI summary */}
@@ -212,7 +216,7 @@ export function TeamRecap() {
                 <th className="pb-2 pr-2 text-left font-semibold text-muted-foreground sticky left-0 bg-card z-10 min-w-[90px]">Jour</th>
                 {SLOTS.map((h) => (
                   <th key={h} className="pb-2 text-center font-semibold text-muted-foreground min-w-[40px]">
-                    {h}h
+                    {String(h).padStart(2, "0")}h00
                   </th>
                 ))}
               </tr>

@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Plus, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
+import { Plus, Trash2, ChevronLeft, ChevronRight, Printer } from "lucide-react";
 
 const MONTHS = [
   "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
@@ -123,6 +123,9 @@ export function CongesCalendar() {
               </span>
             ))}
           </div>
+          <Button variant="outline" size="sm" onClick={() => window.print()}>
+            <Printer className="h-3.5 w-3.5 mr-1" /> Imprimer
+          </Button>
           <Button size="sm" onClick={() => setShowForm(!showForm)}>
             <Plus className="h-3.5 w-3.5 mr-1" /> Ajouter
           </Button>
