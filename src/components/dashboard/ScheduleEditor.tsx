@@ -68,12 +68,21 @@ export function ScheduleEditor() {
   weekSunday.setDate(weekSunday.getDate() + 6);
   const weekEndStr = formatWeekDate(weekSunday);
 
+  const ROLE_ORDER = ["technique", "editorial", "stock", "caisse"];
+
   const { data: employees } = useQuery({
     queryKey: ["employees"],
     queryFn: async () => {
       const { data, error } = await supabase.from("employees").select("*").eq("is_active", true).order("name");
       if (error) throw error;
-      return data;
+      return data?.sort((a, b) => {
+        const ra = ROLE_ORDER.indexOf(a.role);
+        const rb = ROLE_ORDER.indexOf(b.role);
+        const orderA = ra === -1 ? ROLE_ORDER.length : ra;
+        const orderB = rb === -1 ? ROLE_ORDER.length : rb;
+        if (orderA !== orderB) return orderA - orderB;
+        return a.name.localeCompare(b.name, "fr");
+      });
     },
   });
 
