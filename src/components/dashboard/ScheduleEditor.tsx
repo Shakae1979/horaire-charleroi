@@ -104,7 +104,7 @@ export function ScheduleEditor() {
   weekSunday.setDate(weekSunday.getDate() + 6);
   const weekEndStr = formatWeekDate(weekSunday);
 
-  const ROLE_ORDER = ["technique", "editorial", "stock", "caisse"];
+  const ROLE_ORDER = ["responsable", "technique", "editorial", "stock", "caisse"];
 
   const { data: employees } = useQuery({
     queryKey: ["employees"],
