@@ -7,6 +7,7 @@ import Index from "./pages/Index.tsx";
 import EmployeeView from "./pages/EmployeeView.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import TeamDayView from "./pages/TeamDayView.tsx";
+import TeamWeekView from "./pages/TeamWeekView.tsx";
 
 const queryClient = new QueryClient();
 
