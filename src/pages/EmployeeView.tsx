@@ -70,7 +70,7 @@ function formatWeekDate(date: Date): string {
 function getDayDate(monday: Date, offset: number): string {
   const d = new Date(monday);
   d.setDate(d.getDate() + offset);
-  return d.toISOString().split("T")[0];
+  return formatLocalDate(d);
 }
 
 /** Check if a date falls within a conge range */
