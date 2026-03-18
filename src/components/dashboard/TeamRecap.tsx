@@ -163,11 +163,15 @@ export function TeamRecap() {
           </Button>
           <div className="text-center">
             <div className="text-sm font-semibold">Semaine du {weekLabel}</div>
+            <div className="text-xs text-muted-foreground">{formatDateBE(currentMonday)}</div>
           </div>
           <Button variant="outline" size="icon" onClick={() => setWeekOffset((w) => w + 1)}>
             <ChevronRight className="h-4 w-4" />
           </Button>
         </div>
+        <Button variant="outline" size="sm" onClick={() => window.print()}>
+          <Printer className="h-3.5 w-3.5 mr-1" /> Imprimer
+        </Button>
       </div>
 
       {/* KPI summary */}
