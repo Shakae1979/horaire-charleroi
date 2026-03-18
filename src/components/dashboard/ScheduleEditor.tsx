@@ -777,15 +777,6 @@ export function ScheduleEditor() {
                           </div>
                         )}
                       </td>
-                      <td className="py-1.5 px-1">
-                        <input
-                          type="text"
-                          value={getDisplayValue(emp.id, "notes")}
-                          onChange={(e) => handleChange(emp.id, "notes", e.target.value)}
-                          placeholder="—"
-                          className="w-full px-1.5 py-1 text-xs rounded border bg-background focus:outline-none focus:ring-1 focus:ring-accent"
-                        />
-                      </td>
                     </tr>
                   );
                 })
