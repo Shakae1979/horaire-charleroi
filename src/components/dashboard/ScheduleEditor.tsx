@@ -411,19 +411,21 @@ export function ScheduleEditor() {
   endOfWeek.setDate(endOfWeek.getDate() - 2); // Saturday
   const weekEndLabel = formatDateMonthBE(endOfWeek);
 
+  const isCopyMode = copiedEmployee !== null || copiedDay !== null;
+
   return (
     <div className="space-y-4">
       {/* Week navigation */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Button variant="outline" size="icon" onClick={() => { setWeekOffset((w) => w - 1); setLocalEdits({}); }}>
+          <Button variant="outline" size="icon" onClick={() => { setWeekOffset((w) => w - 1); setLocalEdits({}); cancelCopy(); }}>
             <ChevronLeft className="h-4 w-4" />
           </Button>
           <div className="text-center">
             <div className="text-sm font-semibold">{weekLabel} — {weekEndLabel}</div>
             <div className="text-xs text-muted-foreground">Semaine du {formatDateBE(currentMonday)}</div>
           </div>
-          <Button variant="outline" size="icon" onClick={() => { setWeekOffset((w) => w + 1); setLocalEdits({}); }}>
+          <Button variant="outline" size="icon" onClick={() => { setWeekOffset((w) => w + 1); setLocalEdits({}); cancelCopy(); }}>
             <ChevronRight className="h-4 w-4" />
           </Button>
         </div>
@@ -444,18 +446,65 @@ export function ScheduleEditor() {
         </div>
       </div>
 
+      {/* Copy-paste toolbar */}
+      {isCopyMode && (
+        <div className="flex items-center gap-3 p-3 rounded-lg border border-accent bg-accent/10">
+          <ClipboardPaste className="h-4 w-4 text-accent-foreground" />
+          <span className="text-sm font-medium">
+            {copiedEmployee && `Horaires de ${employees?.find((e) => e.id === copiedEmployee)?.name} copiés`}
+            {copiedDay && `${DAYS.find((d) => d.key === copiedDay)?.label} copié`}
+            {" — "}
+            {copiedEmployee && `Cochez les employés cibles (${selectedTargets.size} sélectionné(s))`}
+            {copiedDay && `Cochez les jours cibles (${selectedDays.size} sélectionné(s))`}
+          </span>
+          <div className="ml-auto flex items-center gap-2">
+            <Button
+              size="sm"
+              onClick={pasteToTargets}
+              disabled={(copiedEmployee && selectedTargets.size === 0) || (copiedDay && selectedDays.size === 0) ? true : false}
+            >
+              <ClipboardPaste className="h-3.5 w-3.5 mr-1" /> Coller
+            </Button>
+            <Button size="sm" variant="ghost" onClick={cancelCopy}>
+              <X className="h-3.5 w-3.5" />
+            </Button>
+          </div>
+        </div>
+      )}
+
       {/* Schedule grid */}
       <div className="kpi-card overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b">
-                <th className="pb-2 pr-4 text-left font-semibold text-muted-foreground sticky left-0 bg-card z-10 min-w-[120px]">
+                <th className="pb-2 pr-4 text-left font-semibold text-muted-foreground sticky left-0 bg-card z-10 min-w-[140px]">
                   Vendeur
                 </th>
                 {DAYS.map((day) => (
                   <th key={day.key} colSpan={2} className="pb-2 text-center font-semibold text-muted-foreground min-w-[160px]">
-                    {day.label}
+                    <div className="flex items-center justify-center gap-1">
+                      {copiedDay !== null && copiedDay !== day.key && (
+                        <Checkbox
+                          checked={selectedDays.has(day.key)}
+                          onCheckedChange={() => toggleDay(day.key)}
+                          className="mr-1"
+                        />
+                      )}
+                      <span>{day.label}</span>
+                      {!isCopyMode && (
+                        <button
+                          onClick={() => copyDaySchedule(day.key)}
+                          className="ml-1 p-0.5 rounded hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+                          title={`Copier ${day.label}`}
+                        >
+                          <Copy className="h-3 w-3" />
+                        </button>
+                      )}
+                      {copiedDay === day.key && (
+                        <span className="ml-1 text-xs text-primary font-normal">(source)</span>
+                      )}
+                    </div>
                   </th>
                 ))}
                 <th className="pb-2 text-center font-semibold text-muted-foreground min-w-[60px]">Total</th>
@@ -503,12 +552,35 @@ export function ScheduleEditor() {
 
                   const deptColor = DEPT_COLORS[emp.role] ?? { bg: "", border: "border-l-muted" };
                   const isUnderstaffed = totalH > 0 && totalH < emp.contract_hours;
+                  const isSource = copiedEmployee === emp.id;
 
                   return (
-                    <tr key={emp.id} className={`border-b border-border/50 border-l-4 ${deptColor.border} ${isUnderstaffed ? "bg-destructive/10" : deptColor.bg}`}>
-                      <td className={`py-1.5 pr-4 sticky left-0 z-10 ${isUnderstaffed ? "bg-destructive/10" : deptColor.bg}`}>
-                        <div className="font-medium">{emp.name}</div>
-                        <div className="text-xs text-muted-foreground font-mono-data">{emp.contract_hours}h contrat</div>
+                    <tr key={emp.id} className={`border-b border-border/50 border-l-4 ${deptColor.border} ${isUnderstaffed ? "bg-destructive/10" : isSource ? "bg-primary/10" : deptColor.bg}`}>
+                      <td className={`py-1.5 pr-2 sticky left-0 z-10 ${isUnderstaffed ? "bg-destructive/10" : isSource ? "bg-primary/10" : deptColor.bg}`}>
+                        <div className="flex items-center gap-2">
+                          {copiedEmployee !== null && !isSource && (
+                            <Checkbox
+                              checked={selectedTargets.has(emp.id)}
+                              onCheckedChange={() => toggleTarget(emp.id)}
+                            />
+                          )}
+                          <div className="flex-1 min-w-0">
+                            <div className="font-medium flex items-center gap-1">
+                              {emp.name}
+                              {!isCopyMode && (
+                                <button
+                                  onClick={() => copyEmployeeSchedule(emp.id)}
+                                  className="p-0.5 rounded hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+                                  title={`Copier les horaires de ${emp.name}`}
+                                >
+                                  <Copy className="h-3 w-3" />
+                                </button>
+                              )}
+                              {isSource && <span className="text-xs text-primary">(source)</span>}
+                            </div>
+                            <div className="text-xs text-muted-foreground font-mono-data">{emp.contract_hours}h contrat</div>
+                          </div>
+                        </div>
                       </td>
                       {DAYS.map((day, dayIndex) => {
                         const leaveType = isOnLeave(emp.id, dayIndex);
