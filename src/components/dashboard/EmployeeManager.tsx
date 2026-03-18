@@ -42,6 +42,7 @@ export function EmployeeManager() {
     onSuccess: () => {
       setNewName("");
       setNewHours("36");
+      setNewRole("technique");
       queryClient.invalidateQueries({ queryKey: ["employees"] });
       toast.success("Collaborateur ajouté !");
     },
