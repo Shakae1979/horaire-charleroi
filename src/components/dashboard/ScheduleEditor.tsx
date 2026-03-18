@@ -294,6 +294,7 @@ export function ScheduleEditor() {
 
         // Calculate hours
         let totalMinutes = 0;
+        let workedDays = 0;
         for (const day of DAYS) {
           const startField = `${day.key}_start`;
           const endField = `${day.key}_end`;
@@ -304,10 +305,12 @@ export function ScheduleEditor() {
             const [eh, em] = endVal.split(":").map(Number);
             if (!isNaN(sh) && !isNaN(eh)) {
               totalMinutes += (eh * 60 + (em || 0)) - (sh * 60 + (sm || 0));
+              workedDays++;
             }
           }
         }
-        payload.hours_modified = Math.round((totalMinutes / 60) * 100) / 100;
+        const breakMinutes = workedDays * 60; // 1h de pause par jour travaillé
+        payload.hours_modified = Math.round(((totalMinutes - breakMinutes) / 60) * 100) / 100;
 
         // Find employee contract hours
         const emp = employees?.find((e) => e.id === empId);
