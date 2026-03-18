@@ -248,11 +248,10 @@ const EmployeeView = () => {
                   })()}
                 </div>
 
-                {schedule ? (
-                  <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2">
+                <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2">
                     {DAYS.map((day) => {
-                      const start = (schedule as any)[`${day.key}_start`];
-                      const end = (schedule as any)[`${day.key}_end`];
+                      const start = schedule ? (schedule as any)[`${day.key}_start`] : null;
+                      const end = schedule ? (schedule as any)[`${day.key}_end`] : null;
                       const hasShift = start && end;
                       const dayDate = getDayDate(monday, day.offset);
                       const conge = conges ? getCongeForDate(dayDate, conges) : null;
@@ -294,9 +293,6 @@ const EmployeeView = () => {
                       );
                     })}
                   </div>
-                ) : (
-                  <p className="text-sm text-muted-foreground italic">Planning non encore défini</p>
-                )}
               </div>
             );
           })}
