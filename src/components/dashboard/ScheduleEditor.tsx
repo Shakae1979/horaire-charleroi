@@ -555,6 +555,7 @@ export function ScheduleEditor() {
                   </th>
                 ))}
                 <th className="pb-2 text-center font-semibold text-muted-foreground min-w-[60px]">Total</th>
+                <th className="pb-2 text-center font-semibold text-muted-foreground min-w-[120px]">Commentaire</th>
               </tr>
               <tr className="border-b">
                 <th className="pb-1 sticky left-0 bg-card z-10"></th>
@@ -564,18 +565,19 @@ export function ScheduleEditor() {
                   </th>
                 ))}
                 <th></th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
               {isLoading ? (
                 <tr>
-                  <td colSpan={16} className="py-8 text-center text-muted-foreground">
+                   <td colSpan={17} className="py-8 text-center text-muted-foreground">
                     Chargement...
                   </td>
                 </tr>
               ) : employees?.length === 0 ? (
                 <tr>
-                  <td colSpan={16} className="py-8 text-center text-muted-foreground">
+                  <td colSpan={17} className="py-8 text-center text-muted-foreground">
                     Aucun employé trouvé.
                   </td>
                 </tr>
@@ -716,6 +718,15 @@ export function ScheduleEditor() {
                             {diff > 0 ? "+" : ""}{diff}h
                           </div>
                         )}
+                      </td>
+                      <td className="py-1.5 px-1">
+                        <input
+                          type="text"
+                          value={getDisplayValue(emp.id, "notes")}
+                          onChange={(e) => handleChange(emp.id, "notes", e.target.value)}
+                          placeholder="—"
+                          className="w-full px-1.5 py-1 text-xs rounded border bg-background focus:outline-none focus:ring-1 focus:ring-accent"
+                        />
                       </td>
                     </tr>
                   );
