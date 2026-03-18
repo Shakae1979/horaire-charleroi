@@ -204,14 +204,17 @@ const EmployeeView = () => {
                     <span className="text-sm font-semibold">Semaine du {label}</span>
                     {isCurrentWeek && <span className="badge-positive">Cette semaine</span>}
                   </div>
-                  {schedule && (
-                    <div className="flex items-center gap-1.5">
-                      <Clock className="h-3.5 w-3.5 text-muted-foreground" />
-                      <span className="text-sm font-mono-data font-medium">
-                        {schedule.hours_modified ?? schedule.hours_base ?? 0}h
-                      </span>
-                    </div>
-                  )}
+                  {schedule && (() => {
+                    const { net, breaks } = computeNetHours(schedule);
+                    return (
+                      <div className="flex items-center gap-1.5" title={`Brut - ${breaks}h pause = ${net.toFixed(1)}h net`}>
+                        <Clock className="h-3.5 w-3.5 text-muted-foreground" />
+                        <span className="text-sm font-mono-data font-medium">
+                          {net.toFixed(1)}h <span className="text-muted-foreground text-xs">net</span>
+                        </span>
+                      </div>
+                    );
+                  })()}
                 </div>
 
                 {schedule ? (
