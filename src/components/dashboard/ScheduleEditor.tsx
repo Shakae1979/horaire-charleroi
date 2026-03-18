@@ -442,26 +442,28 @@ export function ScheduleEditor() {
                         return (
                           <>
                             <td key={`${day.key}-s`} className="py-1.5 px-0.5">
-                              <input
-                                type="text"
-                                inputMode="numeric"
-                                placeholder="10:00"
+                              <select
                                 value={getDisplayValue(emp.id, `${day.key}_start`)}
-                                onBlur={(e) => handleTimeInput(emp.id, `${day.key}_start`, e.target.value)}
-                                onChange={(e) => handleTimeInput(emp.id, `${day.key}_start`, e.target.value)}
-                                className="w-full px-1.5 py-1 text-xs rounded border bg-background focus:outline-none focus:ring-1 focus:ring-accent font-mono-data text-center"
-                              />
+                                onChange={(e) => handleChange(emp.id, `${day.key}_start`, e.target.value)}
+                                className="w-full px-0.5 py-1 text-xs rounded border bg-background focus:outline-none focus:ring-1 focus:ring-accent font-mono-data text-center appearance-none cursor-pointer"
+                              >
+                                <option value="">—</option>
+                                {TIME_SLOTS.map((t) => (
+                                  <option key={t} value={t}>{displayTimeBE(t)}</option>
+                                ))}
+                              </select>
                             </td>
                             <td key={`${day.key}-e`} className="py-1.5 px-0.5">
-                              <input
-                                type="text"
-                                inputMode="numeric"
-                                placeholder="18:00"
+                              <select
                                 value={getDisplayValue(emp.id, `${day.key}_end`)}
-                                onBlur={(e) => handleTimeInput(emp.id, `${day.key}_end`, e.target.value)}
-                                onChange={(e) => handleTimeInput(emp.id, `${day.key}_end`, e.target.value)}
-                                className="w-full px-1.5 py-1 text-xs rounded border bg-background focus:outline-none focus:ring-1 focus:ring-accent font-mono-data text-center"
-                              />
+                                onChange={(e) => handleChange(emp.id, `${day.key}_end`, e.target.value)}
+                                className="w-full px-0.5 py-1 text-xs rounded border bg-background focus:outline-none focus:ring-1 focus:ring-accent font-mono-data text-center appearance-none cursor-pointer"
+                              >
+                                <option value="">—</option>
+                                {TIME_SLOTS.map((t) => (
+                                  <option key={t} value={t}>{displayTimeBE(t)}</option>
+                                ))}
+                              </select>
                             </td>
                           </>
                         );
