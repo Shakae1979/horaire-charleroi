@@ -120,7 +120,7 @@ const EmployeeView = () => {
     );
   }
 
-  const weekLabel = currentMonday.toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
+  const weekLabel = formatDateLongBE(currentMonday);
 
   return (
     <div className="min-h-screen bg-background">
