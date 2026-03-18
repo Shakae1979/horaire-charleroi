@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { ChevronLeft, ChevronRight, Save, Plus, Printer, Copy, ClipboardPaste, X } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import { formatDateLongBE, formatDateMonthBE, formatDateBE, formatTimeBE, formatLocalDate } from "@/lib/format";
+import { formatDateLongBE, formatDateMonthBE, formatDateBE, formatTimeBE, formatLocalDate, getWeekNumber } from "@/lib/format";
 
 /** Convert "HHhMM" or "HH:MM" or "HHMM" to "HH:MM" for storage */
 function parseTimeBE(input: string): string {
