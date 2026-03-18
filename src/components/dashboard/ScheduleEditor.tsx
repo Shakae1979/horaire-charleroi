@@ -53,11 +53,19 @@ const DAYS = [
 ] as const;
 
 const DEPT_COLORS: Record<string, { bg: string; border: string }> = {
+  responsable: { bg: "bg-rose-50 dark:bg-rose-950/30", border: "border-l-rose-500" },
   technique: { bg: "bg-blue-50 dark:bg-blue-950/30", border: "border-l-blue-500" },
   editorial: { bg: "bg-purple-50 dark:bg-purple-950/30", border: "border-l-purple-500" },
   stock: { bg: "bg-amber-50 dark:bg-amber-950/30", border: "border-l-amber-500" },
   caisse: { bg: "bg-emerald-50 dark:bg-emerald-950/30", border: "border-l-emerald-500" },
 };
+
+/** Generate time slots from 07:00 to 21:00 every 30 min */
+const TIME_SLOTS: string[] = [];
+for (let h = 7; h <= 21; h++) {
+  TIME_SLOTS.push(`${String(h).padStart(2, "0")}:00`);
+  if (h < 21) TIME_SLOTS.push(`${String(h).padStart(2, "0")}:30`);
+}
 
 type DayKey = (typeof DAYS)[number]["key"];
 
