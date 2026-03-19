@@ -734,6 +734,7 @@ export function ScheduleEditor() {
                               >
                                 <option value="">—</option>
                                 <option value="EXT">Extérieur</option>
+                                <option value="FERIE">Férié</option>
                                 {TIME_SLOTS.map((t) => (
                                   <option key={t} value={t}>{displayTimeBE(t)}</option>
                                 ))}
