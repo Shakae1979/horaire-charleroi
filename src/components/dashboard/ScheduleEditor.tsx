@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { ChevronLeft, ChevronRight, Save, Plus, Printer, Copy, ClipboardPaste, X, MessageSquare } from "lucide-react";
+import { ChevronLeft, ChevronRight, Save, Plus, Printer, Copy, ClipboardPaste, X, MessageSquare, Flag } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { formatDateLongBE, formatDateMonthBE, formatDateBE, formatTimeBE, formatLocalDate, getWeekNumber } from "@/lib/format";
@@ -270,6 +270,19 @@ export function ScheduleEditor() {
     setSelectedTargets(new Set());
     setSelectedDays(new Set());
     setCopiedCell(null);
+  };
+
+  const setDayFerie = (dayKey: string) => {
+    if (!employees) return;
+    const newEdits = { ...localEdits };
+    employees.forEach((emp) => {
+      if (!newEdits[emp.id]) newEdits[emp.id] = {};
+      newEdits[emp.id][`${dayKey}_start`] = "FERIE";
+      newEdits[emp.id][`${dayKey}_end`] = "FERIE";
+    });
+    setLocalEdits(newEdits);
+    const dayLabel = DAYS.find((d) => d.key === dayKey)?.label ?? dayKey;
+    toast.info(`${dayLabel} marqué comme jour férié pour tous les employés`);
   };
 
   const copyCellSchedule = (empId: string, dayKey: string) => {
@@ -576,13 +589,22 @@ export function ScheduleEditor() {
                       )}
                       <span>{day.label}</span>
                       {!isCopyMode && (
-                        <button
-                          onClick={() => copyDaySchedule(day.key)}
-                          className="ml-1 p-0.5 rounded hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
-                          title={`Copier ${day.label}`}
-                        >
-                          <Copy className="h-3 w-3" />
-                        </button>
+                        <>
+                          <button
+                            onClick={() => copyDaySchedule(day.key)}
+                            className="ml-1 p-0.5 rounded hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+                            title={`Copier ${day.label}`}
+                          >
+                            <Copy className="h-3 w-3" />
+                          </button>
+                          <button
+                            onClick={() => setDayFerie(day.key)}
+                            className="p-0.5 rounded hover:bg-destructive/20 text-muted-foreground hover:text-destructive transition-colors"
+                            title={`Marquer ${day.label} comme jour férié`}
+                          >
+                            <Flag className="h-3 w-3" />
+                          </button>
+                        </>
                       )}
                       {copiedDay === day.key && (
                         <span className="ml-1 text-xs text-primary font-normal">(source)</span>
@@ -725,6 +747,7 @@ export function ScheduleEditor() {
                               >
                                 <option value="">—</option>
                                 <option value="EXT">Extérieur</option>
+                                <option value="FERIE">Férié</option>
                                 {TIME_SLOTS.map((t) => (
                                   <option key={t} value={t}>{displayTimeBE(t)}</option>
                                 ))}
@@ -736,6 +759,7 @@ export function ScheduleEditor() {
                               >
                                 <option value="">—</option>
                                 <option value="EXT">Extérieur</option>
+                                <option value="FERIE">Férié</option>
                                 {TIME_SLOTS.map((t) => (
                                   <option key={t} value={t}>{displayTimeBE(t)}</option>
                                 ))}
