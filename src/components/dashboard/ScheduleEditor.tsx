@@ -567,10 +567,13 @@ export function ScheduleEditor() {
             <Printer className="h-3.5 w-3.5 mr-1" /> Imprimer
           </Button>
           <Button variant="outline" size="sm" onClick={() => saveAsTemplateMutation.mutate()} disabled={!schedules?.length}>
-            <Copy className="h-3.5 w-3.5 mr-1" /> Sauver comme Sem. 0
+            <Copy className="h-3.5 w-3.5 mr-1" /> Sauver sem. type
           </Button>
           <Button variant="outline" size="sm" onClick={() => initAllMutation.mutate()}>
-            <Plus className="h-3.5 w-3.5 mr-1" /> Initialiser depuis Sem. 0
+            <ClipboardPaste className="h-3.5 w-3.5 mr-1" /> Appliquer sem. type
+          </Button>
+          <Button variant="outline" size="sm" onClick={() => copyPreviousWeekMutation.mutate()}>
+            <ChevronLeft className="h-3.5 w-3.5 mr-1" /> Copier sem. précédente
           </Button>
           <Button size="sm" disabled={!hasEdits || saveMutation.isPending} onClick={() => saveMutation.mutate()}>
             <Save className="h-3.5 w-3.5 mr-1" />
