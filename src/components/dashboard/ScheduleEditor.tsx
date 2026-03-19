@@ -427,7 +427,7 @@ export function ScheduleEditor() {
     mutationFn: async () => {
       if (!employees) return;
 
-      // Fetch template week (Semaine 0)
+      // Fetch template week (Semaine type)
       const { data: templates } = await supabase
         .from("weekly_schedules")
         .select("*")
@@ -437,7 +437,6 @@ export function ScheduleEditor() {
       const toCreate = employees.filter((e) => !existingIds.includes(e.id));
       const toUpdate = employees.filter((e) => existingIds.includes(e.id));
 
-      // Insert new rows
       if (toCreate.length > 0) {
         const rows = toCreate.map((e) => {
           const tpl = templates?.find((t) => t.employee_id === e.id);
@@ -451,10 +450,9 @@ export function ScheduleEditor() {
         if (error) throw error;
       }
 
-      // Update existing rows with template data
       const updatePromises = toUpdate.map(async (e) => {
         const tpl = templates?.find((t) => t.employee_id === e.id);
-        if (!tpl) return; // no template for this employee, skip
+        if (!tpl) return;
         const existingSchedule = schedules?.find((s) => s.employee_id === e.id);
         if (!existingSchedule) return;
         const { id, created_at, updated_at, week_start, employee_id, ...fields } = tpl as any;
@@ -468,7 +466,46 @@ export function ScheduleEditor() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["schedules", weekStr] });
-      toast.success("Semaine initialisée depuis la Semaine 0 !");
+      toast.success("Semaine type appliquée !");
+    },
+  });
+
+  const copyPreviousWeekMutation = useMutation({
+    mutationFn: async () => {
+      if (!employees) return;
+      const previousMonday = addWeeks(currentMonday, -1);
+      const previousWeekStr = formatWeekDate(previousMonday);
+
+      const { data: prevSchedules, error } = await supabase
+        .from("weekly_schedules")
+        .select("*")
+        .eq("week_start", previousWeekStr);
+      if (error) throw error;
+      if (!prevSchedules || prevSchedules.length === 0) {
+        toast.warning("Aucun planning trouvé pour la semaine précédente");
+        return;
+      }
+
+      const newEdits = { ...localEdits };
+      const dayFields = DAYS.flatMap((d) => [`${d.key}_start`, `${d.key}_end`]);
+
+      prevSchedules.forEach((prev) => {
+        const emp = employees.find((e) => e.id === prev.employee_id);
+        if (!emp) return;
+        const edits: Record<string, string> = {};
+        dayFields.forEach((field) => {
+          edits[field] = (prev as any)[field] ?? "";
+        });
+        newEdits[prev.employee_id] = { ...newEdits[prev.employee_id], ...edits };
+      });
+
+      setLocalEdits(newEdits);
+    },
+    onSuccess: () => {
+      toast.success("Semaine précédente copiée — vérifiez puis sauvegardez");
+    },
+    onError: (err) => {
+      toast.error("Erreur: " + (err as Error).message);
     },
   });
 
