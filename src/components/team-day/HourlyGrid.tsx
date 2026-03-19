@@ -106,13 +106,23 @@ export default function HourlyGrid({ employees }: { employees: Employee[] }) {
           Grille horaire
         </h2>
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 no-print">
-          {ROLES.map((r) => (
-            <span key={r.key} className="flex items-center gap-1 text-[10px] text-muted-foreground">
-              <span className={`w-2.5 h-2.5 rounded-full ${r.dot}`} />
-              {r.label}
-            </span>
-          ))}
+          <div className="flex items-center gap-2">
+            {ROLES.map((r) => (
+              <span key={r.key} className="flex items-center gap-1 text-[10px] text-muted-foreground">
+                <span className={`w-2.5 h-2.5 rounded-full ${r.dot}`} />
+                {r.label}
+              </span>
+            ))}
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            className="no-print h-7 text-xs gap-1.5"
+            onClick={() => window.print()}
+          >
+            <Printer className="h-3.5 w-3.5" />
+            Imprimer
+          </Button>
         </div>
       </div>
       <div className="overflow-x-auto rounded-lg border">
