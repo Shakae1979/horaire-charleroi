@@ -528,7 +528,7 @@ export function ScheduleEditor() {
       }
     },
     onSuccess: () => {
-      toast.success("Semaine 0 (template) mise à jour !");
+      toast.success("Semaine type sauvegardée !");
     },
     onError: (err) => {
       toast.error("Erreur: " + (err as Error).message);
