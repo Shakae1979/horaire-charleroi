@@ -173,6 +173,30 @@ const TeamWeekView = () => {
     return Math.round(((totalMin - workedDays * 60) / 60) * 100) / 100;
   };
 
+  const ferieMutation = useMutation({
+    mutationFn: async (dayKey: string) => {
+      if (!employees || !schedules) return;
+      const promises = employees.map(async (emp) => {
+        const existing = schedules.find(s => s.employee_id === emp.id);
+        const payload = { [`${dayKey}_start`]: "FERIE", [`${dayKey}_end`]: "FERIE" };
+        if (existing) {
+          const { error } = await supabase.from("weekly_schedules").update(payload).eq("id", existing.id);
+          if (error) throw error;
+        } else {
+          const { error } = await supabase.from("weekly_schedules").insert({ employee_id: emp.id, week_start: weekStr, ...payload });
+          if (error) throw error;
+        }
+      });
+      await Promise.all(promises);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["team-week-schedules", weekStr] });
+      queryClient.invalidateQueries({ queryKey: ["schedules", weekStr] });
+      toast.success("Jour marqué comme férié !");
+    },
+    onError: (err) => toast.error("Erreur : " + (err as Error).message),
+  });
+
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b bg-card px-4 py-3 no-print">
