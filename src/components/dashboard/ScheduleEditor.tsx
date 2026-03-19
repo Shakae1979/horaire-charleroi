@@ -627,7 +627,7 @@ export function ScheduleEditor() {
                           className="mr-1"
                         />
                       )}
-                      <span>{day.label}</span>
+                      <span>{day.label} {(() => { const d = new Date(currentMonday); d.setDate(d.getDate() + DAYS.indexOf(day)); return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}`; })()}</span>
                       {!isCopyMode && (
                         <>
                           <button
