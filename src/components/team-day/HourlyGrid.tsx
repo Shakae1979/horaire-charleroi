@@ -1,4 +1,6 @@
 import { useState, useRef, useEffect } from "react";
+import { Printer } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const HOURS = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
 
