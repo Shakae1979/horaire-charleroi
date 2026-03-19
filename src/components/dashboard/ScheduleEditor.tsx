@@ -272,6 +272,19 @@ export function ScheduleEditor() {
     setCopiedCell(null);
   };
 
+  const setDayFerie = (dayKey: string) => {
+    if (!employees) return;
+    const newEdits = { ...localEdits };
+    employees.forEach((emp) => {
+      if (!newEdits[emp.id]) newEdits[emp.id] = {};
+      newEdits[emp.id][`${dayKey}_start`] = "FERIE";
+      newEdits[emp.id][`${dayKey}_end`] = "FERIE";
+    });
+    setLocalEdits(newEdits);
+    const dayLabel = DAYS.find((d) => d.key === dayKey)?.label ?? dayKey;
+    toast.info(`${dayLabel} marqué comme jour férié pour tous les employés`);
+  };
+
   const copyCellSchedule = (empId: string, dayKey: string) => {
     setCopiedCell({ empId, dayKey });
     setCopiedEmployee(null);
