@@ -119,7 +119,9 @@ const TeamDayView = () => {
       const schedule = schedules?.find((s) => s.employee_id === emp.id);
       const start = schedule ? (schedule as any)[`${dayKey}_start`] : null;
       const end = schedule ? (schedule as any)[`${dayKey}_end`] : null;
-      const hasShift = !!(start && end);
+      const isFerie = start === "FERIE" || end === "FERIE";
+      const isExt = start === "EXT" || end === "EXT";
+      const hasShift = !!(start && end && !isFerie && !isExt);
       const conge = conges?.find((c) => c.employee_id === emp.id);
 
       let netHours = 0;
@@ -132,6 +134,8 @@ const TeamDayView = () => {
         start,
         end,
         hasShift,
+        isFerie,
+        isExt,
         netHours,
         conge,
       };
@@ -145,7 +149,9 @@ const TeamDayView = () => {
 
   const working = teamDay?.filter((e) => e.hasShift && !e.conge) || [];
   const onLeave = teamDay?.filter((e) => e.conge) || [];
-  const off = teamDay?.filter((e) => !e.hasShift && !e.conge) || [];
+  const ferie = teamDay?.filter((e) => e.isFerie && !e.conge) || [];
+  const ext = teamDay?.filter((e) => e.isExt && !e.conge) || [];
+  const off = teamDay?.filter((e) => !e.hasShift && !e.conge && !e.isFerie && !e.isExt) || [];
 
   const isToday = dayOffset === 0;
 
