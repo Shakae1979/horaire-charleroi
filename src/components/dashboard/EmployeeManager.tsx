@@ -76,6 +76,18 @@ export function EmployeeManager() {
     onError: (err) => toast.error((err as Error).message),
   });
 
+  const updateEmailMutation = useMutation({
+    mutationFn: async ({ id, email }: { id: string; email: string }) => {
+      const { error } = await supabase.from("employees").update({ email: email || null }).eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["employees"] });
+      toast.success("Email mis à jour !");
+    },
+    onError: (err) => toast.error((err as Error).message),
+  });
+
   const roleOrder = ["responsable", "technique", "editorial", "stock", "caisse"];
   const active = (employees?.filter((e) => e.is_active) ?? []).sort((a, b) => {
     const ra = roleOrder.indexOf(a.role);
