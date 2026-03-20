@@ -168,7 +168,7 @@ export default function HourlyGrid({ employees }: { employees: Employee[] }) {
                         }`}
                         onClick={isWorking ? (e) => handleCellClick(emp.id, h, e) : undefined}
                       >
-                        {isWorking ? <div className="w-full h-5 rounded-sm" /> : null}
+                        {isWorking ? <div className="w-full h-6 rounded-sm" /> : null}
                       </td>
                     );
                   })}
