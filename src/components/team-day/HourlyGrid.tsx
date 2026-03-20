@@ -133,7 +133,7 @@ export default function HourlyGrid({ employees }: { employees: Employee[] }) {
                 Employé
               </th>
               {HOURS.map((h) => (
-                <th key={h} className="px-0 py-1.5 text-center font-medium min-w-[32px] border-r last:border-r-0">
+                <th key={h} className="px-0 py-2 text-center font-medium min-w-[38px] border-r last:border-r-0">
                   {h}h
                 </th>
               ))}
