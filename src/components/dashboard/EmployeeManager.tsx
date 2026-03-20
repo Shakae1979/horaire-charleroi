@@ -18,6 +18,7 @@ export function EmployeeManager() {
   const [newName, setNewName] = useState("");
   const [newHours, setNewHours] = useState("36");
   const [newRole, setNewRole] = useState("technique");
+  const [newEmail, setNewEmail] = useState("");
 
   const { data: employees } = useQuery({
     queryKey: ["employees"],
