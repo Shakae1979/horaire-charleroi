@@ -114,6 +114,15 @@ export function EmployeeManager() {
               className="w-full mt-1 px-3 py-2 text-sm rounded-md border bg-background focus:outline-none focus:ring-2 focus:ring-accent"
             />
           </div>
+          <div className="w-48">
+            <label className="text-xs text-muted-foreground">Email</label>
+            <input
+              type="email"
+              value={newEmail}
+              onChange={(e) => setNewEmail(e.target.value)}
+              placeholder="email@exemple.com"
+              className="w-full mt-1 px-3 py-2 text-sm rounded-md border bg-background focus:outline-none focus:ring-2 focus:ring-accent"
+            />
           <div className="w-32">
             <label className="text-xs text-muted-foreground">Heures contrat</label>
             <input
