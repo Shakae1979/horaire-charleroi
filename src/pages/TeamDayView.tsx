@@ -212,7 +212,7 @@ const TeamDayView = () => {
         </Button>
       </FnacHeader>
 
-      <div className="max-w-3xl mx-auto px-6 py-4">
+      <div className="max-w-6xl mx-auto px-6 py-4">
         {/* Date navigation */}
         <div className="flex items-center justify-between mb-6">
           <Button variant="outline" size="icon" onClick={() => setDayOffset((d) => d - 1)}>
