@@ -124,6 +124,7 @@
     background: white !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
+    font-size: 10px !important;
   }
   nav, button, .no-print {
     display: none !important;
@@ -132,5 +133,38 @@
     break-inside: avoid;
     border: 1px solid #ddd !important;
     box-shadow: none !important;
+  }
+  .print-compact-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 2px !important;
+  }
+  .print-compact-grid > div {
+    padding: 2px 6px !important;
+    margin: 0 !important;
+  }
+  .print-summary-cards {
+    gap: 4px !important;
+    margin-bottom: 8px !important;
+  }
+  .print-summary-cards > div {
+    padding: 4px !important;
+  }
+  .print-section {
+    margin-bottom: 6px !important;
+    break-inside: avoid;
+  }
+  .print-employee-row {
+    padding: 1px 6px !important;
+    font-size: 9px !important;
+  }
+  header {
+    padding: 4px 8px !important;
+  }
+  header h1 {
+    font-size: 12px !important;
+  }
+  .print\:hidden {
+    display: none !important;
   }
 }
