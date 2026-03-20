@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, Mail } from "lucide-react";
 
 const ROLES = [
   { value: "responsable", label: "Responsable", color: "bg-orange-100 text-orange-800" },
@@ -18,6 +18,7 @@ export function EmployeeManager() {
   const [newName, setNewName] = useState("");
   const [newHours, setNewHours] = useState("36");
   const [newRole, setNewRole] = useState("technique");
+  const [newEmail, setNewEmail] = useState("");
 
   const { data: employees } = useQuery({
     queryKey: ["employees"],
@@ -37,6 +38,7 @@ export function EmployeeManager() {
         name: trimmed,
         contract_hours: Number(newHours) || 36,
         role: newRole,
+        email: newEmail.trim() || null,
       });
       if (error) throw error;
     },
@@ -44,6 +46,7 @@ export function EmployeeManager() {
       setNewName("");
       setNewHours("36");
       setNewRole("technique");
+      setNewEmail("");
       queryClient.invalidateQueries({ queryKey: ["employees"] });
       toast.success("Collaborateur ajouté !");
     },
@@ -73,6 +76,18 @@ export function EmployeeManager() {
     onError: (err) => toast.error((err as Error).message),
   });
 
+  const updateEmailMutation = useMutation({
+    mutationFn: async ({ id, email }: { id: string; email: string }) => {
+      const { error } = await supabase.from("employees").update({ email: email || null }).eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["employees"] });
+      toast.success("Email mis à jour !");
+    },
+    onError: (err) => toast.error((err as Error).message),
+  });
+
   const roleOrder = ["responsable", "technique", "editorial", "stock", "caisse"];
   const active = (employees?.filter((e) => e.is_active) ?? []).sort((a, b) => {
     const ra = roleOrder.indexOf(a.role);
@@ -96,6 +111,16 @@ export function EmployeeManager() {
               onChange={(e) => setNewName(e.target.value)}
               placeholder="Prénom"
               maxLength={100}
+              className="w-full mt-1 px-3 py-2 text-sm rounded-md border bg-background focus:outline-none focus:ring-2 focus:ring-accent"
+            />
+          </div>
+          <div className="w-48">
+            <label className="text-xs text-muted-foreground">Email</label>
+            <input
+              type="email"
+              value={newEmail}
+              onChange={(e) => setNewEmail(e.target.value)}
+              placeholder="email@exemple.com"
               className="w-full mt-1 px-3 py-2 text-sm rounded-md border bg-background focus:outline-none focus:ring-2 focus:ring-accent"
             />
           </div>
@@ -151,6 +176,21 @@ export function EmployeeManager() {
                       ))}
                     </select>
                     {" · "}<span className="font-mono-data">{emp.contract_hours}h</span>
+                  </div>
+                  <div className="flex items-center gap-1 mt-0.5">
+                    <Mail className="h-3 w-3 text-muted-foreground" />
+                    <input
+                      type="email"
+                      defaultValue={(emp as any).email || ""}
+                      placeholder="email@exemple.com"
+                      className="text-[11px] bg-transparent border-none outline-none text-muted-foreground w-48 focus:text-foreground"
+                      onBlur={(e) => {
+                        const val = e.target.value.trim();
+                        if (val !== ((emp as any).email || "")) {
+                          updateEmailMutation.mutate({ id: emp.id, email: val });
+                        }
+                      }}
+                    />
                   </div>
                 </div>
               </div>
