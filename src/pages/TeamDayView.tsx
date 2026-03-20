@@ -225,7 +225,7 @@ const TeamDayView = () => {
         </div>
 
         {/* Summary */}
-        <div className="grid grid-cols-3 gap-3 mb-6">
+        <div className="grid grid-cols-3 gap-3 mb-6 print-summary-cards">
           <div className="rounded-lg border bg-accent/5 border-accent/20 p-3 text-center">
             <div className="text-2xl font-bold text-accent">{working.length}</div>
             <div className="text-xs text-muted-foreground">Présents</div>
