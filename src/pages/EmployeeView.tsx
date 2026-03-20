@@ -137,29 +137,28 @@ const EmployeeView = () => {
 
   if (!decodedName) {
     return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6">
-        <div className="max-w-md w-full">
-          <div className="flex items-center gap-3 mb-6">
-            <Calendar className="h-8 w-8 text-accent" />
-            <h1 className="text-2xl font-bold">Mon Planning Fnac</h1>
-          </div>
-          <p className="text-muted-foreground mb-6">Sélectionnez votre nom pour voir votre planning :</p>
-          <div className="space-y-2">
-            {employees?.map((emp) => (
-              <button
-                key={emp.id}
-                onClick={() => navigate(`/mon-planning/${encodeURIComponent(emp.name)}`)}
-                className="w-full flex items-center gap-3 p-3 rounded-lg border bg-card hover:bg-secondary transition-colors text-left"
-              >
-                <div className="h-10 w-10 rounded-full bg-accent/20 flex items-center justify-center text-sm font-bold text-accent">
-                  {emp.name.charAt(0)}
-                </div>
-                <div>
-                  <div className="font-medium">{emp.name}</div>
-                  <div className="text-xs text-muted-foreground font-mono-data">{emp.contract_hours}h / semaine</div>
-                </div>
-              </button>
-            ))}
+      <div className="min-h-screen bg-background flex flex-col">
+        <FnacHeader title="Mon Planning" subtitle="Sélectionnez votre nom" icon={Calendar} />
+        <div className="flex-1 flex items-center justify-center p-6">
+          <div className="max-w-md w-full">
+            <p className="text-muted-foreground mb-6">Sélectionnez votre nom pour voir votre planning :</p>
+            <div className="space-y-2">
+              {employees?.map((emp) => (
+                <button
+                  key={emp.id}
+                  onClick={() => navigate(`/mon-planning/${encodeURIComponent(emp.name)}`)}
+                  className="w-full flex items-center gap-3 p-3 rounded-lg border bg-card hover:bg-secondary transition-colors text-left"
+                >
+                  <div className="h-10 w-10 rounded-full bg-accent/20 flex items-center justify-center text-sm font-bold text-accent">
+                    {emp.name.charAt(0)}
+                  </div>
+                  <div>
+                    <div className="font-medium">{emp.name}</div>
+                    <div className="text-xs text-muted-foreground font-mono-data">{emp.contract_hours}h / semaine</div>
+                  </div>
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>
