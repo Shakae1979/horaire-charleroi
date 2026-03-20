@@ -92,9 +92,9 @@ export default function HourlyGrid({ employees }: { employees: Employee[] }) {
 
   if (active.length === 0) return null;
 
-  const handleCellClick = (empId: string, hour: number, e: React.MouseEvent) => {
+  const handleCellClick = (empId: string, hour: number, e: React.MouseEvent, minute: number = 0) => {
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-    setPicker({ key: `${empId}-${hour}`, rect: { top: rect.bottom + 2, left: rect.left } });
+    setPicker({ key: `${empId}-${hour}-${minute}`, rect: { top: rect.bottom + 2, left: rect.left } });
   };
 
   const handleSelect = (role: string) => {
