@@ -184,24 +184,11 @@ const EmployeeView = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="border-b bg-card px-6 py-4">
-        <div className="max-w-3xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-full bg-accent/20 flex items-center justify-center text-sm font-bold text-accent">
-              {employee.name.charAt(0)}
-            </div>
-            <div>
-              <h1 className="text-lg font-bold">{employee.name}</h1>
-              <p className="text-xs text-muted-foreground font-mono-data">
-                Contrat {employee.contract_hours}h / semaine
-              </p>
-            </div>
-          </div>
-          <Button variant="ghost" size="sm" onClick={() => navigate("/mon-planning")}>
-            Changer
-          </Button>
-        </div>
-      </header>
+      <FnacHeader title={employee.name} subtitle={`Contrat ${employee.contract_hours}h / semaine`} icon={User}>
+        <Button variant="outline" size="sm" className="border-white/20 text-white/80 hover:bg-white/10 hover:text-white" onClick={() => navigate("/mon-planning")}>
+          Changer
+        </Button>
+      </FnacHeader>
 
       <div className="max-w-3xl mx-auto px-6 py-4">
         <div className="flex items-center justify-between mb-6">
