@@ -77,8 +77,8 @@ export function CongesCalendar() {
       if (!formEmp || !formStart || !formEnd) throw new Error("Tous les champs sont requis");
       const { error } = await supabase.from("conges").insert({
         employee_id: formEmp,
-        date_start: formStart,
-        date_end: formEnd,
+        date_start: formatLocalDate(formStart),
+        date_end: formatLocalDate(formEnd),
         type: formType,
       });
       if (error) throw error;
