@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { CONGE_TYPES } from "../CongesCalendar";
+import { isSchoolHoliday } from "@/lib/school-holidays";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 
 function getDaysInMonth(year: number, month: number) {
