@@ -11,11 +11,11 @@ const MONTHS_FULL = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Jui
 const DAY_NAMES = ["dim", "lun", "mar", "mer", "jeu", "ven", "sam"];
 
 const ROLE_COLUMNS = [
-  { key: "responsable", label: "Resp." },
-  { key: "technique", label: "Tech." },
-  { key: "editorial", label: "Édit." },
-  { key: "stock", label: "Stock" },
-  { key: "caisse", label: "Caisse" },
+  { key: "responsable", label: "Resp.", headerBg: "bg-red-100 dark:bg-red-900/30", borderColor: "border-l-2 border-l-red-300 dark:border-l-red-700" },
+  { key: "technique", label: "Tech.", headerBg: "bg-orange-100 dark:bg-orange-900/30", borderColor: "border-l-2 border-l-orange-300 dark:border-l-orange-700" },
+  { key: "editorial", label: "Édit.", headerBg: "bg-yellow-100 dark:bg-yellow-900/30", borderColor: "border-l-2 border-l-yellow-300 dark:border-l-yellow-700" },
+  { key: "stock", label: "Stock", headerBg: "bg-blue-100 dark:bg-blue-900/30", borderColor: "border-l-2 border-l-blue-300 dark:border-l-blue-700" },
+  { key: "caisse", label: "Caisse", headerBg: "bg-green-100 dark:bg-green-900/30", borderColor: "border-l-2 border-l-green-300 dark:border-l-green-700" },
 ];
 
 const HOLIDAYS_2026: Record<string, string> = {
