@@ -125,6 +125,7 @@ const TeamDayView = () => {
       const isExt = start === "EXT" || end === "EXT";
       const hasShift = !!(start && end && !isFerie && !isExt);
       const conge = conges?.find((c) => c.employee_id === emp.id);
+      const notes = schedule?.notes || null;
 
       let netHours = 0;
       if (hasShift) {
@@ -140,6 +141,7 @@ const TeamDayView = () => {
         isExt,
         netHours,
         conge,
+        notes,
       };
     })
     .sort((a, b) => {
