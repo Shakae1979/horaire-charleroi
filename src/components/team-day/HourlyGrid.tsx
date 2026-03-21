@@ -213,7 +213,7 @@ export default function HourlyGrid({ employees, date }: { employees: Employee[];
                     slot.minute === 30 ? "border-r-2 border-r-foreground/30" : "border-r border-r-muted/40"
                   } last:border-r-0`}
                 >
-                  <span className="text-[9px]">{slot.minute === 0 ? slot.label : ""}</span>
+                  <span className="text-[9px]">{slot.minute === 0 ? slot.label : `${slot.hour}h30`}</span>
                 </th>
               ))}
             </tr>
