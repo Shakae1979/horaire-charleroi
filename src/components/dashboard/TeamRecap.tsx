@@ -23,6 +23,7 @@ const CATEGORIES = [
   { key: "editorial", label: "Éditorial", color: "text-purple-600 dark:text-purple-400" },
   { key: "stock", label: "Stock", color: "text-amber-600 dark:text-amber-400" },
   { key: "caisse", label: "Caisse", color: "text-emerald-600 dark:text-emerald-400" },
+  { key: "stagiaire", label: "Stagiaires", color: "text-pink-600 dark:text-pink-400" },
 ];
 
 const ROLE_LABELS: Record<string, string> = {
@@ -31,6 +32,7 @@ const ROLE_LABELS: Record<string, string> = {
   editorial: "Éditorial",
   stock: "Stock",
   caisse: "Caisse",
+  stagiaire: "Stagiaires",
 };
 
 function getMonday(date: Date): Date {

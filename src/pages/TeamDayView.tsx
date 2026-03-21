@@ -22,9 +22,10 @@ const ROLE_LABELS: Record<string, string> = {
   editorial: "Éditorial",
   stock: "Stock",
   caisse: "Caisse",
+  stagiaire: "Stagiaires",
 };
 
-const ROLE_ORDER = ["responsable", "technique", "editorial", "stock", "caisse"];
+const ROLE_ORDER = ["responsable", "technique", "editorial", "stock", "caisse", "stagiaire"];
 
 function timeToHours(t: string | null): number {
   if (!t) return 0;

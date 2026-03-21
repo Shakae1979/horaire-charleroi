@@ -34,7 +34,7 @@ export function CongesCalendar() {
   const [currentQuarter, setCurrentQuarter] = useState(Math.floor(new Date().getMonth() / 3));
   const year = 2026;
 
-  const roleOrder = ["responsable", "technique", "editorial", "stock", "caisse"];
+  const roleOrder = ["responsable", "technique", "editorial", "stock", "caisse", "stagiaire"];
 
   const { data: employees } = useQuery({
     queryKey: ["employees"],

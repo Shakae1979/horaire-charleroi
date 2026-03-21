@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { formatDateBE, formatTimeBE, formatLocalDate } from "@/lib/format";
 
-const ROLE_ORDER = ["responsable", "technique", "editorial", "stock", "caisse"];
+const ROLE_ORDER = ["responsable", "technique", "editorial", "stock", "caisse", "stagiaire"];
 
 const ROLE_LABELS: Record<string, string> = {
   responsable: "Responsables",
@@ -15,6 +15,7 @@ const ROLE_LABELS: Record<string, string> = {
   editorial: "Éditorial",
   stock: "Stock",
   caisse: "Caisse",
+  stagiaire: "Stagiaires",
 };
 
 const ROLE_COLORS: Record<string, { bar: string; text: string; bg: string; headerBg: string }> = {
@@ -23,6 +24,7 @@ const ROLE_COLORS: Record<string, { bar: string; text: string; bg: string; heade
   editorial:   { bar: "bg-purple-400", text: "text-purple-800 dark:text-purple-200", bg: "bg-purple-50 dark:bg-purple-950/20", headerBg: "bg-purple-100 dark:bg-purple-900/40" },
   stock:       { bar: "bg-amber-400",  text: "text-amber-800 dark:text-amber-200",  bg: "bg-amber-50 dark:bg-amber-950/20",  headerBg: "bg-amber-100 dark:bg-amber-900/40"  },
   caisse:      { bar: "bg-emerald-400",text: "text-emerald-800 dark:text-emerald-200",bg: "bg-emerald-50 dark:bg-emerald-950/20",headerBg: "bg-emerald-100 dark:bg-emerald-900/40"},
+  stagiaire:   { bar: "bg-pink-400",   text: "text-pink-800 dark:text-pink-200",   bg: "bg-pink-50 dark:bg-pink-950/20",   headerBg: "bg-pink-100 dark:bg-pink-900/40"   },
 };
 
 const CONGE_LABELS: Record<string, string> = {

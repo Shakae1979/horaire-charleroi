@@ -16,6 +16,7 @@ const ROLES = [
   { key: "editorial", label: "Édit.", color: "bg-yellow-300/50", dot: "bg-yellow-400" },
   { key: "stock", label: "Stock", color: "bg-blue-300/50", dot: "bg-blue-400" },
   { key: "caisse", label: "Caisse", color: "bg-emerald-300/50", dot: "bg-emerald-400" },
+  { key: "stagiaire", label: "Stage", color: "bg-pink-300/50", dot: "bg-pink-400" },
   { key: "heure_de_table", label: "H. table", color: "bg-transparent", dot: "bg-gray-300 border border-gray-400" },
 ];
 
@@ -27,6 +28,7 @@ const ROLE_LABELS: Record<string, string> = {
   editorial: "Édit.",
   stock: "Stock",
   caisse: "Caisse",
+  stagiaire: "Stage",
 };
 
 interface Employee {
