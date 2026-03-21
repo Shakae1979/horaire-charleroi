@@ -61,7 +61,7 @@ export function ShareLinks() {
     return acc;
   }, {} as Record<string, typeof employees>);
 
-  const roleOrder = ["responsable", "technique", "editorial", "stock", "caisse"];
+  const roleOrder = ["responsable", "technique", "editorial", "stock", "caisse", "stagiaire"];
   const sortedRoles = Object.keys(grouped ?? {}).sort((a, b) => {
     const ia = roleOrder.indexOf(a);
     const ib = roleOrder.indexOf(b);

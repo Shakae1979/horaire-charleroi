@@ -11,6 +11,7 @@ const ROLES = [
   { value: "editorial", label: "Éditorial", color: "bg-purple-100 text-purple-800" },
   { value: "stock", label: "Stock", color: "bg-amber-100 text-amber-800" },
   { value: "caisse", label: "Caisse", color: "bg-emerald-100 text-emerald-800" },
+  { value: "stagiaire", label: "Stagiaire", color: "bg-pink-100 text-pink-800" },
 ] as const;
 
 export function EmployeeManager() {
