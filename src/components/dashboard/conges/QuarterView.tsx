@@ -1,5 +1,6 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { CONGE_TYPES } from "../CongesCalendar";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 
 const MONTHS_SHORT = ["janv", "févr", "mars", "avr", "mai", "juin", "juil", "août", "sept", "oct", "nov", "déc"];
 const MONTHS_FULL = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
@@ -51,12 +52,13 @@ interface QuarterViewProps {
   deleteMutation: any;
 }
 
-function VerticalMonthColumn({ year, month, employees, conges, deleteMutation }: {
+function VerticalMonthColumn({ year, month, employees, conges, deleteMutation, onRequestDelete }: {
   year: number;
   month: number;
   employees: any[] | undefined;
   conges: any[] | undefined;
   deleteMutation: any;
+  onRequestDelete: (target: { id: string; name: string; type: string }) => void;
 }) {
   const daysInMonth = getDaysInMonth(year, month);
 
@@ -158,7 +160,7 @@ function VerticalMonthColumn({ year, month, employees, conges, deleteMutation }:
                                   key={emp.id}
                                   className={`${typeColor} text-white text-[10px] px-1 py-0.5 rounded cursor-pointer truncate block`}
                                   title={`${emp.name} — ${typeLabel} — cliquer pour supprimer`}
-                                  onClick={() => deleteMutation.mutate(leave.id)}
+                                  onClick={() => onRequestDelete({ id: leave.id, name: emp.name, type: typeLabel })}
                                 >
                                   {emp.name.split(" ")[0]}
                                 </span>
@@ -180,6 +182,8 @@ function VerticalMonthColumn({ year, month, employees, conges, deleteMutation }:
 }
 
 export function QuarterView({ year, months, employees, conges, deleteMutation }: QuarterViewProps) {
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string; type: string } | null>(null);
+
   return (
     <div className="kpi-card overflow-hidden">
       <div className="overflow-x-auto">
@@ -192,10 +196,28 @@ export function QuarterView({ year, months, employees, conges, deleteMutation }:
               employees={employees}
               conges={conges}
               deleteMutation={deleteMutation}
+              onRequestDelete={setDeleteTarget}
             />
           ))}
         </div>
       </div>
+
+      <AlertDialog open={!!deleteTarget} onOpenChange={(open) => !open && setDeleteTarget(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Supprimer ce congé ?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Voulez-vous vraiment supprimer le congé ({deleteTarget?.type}) de <strong>{deleteTarget?.name}</strong> ? Cette action est irréversible.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Annuler</AlertDialogCancel>
+            <AlertDialogAction onClick={() => { if (deleteTarget) { deleteMutation.mutate(deleteTarget.id); setDeleteTarget(null); } }}>
+              Supprimer
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

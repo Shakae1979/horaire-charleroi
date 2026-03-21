@@ -1,4 +1,6 @@
+import { useState } from "react";
 import { CONGE_TYPES } from "../CongesCalendar";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 
 function getDaysInMonth(year: number, month: number) {
   return new Date(year, month + 1, 0).getDate();
@@ -17,6 +19,7 @@ interface MonthGridProps {
 }
 
 export function MonthGrid({ year, month, employees, conges, deleteMutation }: MonthGridProps) {
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string; type: string } | null>(null);
   const MONTHS = [
     "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
     "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre",
@@ -90,7 +93,7 @@ export function MonthGrid({ year, month, employees, conges, deleteMutation }: Mo
                     return (
                       <td key={i} className={`py-0.5 text-center ${isWeekend ? "bg-muted/30" : ""} ${isMonday && i > 0 ? "border-l-2 border-accent/30" : ""}`}>
                         {leave ? (
-                          <span className={`inline-block w-5 h-5 rounded ${typeColor} cursor-pointer`} title={`${CONGE_TYPES.find((t) => t.value === leave.type)?.label} — cliquer pour supprimer`} onClick={() => deleteMutation.mutate(leave.id)} />
+                          <span className={`inline-block w-5 h-5 rounded ${typeColor} cursor-pointer`} title={`${CONGE_TYPES.find((t) => t.value === leave.type)?.label} — cliquer pour supprimer`} onClick={() => setDeleteTarget({ id: leave.id, name: emp.name, type: CONGE_TYPES.find((t) => t.value === leave.type)?.label || leave.type })} />
                         ) : null}
                       </td>
                     );
@@ -102,6 +105,23 @@ export function MonthGrid({ year, month, employees, conges, deleteMutation }: Mo
           </tbody>
         </table>
       </div>
+
+      <AlertDialog open={!!deleteTarget} onOpenChange={(open) => !open && setDeleteTarget(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Supprimer ce congé ?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Voulez-vous vraiment supprimer le congé ({deleteTarget?.type}) de <strong>{deleteTarget?.name}</strong> ? Cette action est irréversible.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Annuler</AlertDialogCancel>
+            <AlertDialogAction onClick={() => { if (deleteTarget) { deleteMutation.mutate(deleteTarget.id); setDeleteTarget(null); } }}>
+              Supprimer
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
