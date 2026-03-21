@@ -785,11 +785,11 @@ export function ScheduleEditor() {
                               {emp.name}
                               {!isCopyMode && (
                                 <button
-                                  onClick={() => copyEmployeeSchedule(emp.id)}
+                                  onClick={() => copyPreviousWeekForEmployee(emp.id)}
                                   className="p-0.5 rounded hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
-                                  title={`Copier les horaires de ${emp.name}`}
+                                  title={`Copier la semaine précédente pour ${emp.name}`}
                                 >
-                                  <Copy className="h-3 w-3" />
+                                  <History className="h-3 w-3" />
                                 </button>
                               )}
                               {isSource && <span className="text-xs text-primary">(source)</span>}
