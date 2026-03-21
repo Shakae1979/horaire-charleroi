@@ -19,6 +19,7 @@ interface MonthGridProps {
 }
 
 export function MonthGrid({ year, month, employees, conges, deleteMutation }: MonthGridProps) {
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string; type: string } | null>(null);
   const MONTHS = [
     "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
     "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre",
