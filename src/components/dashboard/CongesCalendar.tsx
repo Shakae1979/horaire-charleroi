@@ -70,15 +70,25 @@ export function CongesCalendar() {
   const [formType, setFormType] = useState("conge");
 
   const addMutation = useMutation({
-    mutationFn: async () => {
-      if (!formEmp || !formStart || !formEnd) throw new Error("Tous les champs sont requis");
-      const { error } = await supabase.from("conges").insert({
-        employee_id: formEmp,
-        date_start: formatLocalDate(formStart),
-        date_end: formatLocalDate(formEnd),
-        type: formType,
-      });
-      if (error) throw error;
+    mutationFn: async (params?: { empId: string; start: string; end: string; type: string }) => {
+      if (params) {
+        const { error } = await supabase.from("conges").insert({
+          employee_id: params.empId,
+          date_start: params.start,
+          date_end: params.end,
+          type: params.type,
+        });
+        if (error) throw error;
+      } else {
+        if (!formEmp || !formStart || !formEnd) throw new Error("Tous les champs sont requis");
+        const { error } = await supabase.from("conges").insert({
+          employee_id: formEmp,
+          date_start: formatLocalDate(formStart),
+          date_end: formatLocalDate(formEnd),
+          type: formType,
+        });
+        if (error) throw error;
+      }
     },
     onSuccess: () => {
       setShowForm(false);
@@ -90,6 +100,10 @@ export function CongesCalendar() {
     },
     onError: (err) => toast.error((err as Error).message),
   });
+
+  const handleAddConge = (employeeId: string, dateStart: string, dateEnd: string, type: string) => {
+    addMutation.mutate({ empId: employeeId, start: dateStart, end: dateEnd, type });
+  };
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
@@ -211,7 +225,7 @@ export function CongesCalendar() {
               {CONGE_TYPES.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
             </select>
           </div>
-          <Button size="sm" onClick={() => addMutation.mutate()} disabled={addMutation.isPending}>Valider</Button>
+          <Button size="sm" onClick={() => addMutation.mutate(undefined)} disabled={addMutation.isPending}>Valider</Button>
         </div>
       )}
 
@@ -223,6 +237,7 @@ export function CongesCalendar() {
             employees={employees}
             conges={conges}
             deleteMutation={deleteMutation}
+            onAddConge={handleAddConge}
           />
         </div>
       ) : (
