@@ -159,7 +159,7 @@ function VerticalMonthColumn({ year, month, employees, conges, deleteMutation, o
                                   key={emp.id}
                                   className={`${typeColor} text-white text-[10px] px-1 py-0.5 rounded cursor-pointer truncate block`}
                                   title={`${emp.name} — ${typeLabel} — cliquer pour supprimer`}
-                                  onClick={() => deleteMutation.mutate(leave.id)}
+                                  onClick={() => onRequestDelete({ id: leave.id, name: emp.name, type: typeLabel })}
                                 >
                                   {emp.name.split(" ")[0]}
                                 </span>
