@@ -225,7 +225,7 @@ export function CongesCalendar() {
               {CONGE_TYPES.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
             </select>
           </div>
-          <Button size="sm" onClick={() => addMutation.mutate()} disabled={addMutation.isPending}>Valider</Button>
+          <Button size="sm" onClick={() => addMutation.mutate(undefined)} disabled={addMutation.isPending}>Valider</Button>
         </div>
       )}
 
