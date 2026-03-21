@@ -125,6 +125,7 @@ const TeamDayView = () => {
       const isExt = start === "EXT" || end === "EXT";
       const hasShift = !!(start && end && !isFerie && !isExt);
       const conge = conges?.find((c) => c.employee_id === emp.id);
+      const notes = schedule?.notes || null;
 
       let netHours = 0;
       if (hasShift) {
@@ -140,6 +141,7 @@ const TeamDayView = () => {
         isExt,
         netHours,
         conge,
+        notes,
       };
     })
     .sort((a, b) => {
@@ -269,14 +271,20 @@ const TeamDayView = () => {
                   </div>
                   <div className="space-y-0.5">
                     {group.map((emp) => (
-                      <div
-                        key={emp.id}
-                        className="flex items-center justify-between py-1 px-2 rounded bg-accent/5 text-xs"
-                      >
-                        <span className="font-medium">{emp.name}</span>
-                        <span className="text-muted-foreground font-mono-data text-[11px]">
-                          {formatTimeBE(emp.start)}–{formatTimeBE(emp.end)} <span className="ml-1">{emp.netHours.toFixed(1)}h</span>
-                        </span>
+                      <div key={emp.id}>
+                        <div
+                          className="flex items-center justify-between py-1 px-2 rounded bg-accent/5 text-xs"
+                        >
+                          <span className="font-medium">{emp.name}</span>
+                          <span className="text-muted-foreground font-mono-data text-[11px]">
+                            {formatTimeBE(emp.start)}–{formatTimeBE(emp.end)} <span className="ml-1">{emp.netHours.toFixed(1)}h</span>
+                          </span>
+                        </div>
+                        {emp.notes && (
+                          <div className="ml-2 mt-0.5 mb-1 px-2 py-1 rounded bg-amber-100/80 dark:bg-amber-900/30 border-l-2 border-amber-500 text-[11px] text-amber-800 dark:text-amber-200">
+                            📝 {emp.notes}
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>
