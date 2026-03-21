@@ -1,4 +1,4 @@
-import { BarChart3, Users, CalendarDays, Share2, Calendar, TableProperties, Palmtree, ExternalLink, PanelLeftClose, PanelLeftOpen } from "lucide-react";
+import { BarChart3, Users, CalendarDays, Share2, Calendar, TableProperties, Palmtree, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
