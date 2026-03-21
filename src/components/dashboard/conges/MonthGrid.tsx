@@ -93,7 +93,7 @@ export function MonthGrid({ year, month, employees, conges, deleteMutation }: Mo
                     return (
                       <td key={i} className={`py-0.5 text-center ${isWeekend ? "bg-muted/30" : ""} ${isMonday && i > 0 ? "border-l-2 border-accent/30" : ""}`}>
                         {leave ? (
-                          <span className={`inline-block w-5 h-5 rounded ${typeColor} cursor-pointer`} title={`${CONGE_TYPES.find((t) => t.value === leave.type)?.label} — cliquer pour supprimer`} onClick={() => deleteMutation.mutate(leave.id)} />
+                          <span className={`inline-block w-5 h-5 rounded ${typeColor} cursor-pointer`} title={`${CONGE_TYPES.find((t) => t.value === leave.type)?.label} — cliquer pour supprimer`} onClick={() => setDeleteTarget({ id: leave.id, name: emp.name, type: CONGE_TYPES.find((t) => t.value === leave.type)?.label || leave.type })} />
                         ) : null}
                       </td>
                     );
