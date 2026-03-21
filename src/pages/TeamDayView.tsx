@@ -204,7 +204,7 @@ const TeamDayView = () => {
         <Button
           variant="outline"
           size="sm"
-          className="no-print h-8 text-xs gap-1.5 border-white/20 text-white/80 hover:bg-white/10 hover:text-white"
+          className="no-print h-8 text-xs gap-1.5 border-foreground/20 text-foreground hover:bg-foreground/10"
           onClick={() => window.print()}
         >
           <Printer className="h-3.5 w-3.5" />
