@@ -5,9 +5,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 const HALF_HOURS: { hour: number; minute: number; label: string }[] = [];
-for (let h = 7; h <= 21; h++) {
+for (let h = 9; h <= 20; h++) {
   HALF_HOURS.push({ hour: h, minute: 0, label: `${h}h` });
-  if (h < 21) HALF_HOURS.push({ hour: h, minute: 30, label: `${h}h30` });
+  if (h < 20) HALF_HOURS.push({ hour: h, minute: 30, label: `${h}h30` });
 }
 
 const ROLES = [

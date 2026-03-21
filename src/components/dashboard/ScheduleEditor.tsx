@@ -61,11 +61,11 @@ const DEPT_COLORS: Record<string, { bg: string; border: string }> = {
   caisse: { bg: "bg-emerald-50 dark:bg-emerald-950/30", border: "border-l-emerald-500" },
 };
 
-/** Generate time slots from 07:00 to 21:00 every 30 min */
+/** Generate time slots from 09:00 to 20:00 every 30 min */
 const TIME_SLOTS: string[] = [];
-for (let h = 7; h <= 21; h++) {
+for (let h = 9; h <= 20; h++) {
   TIME_SLOTS.push(`${String(h).padStart(2, "0")}:00`);
-  if (h < 21) TIME_SLOTS.push(`${String(h).padStart(2, "0")}:30`);
+  if (h < 20) TIME_SLOTS.push(`${String(h).padStart(2, "0")}:30`);
 }
 
 type DayKey = (typeof DAYS)[number]["key"];
