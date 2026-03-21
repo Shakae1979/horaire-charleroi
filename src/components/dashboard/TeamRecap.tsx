@@ -128,7 +128,7 @@ export function TeamRecap() {
   });
 
   // Group employees by category for summary
-  const ROLE_ORDER = ["responsable", "technique", "editorial", "stock", "caisse"];
+  const ROLE_ORDER = ["responsable", "technique", "editorial", "stock", "caisse", "stagiaire"];
   const sortedEmpSummary = empSummary?.sort((a, b) => {
     const ra = ROLE_ORDER.indexOf(a.role);
     const rb = ROLE_ORDER.indexOf(b.role);
