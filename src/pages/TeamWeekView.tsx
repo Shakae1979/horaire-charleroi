@@ -230,10 +230,10 @@ const TeamWeekView = () => {
               {ROLE_LABELS[role]}
             </span>
           ))}
-          <span className="ml-2 border-l pl-2 flex items-center gap-1.5"><span className="inline-block w-3 h-3 rounded bg-yellow-400" /> Congé</span>
-          <span className="flex items-center gap-1.5"><span className="inline-block w-3 h-3 rounded bg-pink-400" /> Formation</span>
-          <span className="flex items-center gap-1.5"><span className="inline-block w-3 h-3 rounded bg-red-400" /> Maladie</span>
-          <span className="flex items-center gap-1.5"><span className="inline-block w-3 h-3 rounded bg-cyan-400" /> Sans solde</span>
+          <span className="ml-2 border-l pl-2 flex items-center gap-1.5"><span className="inline-block w-3 h-3 rounded bg-lime-500" /> Congé</span>
+          <span className="flex items-center gap-1.5"><span className="inline-block w-3 h-3 rounded bg-violet-500" /> Formation</span>
+          <span className="flex items-center gap-1.5"><span className="inline-block w-3 h-3 rounded bg-rose-600" /> Maladie</span>
+          <span className="flex items-center gap-1.5"><span className="inline-block w-3 h-3 rounded bg-cyan-500" /> Sans solde</span>
           <span className="flex items-center gap-1.5"><span className="inline-block w-3 h-3 rounded bg-gray-400" /> Férié</span>
           <span className="flex items-center gap-1.5"><span className="inline-block w-3 h-3 rounded bg-indigo-400" /> Extérieur</span>
         </div>
