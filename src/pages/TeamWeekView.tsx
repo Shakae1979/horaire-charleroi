@@ -27,7 +27,7 @@ const ROLE_COLORS: Record<string, { bar: string; text: string; bg: string; heade
 
 const CONGE_LABELS: Record<string, string> = {
   conge: "Congé",
-  rtt: "RTT",
+  rtt: "Sans solde",
   maladie: "Maladie",
   formation: "Formation",
 };
