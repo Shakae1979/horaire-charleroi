@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { AlertTriangle, ChevronLeft, ChevronRight, Flag, MessageSquare, Palmtree, Printer, Users } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
 import HourlyGrid from "@/components/team-day/HourlyGrid";
 import { FnacHeader } from "@/components/FnacHeader";
 import { useState } from "react";
