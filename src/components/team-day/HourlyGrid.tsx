@@ -95,6 +95,8 @@ export default function HourlyGrid({ employees, date }: { employees: Employee[];
   const [picker, setPicker] = useState<{ key: string; rect: { top: number; left: number } } | null>(null);
   const [saving, setSaving] = useState(false);
   const [dirty, setDirty] = useState(false);
+  const [soclozChecked, setSoclozChecked] = useState<Record<string, boolean>>({});
+  const [savChecked, setSavChecked] = useState<Record<string, boolean>>({});
 
   // Load overrides from DB
   useEffect(() => {
