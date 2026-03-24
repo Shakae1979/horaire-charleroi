@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Printer, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
