@@ -98,23 +98,45 @@ export default function HourlyGrid({ employees, date }: { employees: Employee[];
   const [soclozChecked, setSoclozChecked] = useState<Record<string, boolean>>({});
   const [savChecked, setSavChecked] = useState<Record<string, boolean>>({});
 
-  // Load overrides from DB
+  // Load overrides and flags from DB
   useEffect(() => {
     if (!date) return;
     const load = async () => {
-      const { data } = await supabase
-        .from("schedule_role_overrides")
-        .select("employee_id, slot_key, role")
-        .eq("date", date);
-      if (data && data.length > 0) {
+      const [overridesRes, flagsRes] = await Promise.all([
+        supabase
+          .from("schedule_role_overrides")
+          .select("employee_id, slot_key, role")
+          .eq("date", date),
+        supabase
+          .from("employee_day_flags")
+          .select("employee_id, socloz, sav")
+          .eq("date", date),
+      ]);
+
+      if (overridesRes.data && overridesRes.data.length > 0) {
         const loaded: Overrides = {};
-        for (const row of data) {
+        for (const row of overridesRes.data) {
           loaded[`${row.employee_id}-${row.slot_key}`] = row.role;
         }
         setOverrides(loaded);
       } else {
         setOverrides({});
       }
+
+      if (flagsRes.data && flagsRes.data.length > 0) {
+        const soc: Record<string, boolean> = {};
+        const sav: Record<string, boolean> = {};
+        for (const row of flagsRes.data) {
+          if (row.socloz) soc[row.employee_id] = true;
+          if (row.sav) sav[row.employee_id] = true;
+        }
+        setSoclozChecked(soc);
+        setSavChecked(sav);
+      } else {
+        setSoclozChecked({});
+        setSavChecked({});
+      }
+
       setDirty(false);
     };
     load();
@@ -137,12 +159,14 @@ export default function HourlyGrid({ employees, date }: { employees: Employee[];
   const handleSave = async () => {
     setSaving(true);
     try {
-      // Delete existing overrides for this date
-      await supabase.from("schedule_role_overrides").delete().eq("date", date);
+      // Delete existing overrides and flags for this date
+      await Promise.all([
+        supabase.from("schedule_role_overrides").delete().eq("date", date),
+        supabase.from("employee_day_flags").delete().eq("date", date),
+      ]);
 
       // Insert current overrides
       const rows = Object.entries(overrides).map(([key, role]) => {
-        // key format: "empId-hour-minute"
         const parts = key.split("-");
         const slotKey = `${parts[parts.length - 2]}-${parts[parts.length - 1]}`;
         const employeeId = parts.slice(0, parts.length - 2).join("-");
@@ -154,10 +178,25 @@ export default function HourlyGrid({ employees, date }: { employees: Employee[];
         };
       });
 
+      // Insert flags for employees that have socloz or sav checked
+      const allEmpIds = new Set([...Object.keys(soclozChecked), ...Object.keys(savChecked)]);
+      const flagRows = Array.from(allEmpIds)
+        .filter((id) => soclozChecked[id] || savChecked[id])
+        .map((employee_id) => ({
+          date,
+          employee_id,
+          socloz: !!soclozChecked[employee_id],
+          sav: !!savChecked[employee_id],
+        }));
+
+      const promises: Array<Promise<any>> = [];
       if (rows.length > 0) {
-        const { error } = await supabase.from("schedule_role_overrides").insert(rows);
-        if (error) throw error;
+        promises.push(Promise.resolve(supabase.from("schedule_role_overrides").insert(rows)).then(({ error }) => { if (error) throw error; }));
       }
+      if (flagRows.length > 0) {
+        promises.push(Promise.resolve(supabase.from("employee_day_flags").insert(flagRows as any)).then(({ error }) => { if (error) throw error; }));
+      }
+      await Promise.all(promises);
 
       setDirty(false);
       toast.success("Grille sauvegardée");
@@ -241,7 +280,7 @@ export default function HourlyGrid({ employees, date }: { employees: Employee[];
                       <label className="flex items-center gap-0.5 cursor-pointer">
                         <Checkbox
                           checked={!!soclozChecked[emp.id]}
-                          onCheckedChange={(v) => setSoclozChecked((p) => ({ ...p, [emp.id]: !!v }))}
+                          onCheckedChange={(v) => { setSoclozChecked((p) => ({ ...p, [emp.id]: !!v })); setDirty(true); }}
                           className="h-3 w-3"
                         />
                         <span className="text-[8px] text-muted-foreground">Socloz</span>
@@ -249,7 +288,7 @@ export default function HourlyGrid({ employees, date }: { employees: Employee[];
                       <label className="flex items-center gap-0.5 cursor-pointer">
                         <Checkbox
                           checked={!!savChecked[emp.id]}
-                          onCheckedChange={(v) => setSavChecked((p) => ({ ...p, [emp.id]: !!v }))}
+                          onCheckedChange={(v) => { setSavChecked((p) => ({ ...p, [emp.id]: !!v })); setDirty(true); }}
                           className="h-3 w-3"
                         />
                         <span className="text-[8px] text-muted-foreground">SAV</span>
