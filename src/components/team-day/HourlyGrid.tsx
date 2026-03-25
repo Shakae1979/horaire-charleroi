@@ -98,23 +98,45 @@ export default function HourlyGrid({ employees, date }: { employees: Employee[];
   const [soclozChecked, setSoclozChecked] = useState<Record<string, boolean>>({});
   const [savChecked, setSavChecked] = useState<Record<string, boolean>>({});
 
-  // Load overrides from DB
+  // Load overrides and flags from DB
   useEffect(() => {
     if (!date) return;
     const load = async () => {
-      const { data } = await supabase
-        .from("schedule_role_overrides")
-        .select("employee_id, slot_key, role")
-        .eq("date", date);
-      if (data && data.length > 0) {
+      const [overridesRes, flagsRes] = await Promise.all([
+        supabase
+          .from("schedule_role_overrides")
+          .select("employee_id, slot_key, role")
+          .eq("date", date),
+        supabase
+          .from("employee_day_flags")
+          .select("employee_id, socloz, sav")
+          .eq("date", date),
+      ]);
+
+      if (overridesRes.data && overridesRes.data.length > 0) {
         const loaded: Overrides = {};
-        for (const row of data) {
+        for (const row of overridesRes.data) {
           loaded[`${row.employee_id}-${row.slot_key}`] = row.role;
         }
         setOverrides(loaded);
       } else {
         setOverrides({});
       }
+
+      if (flagsRes.data && flagsRes.data.length > 0) {
+        const soc: Record<string, boolean> = {};
+        const sav: Record<string, boolean> = {};
+        for (const row of flagsRes.data) {
+          if (row.socloz) soc[row.employee_id] = true;
+          if (row.sav) sav[row.employee_id] = true;
+        }
+        setSoclozChecked(soc);
+        setSavChecked(sav);
+      } else {
+        setSoclozChecked({});
+        setSavChecked({});
+      }
+
       setDirty(false);
     };
     load();
