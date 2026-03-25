@@ -31,16 +31,11 @@ export default function Login() {
         <CardHeader className="text-center pb-2">
           <div className="mx-auto mb-3 flex items-center justify-center gap-2">
             <Calendar className="h-7 w-7" style={{ color: "hsl(var(--sidebar-active))" }} />
-            <span
-              className="text-2xl font-extrabold tracking-tight"
-              style={{ color: "hsl(var(--sidebar-active))" }}
-            >
+            <span className="text-2xl font-extrabold tracking-tight" style={{ color: "hsl(var(--sidebar-active))" }}>
               fnac
             </span>
           </div>
-          <CardTitle className="text-lg font-semibold text-foreground">
-            Connexion au Planning
-          </CardTitle>
+          <CardTitle className="text-lg font-semibold text-foreground">Connexion au Planning</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -51,7 +46,7 @@ export default function Login() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@fnac.com"
+                placeholder="e-mail"
                 required
               />
             </div>
@@ -66,15 +61,9 @@ export default function Login() {
                 required
               />
             </div>
-            {error && (
-              <p className="text-sm text-destructive font-medium">{error}</p>
-            )}
+            {error && <p className="text-sm text-destructive font-medium">{error}</p>}
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <LogIn className="h-4 w-4" />
-              )}
+              {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <LogIn className="h-4 w-4" />}
               Se connecter
             </Button>
           </form>
