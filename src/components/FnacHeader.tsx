@@ -1,5 +1,6 @@
-import { Calendar, Users, CalendarDays, User } from "lucide-react";
+import { Calendar, Users, CalendarDays, User, LogOut } from "lucide-react";
 import { ReactNode } from "react";
+import { useAuth } from "@/hooks/useAuth";
 import { useNavigate, useLocation } from "react-router-dom";
 
 interface FnacHeaderProps {
