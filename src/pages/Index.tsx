@@ -8,8 +8,8 @@ import { DashboardOverview } from "@/components/dashboard/DashboardOverview";
 import { ShareLinks } from "@/components/dashboard/ShareLinks";
 import { TeamRecap } from "@/components/dashboard/TeamRecap";
 import { CongesCalendar } from "@/components/dashboard/CongesCalendar";
-
-type View = "overview" | "schedule" | "recap" | "employees" | "share" | "conges";
+import { UserManager } from "@/components/dashboard/UserManager";
+type View = "overview" | "schedule" | "recap" | "employees" | "share" | "conges" | "users";
 
 const NAV_SHORTCUTS = [
   { label: "Équipe du jour", path: "/equipe-du-jour", icon: Users },
@@ -69,6 +69,7 @@ const Index = () => {
           {view === "employees" && <EmployeeManager />}
           {view === "share" && <ShareLinks />}
           {view === "conges" && <CongesCalendar />}
+          {view === "users" && <UserManager />}
         </div>
       </main>
     </div>
