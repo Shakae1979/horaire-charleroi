@@ -189,12 +189,12 @@ export default function HourlyGrid({ employees, date }: { employees: Employee[];
           sav: !!savChecked[employee_id],
         }));
 
-      const promises: Promise<any>[] = [];
+      const promises: Array<Promise<any>> = [];
       if (rows.length > 0) {
-        promises.push(supabase.from("schedule_role_overrides").insert(rows).then(({ error }) => { if (error) throw error; }));
+        promises.push(Promise.resolve(supabase.from("schedule_role_overrides").insert(rows)).then(({ error }) => { if (error) throw error; }));
       }
       if (flagRows.length > 0) {
-        promises.push(supabase.from("employee_day_flags").insert(flagRows).then(({ error }) => { if (error) throw error; }));
+        promises.push(Promise.resolve(supabase.from("employee_day_flags").insert(flagRows as any)).then(({ error }) => { if (error) throw error; }));
       }
       await Promise.all(promises);
 
