@@ -73,7 +73,19 @@ export function Sidebar({ activeView, onViewChange }: SidebarProps) {
         </nav>
 
 
-        <div className={`${collapsed ? "px-2" : "px-3"} pb-4`}>
+        <div className={`${collapsed ? "px-2" : "px-3"} pb-4 space-y-1`}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                onClick={signOut}
+                className="sidebar-link sidebar-link-inactive w-full justify-center text-destructive"
+              >
+                <LogOut className="h-4 w-4" />
+                {!collapsed && <span className="text-xs">Déconnexion</span>}
+              </button>
+            </TooltipTrigger>
+            {collapsed && <TooltipContent side="right">Déconnexion</TooltipContent>}
+          </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
               <button
