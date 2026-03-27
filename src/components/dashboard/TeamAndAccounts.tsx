@@ -280,8 +280,8 @@ export function TeamAndAccounts() {
                         <span className="text-sm font-medium">{emp.name}</span>
                         {account ? (
                           <Badge variant="outline" className="text-[10px] gap-1 py-0">
-                            {account.role === "admin" ? <Shield className="h-3 w-3" /> : <User className="h-3 w-3" />}
-                            {account.role === "admin" ? "Admin" : "Utilisateur"}
+                            {account.role === "admin" ? <Shield className="h-3 w-3" /> : account.role === "editor" ? <PenTool className="h-3 w-3" /> : <User className="h-3 w-3" />}
+                            {account.role === "admin" ? "Admin" : account.role === "editor" ? "Éditeur" : "Utilisateur"}
                           </Badge>
                         ) : emp.email ? (
                           <Badge variant="secondary" className="text-[10px] py-0 text-muted-foreground">
