@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useStore } from "@/hooks/useStore";
 import { ChevronLeft, ChevronRight, Save, Plus, Printer, Copy, ClipboardPaste, X, MessageSquare, Flag, History } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
@@ -115,11 +116,13 @@ export function ScheduleEditor() {
 
   const ROLE_ORDER = ["responsable", "technique", "editorial", "stock", "caisse", "stagiaire"];
 
+  const { currentStore } = useStore();
   const { data: employees } = useQuery({
-    queryKey: ["employees"],
+    queryKey: ["employees", currentStore?.id],
     queryFn: async () => {
-      const { data, error } = await supabase.from("employees").select("*").eq("is_active", true).order("name");
-      if (error) throw error;
+      let query = supabase.from("employees").select("*").eq("is_active", true).order("name");
+      if (currentStore) query = query.eq("store_id", currentStore.id);
+      const { data, error } = await query;
       return data?.sort((a, b) => {
         const ra = ROLE_ORDER.indexOf(a.role);
         const rb = ROLE_ORDER.indexOf(b.role);
