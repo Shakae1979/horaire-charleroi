@@ -68,6 +68,21 @@ export function TeamAndAccounts() {
   const [accounts, setAccounts] = useState<AppUser[]>([]);
   const [accountsLoading, setAccountsLoading] = useState(true);
 
+  // Fetch store assignments to filter accounts by current store
+  const { data: storeAssignments } = useQuery({
+    queryKey: ["user-store-assignments", currentStore?.id],
+    queryFn: async () => {
+      if (!currentStore) return [];
+      const { data, error } = await supabase
+        .from("user_store_assignments")
+        .select("user_id")
+        .eq("store_id", currentStore.id);
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!currentStore,
+  });
+
   const callManageUsers = async (body: Record<string, unknown>) => {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) throw new Error("Non connecté");
@@ -215,9 +230,12 @@ export function TeamAndAccounts() {
   });
   const inactive = employees?.filter((e) => !e.is_active) ?? [];
 
-  // Find accounts not linked to any employee
+  // Find accounts not linked to any employee in this store, but assigned to this store
   const employeeEmails = new Set((employees ?? []).filter(e => e.email).map(e => e.email!.toLowerCase()));
-  const orphanAccounts = accounts.filter(a => !employeeEmails.has(a.email.toLowerCase()));
+  const assignedUserIds = new Set((storeAssignments ?? []).map(a => a.user_id));
+  const orphanAccounts = accounts.filter(a => 
+    !employeeEmails.has(a.email.toLowerCase()) && assignedUserIds.has(a.id)
+  );
 
   return (
     <div className="space-y-6">
