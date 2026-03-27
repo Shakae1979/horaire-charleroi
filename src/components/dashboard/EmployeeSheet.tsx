@@ -7,7 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Save, User } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { Save, Shield, PenTool, User, Loader2 } from "lucide-react";
 
 const ROLES = [
   { value: "responsable", label: "Responsable" },
@@ -16,6 +18,12 @@ const ROLES = [
   { value: "stock", label: "Stock" },
   { value: "caisse", label: "Caisse" },
   { value: "stagiaire", label: "Stagiaire" },
+] as const;
+
+const ACCESS_ROLES = [
+  { value: "admin", label: "Admin", icon: Shield, desc: "Accès total, tous les magasins" },
+  { value: "editor", label: "Éditeur", icon: PenTool, desc: "Gestion de son magasin uniquement" },
+  { value: "user", label: "Utilisateur", icon: User, desc: "Lecture seule" },
 ] as const;
 
 interface Employee {
@@ -27,18 +35,28 @@ interface Employee {
   is_active: boolean;
 }
 
+interface AppAccount {
+  id: string;
+  email: string;
+  role: string;
+}
+
 interface EmployeeSheetProps {
   employee: Employee | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  account?: AppAccount | null;
+  onUpdateAccountRole?: (userId: string, newRole: string) => Promise<void>;
 }
 
-export function EmployeeSheet({ employee, open, onOpenChange }: EmployeeSheetProps) {
+export function EmployeeSheet({ employee, open, onOpenChange, account, onUpdateAccountRole }: EmployeeSheetProps) {
   const queryClient = useQueryClient();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("technique");
   const [hours, setHours] = useState("36");
+  const [accessRole, setAccessRole] = useState("user");
+  const [savingAccessRole, setSavingAccessRole] = useState(false);
 
   useEffect(() => {
     if (employee) {
@@ -48,6 +66,12 @@ export function EmployeeSheet({ employee, open, onOpenChange }: EmployeeSheetPro
       setHours(String(employee.contract_hours));
     }
   }, [employee]);
+
+  useEffect(() => {
+    if (account) {
+      setAccessRole(account.role);
+    }
+  }, [account]);
 
   const updateMutation = useMutation({
     mutationFn: async () => {
@@ -72,6 +96,20 @@ export function EmployeeSheet({ employee, open, onOpenChange }: EmployeeSheetPro
     },
     onError: (err) => toast.error((err as Error).message),
   });
+
+  const handleAccessRoleChange = async (newRole: string) => {
+    if (!account || !onUpdateAccountRole) return;
+    setAccessRole(newRole);
+    setSavingAccessRole(true);
+    try {
+      await onUpdateAccountRole(account.id, newRole);
+      toast.success("Rôle d'accès mis à jour !");
+    } catch (e: any) {
+      toast.error(e.message || "Erreur");
+      setAccessRole(account.role); // revert
+    }
+    setSavingAccessRole(false);
+  };
 
   if (!employee) return null;
 
@@ -137,13 +175,65 @@ export function EmployeeSheet({ employee, open, onOpenChange }: EmployeeSheetPro
           </div>
 
           <Button
-            className="w-full mt-4"
+            className="w-full"
             onClick={() => updateMutation.mutate()}
             disabled={updateMutation.isPending}
           >
             <Save className="h-4 w-4 mr-2" />
             Enregistrer
           </Button>
+
+          {/* Access role section */}
+          {account && (
+            <>
+              <Separator />
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <Label className="text-sm font-semibold">Rôle d'accès</Label>
+                  {savingAccessRole && <Loader2 className="h-3.5 w-3.5 animate-spin text-muted-foreground" />}
+                </div>
+                <div className="space-y-2">
+                  {ACCESS_ROLES.map((ar) => {
+                    const Icon = ar.icon;
+                    const isSelected = accessRole === ar.value;
+                    return (
+                      <button
+                        key={ar.value}
+                        onClick={() => handleAccessRoleChange(ar.value)}
+                        disabled={savingAccessRole}
+                        className={`w-full flex items-center gap-3 p-3 rounded-lg border text-left transition-colors ${
+                          isSelected
+                            ? "border-accent bg-accent/10"
+                            : "border-border hover:border-accent/50 hover:bg-muted/50"
+                        }`}
+                      >
+                        <Icon className={`h-4 w-4 shrink-0 ${isSelected ? "text-accent" : "text-muted-foreground"}`} />
+                        <div className="flex-1 min-w-0">
+                          <p className={`text-sm font-medium ${isSelected ? "text-foreground" : "text-muted-foreground"}`}>
+                            {ar.label}
+                          </p>
+                          <p className="text-[11px] text-muted-foreground">{ar.desc}</p>
+                        </div>
+                        {isSelected && (
+                          <Badge variant="secondary" className="text-[10px] shrink-0">Actif</Badge>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </>
+          )}
+
+          {!account && employee.email && (
+            <>
+              <Separator />
+              <p className="text-xs text-muted-foreground text-center">
+                Ce collaborateur n'a pas encore de compte d'accès.
+                Créez-en un depuis la liste pour pouvoir gérer son rôle.
+              </p>
+            </>
+          )}
         </div>
       </SheetContent>
     </Sheet>
