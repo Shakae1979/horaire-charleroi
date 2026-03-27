@@ -5,9 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useI18n } from "@/lib/i18n";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
 export default function Login() {
   const { signIn } = useAuth();
+  const { t } = useI18n();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -18,15 +21,18 @@ export default function Login() {
     setError(null);
     setLoading(true);
     const { error } = await signIn(email, password);
-    if (error) setError("Email ou mot de passe incorrect");
+    if (error) setError(t("login.error"));
     setLoading(false);
   };
 
   return (
     <div
-      className="min-h-screen flex items-center justify-center px-4"
+      className="min-h-screen flex items-center justify-center px-4 relative"
       style={{ background: "hsl(var(--sidebar-bg))" }}
     >
+      <div className="absolute top-4 right-4">
+        <LanguageSwitcher />
+      </div>
       <Card className="w-full max-w-sm border-0 shadow-2xl">
         <CardHeader className="text-center pb-2">
           <div className="mx-auto mb-3 flex items-center justify-center gap-2">
@@ -35,12 +41,12 @@ export default function Login() {
               fnac
             </span>
           </div>
-          <CardTitle className="text-lg font-semibold text-foreground">Connexion au Planning</CardTitle>
+          <CardTitle className="text-lg font-semibold text-foreground">{t("login.title")}</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">{t("login.email")}</Label>
               <Input
                 id="email"
                 type="email"
@@ -51,7 +57,7 @@ export default function Login() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Mot de passe</Label>
+              <Label htmlFor="password">{t("login.password")}</Label>
               <Input
                 id="password"
                 type="password"
@@ -64,7 +70,7 @@ export default function Login() {
             {error && <p className="text-sm text-destructive font-medium">{error}</p>}
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <LogIn className="h-4 w-4" />}
-              Se connecter
+              {t("login.submit")}
             </Button>
           </form>
         </CardContent>

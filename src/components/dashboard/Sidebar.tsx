@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useAuth } from "@/hooks/useAuth";
+import { useI18n } from "@/lib/i18n";
 
 type View = "overview" | "schedule" | "recap" | "team" | "conges" | "stores";
 
@@ -11,13 +12,13 @@ interface SidebarProps {
   onViewChange: (view: View) => void;
 }
 
-const links: { id: View; label: string; icon: React.ElementType }[] = [
-  { id: "overview", label: "Vue d'ensemble", icon: BarChart3 },
-  { id: "schedule", label: "Horaires", icon: CalendarDays },
-  { id: "recap", label: "Récap équipe", icon: TableProperties },
-  { id: "conges", label: "Congés", icon: Palmtree },
-  { id: "team", label: "Équipe & Comptes", icon: Users },
-  { id: "stores", label: "Magasins", icon: Store },
+const linkDefs: { id: View; labelKey: string; icon: React.ElementType }[] = [
+  { id: "overview", labelKey: "nav.overview", icon: BarChart3 },
+  { id: "schedule", labelKey: "nav.schedule", icon: CalendarDays },
+  { id: "recap", labelKey: "nav.recap", icon: TableProperties },
+  { id: "conges", labelKey: "nav.conges", icon: Palmtree },
+  { id: "team", labelKey: "nav.team", icon: Users },
+  { id: "stores", labelKey: "nav.stores", icon: Store },
 ];
 
 
@@ -25,7 +26,9 @@ export function Sidebar({ activeView, onViewChange }: SidebarProps) {
   const navigate = useNavigate();
   const { role, signOut } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
+  const { t } = useI18n();
 
+  const links = linkDefs.map(l => ({ ...l, label: t(l.labelKey as any) }));
   const filteredLinks = role === "admin" ? links : (role === "editor" ? links.filter(l => l.id !== "stores") : []);
   return (
     <TooltipProvider delayDuration={0}>
@@ -41,7 +44,7 @@ export function Sidebar({ activeView, onViewChange }: SidebarProps) {
                 fnac
               </span>
               <span className="text-xs font-medium" style={{ color: "hsl(var(--sidebar-fg))" }}>
-                Planning
+                {t("nav.planning")}
               </span>
             </>
           )}
@@ -81,10 +84,10 @@ export function Sidebar({ activeView, onViewChange }: SidebarProps) {
                 className="sidebar-link sidebar-link-inactive w-full justify-center text-destructive"
               >
                 <LogOut className="h-4 w-4" />
-                {!collapsed && <span className="text-xs">Déconnexion</span>}
+                {!collapsed && <span className="text-xs">{t("nav.logout")}</span>}
               </button>
             </TooltipTrigger>
-            {collapsed && <TooltipContent side="right">Déconnexion</TooltipContent>}
+            {collapsed && <TooltipContent side="right">{t("nav.logout")}</TooltipContent>}
           </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -93,10 +96,10 @@ export function Sidebar({ activeView, onViewChange }: SidebarProps) {
                 className="sidebar-link sidebar-link-inactive w-full justify-center"
               >
                 {collapsed ? <PanelLeftOpen className="h-4 w-4" /> : <PanelLeftClose className="h-4 w-4" />}
-                {!collapsed && <span className="text-xs">Réduire</span>}
+                {!collapsed && <span className="text-xs">{t("nav.collapse")}</span>}
               </button>
             </TooltipTrigger>
-            {collapsed && <TooltipContent side="right">Agrandir</TooltipContent>}
+            {collapsed && <TooltipContent side="right">{t("nav.expand")}</TooltipContent>}
           </Tooltip>
         </div>
       </aside>
