@@ -179,7 +179,7 @@ export function TeamAndAccounts() {
     }
     setSavingAccount(true);
     try {
-      await callManageUsers({ action: "create", email: employeeEmail, password: accountPassword, role: accountRole });
+      await callManageUsers({ action: "create", email: employeeEmail, password: accountPassword, role: accountRole, store_id: currentStore?.id });
       toast.success("Compte créé !");
       setCreatingForId(null);
       setAccountPassword("");
