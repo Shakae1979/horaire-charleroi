@@ -68,6 +68,21 @@ export function TeamAndAccounts() {
   const [accounts, setAccounts] = useState<AppUser[]>([]);
   const [accountsLoading, setAccountsLoading] = useState(true);
 
+  // Fetch store assignments to filter accounts by current store
+  const { data: storeAssignments } = useQuery({
+    queryKey: ["user-store-assignments", currentStore?.id],
+    queryFn: async () => {
+      if (!currentStore) return [];
+      const { data, error } = await supabase
+        .from("user_store_assignments")
+        .select("user_id")
+        .eq("store_id", currentStore.id);
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!currentStore,
+  });
+
   const callManageUsers = async (body: Record<string, unknown>) => {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) throw new Error("Non connecté");
