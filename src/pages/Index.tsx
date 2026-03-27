@@ -10,15 +10,11 @@ import { TeamAndAccounts } from "@/components/dashboard/TeamAndAccounts";
 import { StoreManager } from "@/components/dashboard/StoreManager";
 import { useStore } from "@/hooks/useStore";
 import { useAuth } from "@/hooks/useAuth";
+import { useI18n } from "@/lib/i18n";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 type View = "overview" | "schedule" | "recap" | "team" | "conges" | "stores";
-
-const NAV_SHORTCUTS = [
-  { label: "Équipe du jour", path: "/equipe-du-jour", icon: Users },
-  { label: "Planning semaine", path: "/planning-equipe", icon: CalendarDays },
-  { label: "Mon planning", path: "/mon-planning", icon: User },
-];
 
 const Index = () => {
   const [view, setView] = useState<View>("overview");
@@ -26,6 +22,13 @@ const Index = () => {
   const location = useLocation();
   const { stores, currentStore, setCurrentStore } = useStore();
   const { role } = useAuth();
+  const { t } = useI18n();
+
+  const NAV_SHORTCUTS = [
+    { label: t("header.teamDay"), path: "/equipe-du-jour", icon: Users },
+    { label: t("header.weekPlan"), path: "/planning-equipe", icon: CalendarDays },
+    { label: t("header.myPlan"), path: "/mon-planning", icon: User },
+  ];
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -36,11 +39,10 @@ const Index = () => {
             <div className="flex items-center gap-2">
               <Calendar className="h-5 w-5" style={{ color: "hsl(var(--sidebar-active))" }} />
               <h1 className="text-base font-extrabold tracking-tight" style={{ color: "hsl(var(--sidebar-active))" }}>
-                Planning Fnac 2026
+                {t("header.title")}
               </h1>
             </div>
 
-            {/* Store selector */}
             {stores.length > 1 && (
               <>
                 <div className="h-5 w-px" style={{ background: "hsl(var(--sidebar-fg) / 0.2)" }} />
@@ -97,9 +99,12 @@ const Index = () => {
               })}
             </nav>
           </div>
-          <p className="text-xs" style={{ color: "hsl(var(--sidebar-fg) / 0.6)" }}>
-            {currentStore ? currentStore.name : "Gestion des horaires"}
-          </p>
+          <div className="flex items-center gap-2">
+            <LanguageSwitcher />
+            <p className="text-xs" style={{ color: "hsl(var(--sidebar-fg) / 0.6)" }}>
+              {currentStore ? currentStore.name : t("header.mgmt")}
+            </p>
+          </div>
         </header>
 
         <div className="p-6">
