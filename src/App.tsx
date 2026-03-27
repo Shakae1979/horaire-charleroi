@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider, useAuth } from "@/hooks/useAuth";
 import { StoreProvider } from "@/hooks/useStore";
+import { I18nProvider } from "@/lib/i18n";
 import Index from "./pages/Index.tsx";
 import EmployeeView from "./pages/EmployeeView.tsx";
 import NotFound from "./pages/NotFound.tsx";
@@ -27,7 +28,6 @@ function ProtectedRoute({ children, adminOnly = false }: { children: React.React
   }
 
   if (!user) return <Navigate to="/login" replace />;
-  // admin and editor can access dashboard
   if (adminOnly && role !== "admin" && role !== "editor") return <Navigate to="/equipe-du-jour" replace />;
 
   return <>{children}</>;
@@ -63,11 +63,13 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <AuthProvider>
-          <StoreProvider>
-            <AppRoutes />
-          </StoreProvider>
-        </AuthProvider>
+        <I18nProvider>
+          <AuthProvider>
+            <StoreProvider>
+              <AppRoutes />
+            </StoreProvider>
+          </AuthProvider>
+        </I18nProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
