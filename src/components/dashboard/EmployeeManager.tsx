@@ -48,6 +48,7 @@ export function EmployeeManager() {
         contract_hours: Number(newHours) || 36,
         role: newRole,
         email: newEmail.trim() || null,
+        store_id: currentStore?.id || null,
       });
       if (error) throw error;
     },
