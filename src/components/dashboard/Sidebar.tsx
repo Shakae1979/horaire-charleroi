@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useAuth } from "@/hooks/useAuth";
 
-type View = "overview" | "schedule" | "recap" | "team" | "share" | "conges" | "stores";
+type View = "overview" | "schedule" | "recap" | "team" | "conges" | "stores";
 
 interface SidebarProps {
   activeView: View;

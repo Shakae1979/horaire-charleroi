@@ -108,7 +108,7 @@ const Index = () => {
           {view === "schedule" && <ScheduleEditor />}
           {view === "recap" && <TeamRecap />}
           {view === "team" && <TeamAndAccounts />}
-          {view === "share" && <ShareLinks />}
+          {view === "conges" && <CongesCalendar />}
           {view === "conges" && <CongesCalendar />}
           {view === "stores" && <StoreManager />}
         </div>
