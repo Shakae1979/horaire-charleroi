@@ -32,6 +32,8 @@ interface AppUser {
 
 export function TeamAndAccounts() {
   const queryClient = useQueryClient();
+  const { currentStore } = useStore();
+  const { role: myRole } = useAuth();
   const [newName, setNewName] = useState("");
   const [newHours, setNewHours] = useState("36");
   const [newRole, setNewRole] = useState("technique");
@@ -44,11 +46,15 @@ export function TeamAndAccounts() {
   const [savingAccount, setSavingAccount] = useState(false);
   const [deletingAccountId, setDeletingAccountId] = useState<string | null>(null);
 
-  // Fetch employees
+  // Fetch employees filtered by store
   const { data: employees } = useQuery({
-    queryKey: ["employees"],
+    queryKey: ["employees", currentStore?.id],
     queryFn: async () => {
-      const { data, error } = await supabase.from("employees").select("*").order("name");
+      let query = supabase.from("employees").select("*").order("name");
+      if (currentStore) {
+        query = query.eq("store_id", currentStore.id);
+      }
+      const { data, error } = await query;
       if (error) throw error;
       return data;
     },
