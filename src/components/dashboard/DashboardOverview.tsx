@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Users, CalendarDays, AlertTriangle } from "lucide-react";
 import { useStore } from "@/hooks/useStore";
+import { useI18n } from "@/lib/i18n";
 
 const ROLE_META: Record<string, { label: string; bg: string; text: string }> = {
   responsable: { label: "Resp.", bg: "bg-red-100", text: "text-red-800" },
