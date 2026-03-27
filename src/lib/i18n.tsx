@@ -241,7 +241,17 @@ const translations = {
   "team.accountDeleted": { fr: "Compte supprimé", nl: "Account verwijderd" },
   "team.deleteConfirm": { fr: "Cette action est irréversible. Toutes les données liées seront supprimées.", nl: "Deze actie is onomkeerbaar. Alle gerelateerde gegevens worden verwijderd." },
   "team.orphanAccounts": { fr: "Comptes sans collaborateur", nl: "Accounts zonder medewerker" },
-  "team.noOrphans": { fr: "Tous les comptes sont liés à un collaborateur.", nl: "Alle accounts zijn gekoppeld aan een medewerker." },
+  "team.orphanDesc": { fr: "Ces comptes ne sont liés à aucun collaborateur (email différent ou non renseigné).", nl: "Deze accounts zijn niet gekoppeld aan een medewerker (ander of ontbrekend e-mailadres)." },
+  "team.deleteConfirmTitle": { fr: "Supprimer", nl: "Verwijderen" },
+  "team.deleteConfirmDesc": { fr: "Cette action est irréversible. Toutes les données liées seront supprimées.", nl: "Deze actie is onomkeerbaar. Alle gerelateerde gegevens worden verwijderd." },
+  "team.deleteAccountConfirm": { fr: "Supprimer ce compte d'accès ?", nl: "Dit toegangsaccount verwijderen?" },
+  "team.notConnected": { fr: "Non connecté", nl: "Niet verbonden" },
+  "team.serverError": { fr: "Erreur serveur", nl: "Serverfout" },
+  "team.nameRequired": { fr: "Le nom est requis", nl: "Naam is verplicht" },
+  "team.passwordMinChars": { fr: "Le mot de passe doit faire au moins 6 caractères", nl: "Het wachtwoord moet minstens 6 tekens bevatten" },
+  "team.errorCreating": { fr: "Erreur lors de la création", nl: "Fout bij het aanmaken" },
+  "team.firstName": { fr: "Prénom", nl: "Voornaam" },
+  "team.create": { fr: "Créer", nl: "Aanmaken" },
 
   // ========== Access roles ==========
   "access.admin": { fr: "Admin", nl: "Admin" },

@@ -88,7 +88,7 @@ export function TeamAndAccounts() {
 
   const callManageUsers = async (body: Record<string, unknown>) => {
     const { data: { session } } = await supabase.auth.getSession();
-    if (!session) throw new Error("Non connecté");
+    if (!session) throw new Error(t("team.notConnected" as any));
     const response = await fetch(
       `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/manage-users`,
       {
@@ -102,7 +102,7 @@ export function TeamAndAccounts() {
       }
     );
     const data = await response.json();
-    if (!response.ok) throw new Error(data.error || "Erreur serveur");
+    if (!response.ok) throw new Error(data.error || t("team.serverError" as any));
     return data;
   };
 
@@ -129,7 +129,7 @@ export function TeamAndAccounts() {
   const addMutation = useMutation({
     mutationFn: async () => {
       const trimmed = newName.trim();
-      if (!trimmed) throw new Error("Le nom est requis");
+      if (!trimmed) throw new Error(t("team.nameRequired" as any));
       const { error } = await supabase.from("employees").insert({
         name: trimmed,
         contract_hours: Number(newHours) || 36,
@@ -142,7 +142,7 @@ export function TeamAndAccounts() {
     onSuccess: () => {
       setNewName(""); setNewHours("36"); setNewRole("technique"); setNewEmail("");
       queryClient.invalidateQueries({ queryKey: ["employees"] });
-      toast.success("Collaborateur ajouté !");
+      toast.success(t("team.employeeAdded" as any));
     },
     onError: (err) => toast.error((err as Error).message),
   });
@@ -154,7 +154,7 @@ export function TeamAndAccounts() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["employees"] });
-      toast.success("Mis à jour !");
+      toast.success(t("team.employeeUpdated" as any));
     },
   });
 
@@ -165,7 +165,7 @@ export function TeamAndAccounts() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["employees"] });
-      toast.success("Département mis à jour !");
+      toast.success(t("team.departmentUpdated" as any));
     },
   });
 
@@ -176,7 +176,7 @@ export function TeamAndAccounts() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["employees"] });
-      toast.success("Email mis à jour !");
+      toast.success(t("team.emailUpdated" as any));
     },
   });
 
@@ -187,39 +187,39 @@ export function TeamAndAccounts() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["employees"] });
-      toast.success("Collaborateur supprimé !");
+      toast.success(t("team.employeeDeleted" as any));
     },
   });
 
   // Account actions
   const handleCreateAccount = async (employeeEmail: string) => {
     if (!accountPassword || accountPassword.length < 6) {
-      toast.error("Le mot de passe doit faire au moins 6 caractères");
+      toast.error(t("team.passwordMinChars" as any));
       return;
     }
     setSavingAccount(true);
     try {
       await callManageUsers({ action: "create", email: employeeEmail, password: accountPassword, role: accountRole, store_id: currentStore?.id });
-      toast.success("Compte créé !");
+      toast.success(t("team.accountCreated" as any));
       setCreatingForId(null);
       setAccountPassword("");
       setAccountRole("user");
       fetchAccounts();
     } catch (e: any) {
-      toast.error(e.message || "Erreur lors de la création");
+      toast.error(e.message || t("team.errorCreating" as any));
     }
     setSavingAccount(false);
   };
 
   const handleDeleteAccount = async (userId: string) => {
-    if (!confirm("Supprimer ce compte d'accès ?")) return;
+    if (!confirm(t("team.deleteAccountConfirm" as any))) return;
     setDeletingAccountId(userId);
     try {
       await callManageUsers({ action: "delete", user_id: userId });
-      toast.success("Compte supprimé");
+      toast.success(t("team.accountDeleted" as any));
       fetchAccounts();
     } catch (e: any) {
-      toast.error(e.message || "Erreur");
+      toast.error(e.message || t("team.serverError" as any));
     }
     setDeletingAccountId(null);
   };
@@ -244,39 +244,39 @@ export function TeamAndAccounts() {
     <div className="space-y-6">
       <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
         <Users className="h-5 w-5" />
-        Équipe & Comptes
+        {t("team.title" as any)}
       </h2>
 
       {/* Add employee */}
       <div className="kpi-card">
-        <h3 className="text-sm font-semibold text-muted-foreground mb-3">Ajouter un collaborateur</h3>
+        <h3 className="text-sm font-semibold text-muted-foreground mb-3">{t("team.addEmployee" as any)}</h3>
         <div className="flex items-end gap-3 flex-wrap">
           <div className="flex-1 min-w-[150px]">
-            <label className="text-xs text-muted-foreground">Nom</label>
+            <label className="text-xs text-muted-foreground">{t("team.name" as any)}</label>
             <input type="text" value={newName} onChange={(e) => setNewName(e.target.value)}
-              placeholder="Prénom" maxLength={100}
+              placeholder={t("team.firstName" as any)} maxLength={100}
               className="w-full mt-1 px-3 py-2 text-sm rounded-md border bg-background focus:outline-none focus:ring-2 focus:ring-accent" />
           </div>
           <div className="w-48">
-            <label className="text-xs text-muted-foreground">Email</label>
+            <label className="text-xs text-muted-foreground">{t("team.email" as any)}</label>
             <input type="email" value={newEmail} onChange={(e) => setNewEmail(e.target.value)}
               placeholder="email@exemple.com"
               className="w-full mt-1 px-3 py-2 text-sm rounded-md border bg-background focus:outline-none focus:ring-2 focus:ring-accent" />
           </div>
           <div className="w-32">
-            <label className="text-xs text-muted-foreground">Heures contrat</label>
+            <label className="text-xs text-muted-foreground">{t("team.contractHours" as any)}</label>
             <input type="number" value={newHours} onChange={(e) => setNewHours(e.target.value)}
               className="w-full mt-1 px-3 py-2 text-sm rounded-md border bg-background focus:outline-none focus:ring-2 focus:ring-accent font-mono-data" />
           </div>
           <div className="w-40">
-            <label className="text-xs text-muted-foreground">Département</label>
+            <label className="text-xs text-muted-foreground">{t("team.department" as any)}</label>
             <select value={newRole} onChange={(e) => setNewRole(e.target.value)}
               className="w-full mt-1 px-3 py-2 text-sm rounded-md border bg-background focus:outline-none focus:ring-2 focus:ring-accent">
               {ROLE_KEYS.map((r) => <option key={r} value={r}>{t(`role.${r}.short` as any)}</option>)}
             </select>
           </div>
           <Button size="sm" onClick={() => addMutation.mutate()} disabled={addMutation.isPending}>
-            <Plus className="h-3.5 w-3.5 mr-1" /> Ajouter
+            <Plus className="h-3.5 w-3.5 mr-1" /> {t("action.add" as any)}
           </Button>
         </div>
       </div>
@@ -284,7 +284,7 @@ export function TeamAndAccounts() {
       {/* Active employees */}
       <div className="kpi-card">
         <h3 className="text-sm font-semibold text-muted-foreground mb-3">
-          Collaborateurs actifs ({active.length})
+          {t("team.activeEmployees" as any)} ({active.length})
         </h3>
         <div className="space-y-1">
           {active.map((emp) => {
@@ -304,11 +304,11 @@ export function TeamAndAccounts() {
                         {account ? (
                           <Badge variant="outline" className="text-[10px] gap-1 py-0">
                             {account.role === "admin" ? <Shield className="h-3 w-3" /> : account.role === "editor" ? <PenTool className="h-3 w-3" /> : <User className="h-3 w-3" />}
-                            {account.role === "admin" ? "Admin" : account.role === "editor" ? "Éditeur" : "Utilisateur"}
+                            {account.role === "admin" ? t("access.admin" as any) : account.role === "editor" ? t("access.editor" as any) : t("access.user" as any)}
                           </Badge>
                         ) : emp.email ? (
                           <Badge variant="secondary" className="text-[10px] py-0 text-muted-foreground">
-                            Pas de compte
+                            {t("team.noAccount" as any)}
                           </Badge>
                         ) : null}
                       </div>
@@ -341,18 +341,18 @@ export function TeamAndAccounts() {
                         onClick={() => handleDeleteAccount(account.id)}
                         disabled={deletingAccountId === account.id}>
                         {deletingAccountId === account.id ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <KeyRound className="h-3.5 w-3.5" />}
-                        Suppr. compte
+                        {t("team.deleteAccount" as any)}
                       </Button>
                     ) : emp.email ? (
                       <Button variant="outline" size="sm" className="text-xs gap-1"
                         onClick={() => { setCreatingForId(isCreating ? null : emp.id); setAccountPassword(""); setAccountRole("user"); }}>
                         <UserPlus className="h-3.5 w-3.5" />
-                        Créer un compte
+                        {t("team.createAccount" as any)}
                       </Button>
                     ) : null}
                     <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-destructive"
                       onClick={() => toggleMutation.mutate({ id: emp.id, active: false })}>
-                      <Trash2 className="h-3.5 w-3.5 mr-1" /> Désactiver
+                      <Trash2 className="h-3.5 w-3.5 mr-1" /> {t("action.deactivate" as any)}
                     </Button>
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
@@ -362,16 +362,16 @@ export function TeamAndAccounts() {
                       </AlertDialogTrigger>
                       <AlertDialogContent>
                         <AlertDialogHeader>
-                          <AlertDialogTitle>Supprimer {emp.name} ?</AlertDialogTitle>
+                          <AlertDialogTitle>{t("team.deleteConfirmTitle" as any)} {emp.name} ?</AlertDialogTitle>
                           <AlertDialogDescription>
-                            Cette action est irréversible. Toutes les données liées seront supprimées.
+                            {t("team.deleteConfirmDesc" as any)}
                           </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
-                          <AlertDialogCancel>Annuler</AlertDialogCancel>
+                          <AlertDialogCancel>{t("action.cancel" as any)}</AlertDialogCancel>
                           <AlertDialogAction className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                             onClick={() => deleteMutation.mutate(emp.id)}>
-                            Supprimer définitivement
+                            {t("action.deletePermanent" as any)}
                           </AlertDialogAction>
                         </AlertDialogFooter>
                       </AlertDialogContent>
@@ -382,25 +382,25 @@ export function TeamAndAccounts() {
                 {/* Inline account creation form */}
                 {isCreating && (
                   <div className="mt-2 ml-11 flex items-end gap-2 p-2 rounded-md border bg-muted/30">
-                    <div className="flex-1 min-w-[150px]">
-                      <label className="text-xs text-muted-foreground">Mot de passe</label>
+                     <div className="flex-1 min-w-[150px]">
+                      <label className="text-xs text-muted-foreground">{t("team.password" as any)}</label>
                       <Input type="text" value={accountPassword} onChange={(e) => setAccountPassword(e.target.value)}
-                        placeholder="Min. 6 caractères" className="h-8 text-sm mt-1" />
+                        placeholder={t("team.minChars" as any)} className="h-8 text-sm mt-1" />
                     </div>
                     <div className="w-[130px]">
-                      <label className="text-xs text-muted-foreground">Rôle</label>
+                      <label className="text-xs text-muted-foreground">{t("team.accountRole" as any)}</label>
                       <Select value={accountRole} onValueChange={setAccountRole}>
                         <SelectTrigger className="h-8 text-sm mt-1"><SelectValue /></SelectTrigger>
                         <SelectContent>
-                          {myRole === "admin" && <SelectItem value="admin">Admin</SelectItem>}
-                          {myRole === "admin" && <SelectItem value="editor">Éditeur</SelectItem>}
-                          <SelectItem value="user">Utilisateur</SelectItem>
+                          {myRole === "admin" && <SelectItem value="admin">{t("access.admin" as any)}</SelectItem>}
+                          {myRole === "admin" && <SelectItem value="editor">{t("access.editor" as any)}</SelectItem>}
+                          <SelectItem value="user">{t("access.user" as any)}</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                     <Button size="sm" disabled={savingAccount} onClick={() => handleCreateAccount(emp.email!)}>
                       {savingAccount ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Plus className="h-3.5 w-3.5" />}
-                      Créer
+                      {t("team.create" as any)}
                     </Button>
                     <Button size="sm" variant="ghost" onClick={() => setCreatingForId(null)}>
                       <X className="h-3.5 w-3.5" />
@@ -416,26 +416,26 @@ export function TeamAndAccounts() {
       {/* Inactive employees */}
       {inactive.length > 0 && (
         <div className="kpi-card">
-          <h3 className="text-sm font-semibold text-muted-foreground mb-3">Inactifs ({inactive.length})</h3>
+          <h3 className="text-sm font-semibold text-muted-foreground mb-3">{t("team.inactive" as any)} ({inactive.length})</h3>
           <div className="space-y-1">
             {inactive.map((emp) => (
               <div key={emp.id} className="flex items-center justify-between py-2 px-2 rounded table-row-hover opacity-60">
                 <span className="text-sm">{emp.name}</span>
                 <div className="flex items-center gap-1">
-                  <Button variant="outline" size="sm" onClick={() => toggleMutation.mutate({ id: emp.id, active: true })}>Réactiver</Button>
+                  <Button variant="outline" size="sm" onClick={() => toggleMutation.mutate({ id: emp.id, active: true })}>{t("action.reactivate" as any)}</Button>
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
                       <Button variant="ghost" size="sm" className="text-destructive/60 hover:text-destructive"><X className="h-3.5 w-3.5" /></Button>
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                       <AlertDialogHeader>
-                        <AlertDialogTitle>Supprimer {emp.name} ?</AlertDialogTitle>
-                        <AlertDialogDescription>Cette action est irréversible.</AlertDialogDescription>
+                        <AlertDialogTitle>{t("team.deleteConfirmTitle" as any)} {emp.name} ?</AlertDialogTitle>
+                        <AlertDialogDescription>{t("conges.irreversible" as any)}</AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
-                        <AlertDialogCancel>Annuler</AlertDialogCancel>
+                        <AlertDialogCancel>{t("action.cancel" as any)}</AlertDialogCancel>
                         <AlertDialogAction className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                          onClick={() => deleteMutation.mutate(emp.id)}>Supprimer</AlertDialogAction>
+                          onClick={() => deleteMutation.mutate(emp.id)}>{t("action.delete" as any)}</AlertDialogAction>
                       </AlertDialogFooter>
                     </AlertDialogContent>
                   </AlertDialog>
@@ -451,10 +451,10 @@ export function TeamAndAccounts() {
         <div className="kpi-card">
           <h3 className="text-sm font-semibold text-muted-foreground mb-3 flex items-center gap-2">
             <Shield className="h-4 w-4" />
-            Comptes sans collaborateur ({orphanAccounts.length})
+            {t("team.orphanAccounts" as any)} ({orphanAccounts.length})
           </h3>
           <p className="text-xs text-muted-foreground mb-3">
-            Ces comptes ne sont liés à aucun collaborateur (email différent ou non renseigné).
+            {t("team.orphanDesc" as any)}
           </p>
           <div className="space-y-1">
             {orphanAccounts.map((a) => (
@@ -466,8 +466,8 @@ export function TeamAndAccounts() {
                   </div>
                   <div>
                     <p className="text-sm font-medium text-foreground">{a.email}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {a.role === "admin" ? "Administrateur" : "Utilisateur"} · {new Date(a.created_at).toLocaleDateString("fr-BE")}
+                     <p className="text-xs text-muted-foreground">
+                      {a.role === "admin" ? t("users.administrator" as any) : t("access.user" as any)} · {new Date(a.created_at).toLocaleDateString("fr-BE")}
                     </p>
                   </div>
                 </div>
