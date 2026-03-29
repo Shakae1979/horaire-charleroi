@@ -61,7 +61,7 @@ export default function CongesView() {
 
   return (
     <div className="min-h-screen bg-background">
-      <FnacHeader title={t("nav.conges")} subtitle={t("header.readOnly") || "Consultation"} />
+      <FnacHeader title={t("nav.conges")} subtitle="Consultation" />
       <div className="max-w-[1600px] mx-auto px-4 py-6 space-y-4">
         <div className="flex items-center justify-between flex-wrap gap-2">
           <div className="flex items-center gap-3">
