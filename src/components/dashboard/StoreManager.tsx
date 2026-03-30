@@ -4,12 +4,19 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Plus, Trash2, Pencil, Store, X, Save, Loader2 } from "lucide-react";
+import { Plus, Trash2, Pencil, Store, X, Save, Loader2, UserPlus, UserMinus } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
+
+interface ManagerInfo {
+  user_id: string;
+  email: string;
+  role: string;
+}
 
 export function StoreManager() {
   const queryClient = useQueryClient();
@@ -19,6 +26,8 @@ export function StoreManager() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editName, setEditName] = useState("");
   const [editCity, setEditCity] = useState("");
+  const [addingManagerStoreId, setAddingManagerStoreId] = useState<string | null>(null);
+  const [selectedUserId, setSelectedUserId] = useState("");
 
   const { data: stores, isLoading } = useQuery({
     queryKey: ["stores"],
@@ -29,26 +38,29 @@ export function StoreManager() {
     },
   });
 
-  const { data: storeManagers } = useQuery({
-    queryKey: ["store-managers"],
+  const { data: allUsers } = useQuery({
+    queryKey: ["store-all-users"],
     queryFn: async () => {
       const { data, error } = await supabase.functions.invoke("manage-users", {
         body: { action: "list" },
       });
       if (error) throw error;
-      // Filter editors and admins, map by store_id
-      const managers: Record<string, { name: string; email: string; role: string }[]> = {};
-      for (const u of data || []) {
-        if (u.role === "editor" || u.role === "admin") {
-          for (const s of u.stores || []) {
-            if (!managers[s.store_id]) managers[s.store_id] = [];
-            managers[s.store_id].push({ name: u.email.split("@")[0], email: u.email, role: u.role });
-          }
-        }
-      }
-      return managers;
+      return (data || []) as { id: string; email: string; role: string; stores: { store_id: string; store_name: string }[] }[];
     },
   });
+
+  // Build managers map by store_id
+  const storeManagers: Record<string, ManagerInfo[]> = {};
+  if (allUsers) {
+    for (const u of allUsers) {
+      if (u.role === "editor" || u.role === "admin") {
+        for (const s of u.stores || []) {
+          if (!storeManagers[s.store_id]) storeManagers[s.store_id] = [];
+          storeManagers[s.store_id].push({ user_id: u.id, email: u.email, role: u.role });
+        }
+      }
+    }
+  }
 
   const addMutation = useMutation({
     mutationFn: async () => {
@@ -91,6 +103,38 @@ export function StoreManager() {
     onError: (err) => toast.error((err as Error).message),
   });
 
+  const assignMutation = useMutation({
+    mutationFn: async ({ user_id, store_id }: { user_id: string; store_id: string }) => {
+      const { data, error } = await supabase.functions.invoke("manage-users", {
+        body: { action: "assign_store", user_id, store_id },
+      });
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+    },
+    onSuccess: () => {
+      setAddingManagerStoreId(null);
+      setSelectedUserId("");
+      queryClient.invalidateQueries({ queryKey: ["store-all-users"] });
+      toast.success(t("store.managerAssigned"));
+    },
+    onError: (err) => toast.error((err as Error).message),
+  });
+
+  const unassignMutation = useMutation({
+    mutationFn: async ({ user_id, store_id }: { user_id: string; store_id: string }) => {
+      const { data, error } = await supabase.functions.invoke("manage-users", {
+        body: { action: "unassign_store", user_id, store_id },
+      });
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["store-all-users"] });
+      toast.success(t("store.managerRemoved"));
+    },
+    onError: (err) => toast.error((err as Error).message),
+  });
+
   const { data: employeeCounts } = useQuery({
     queryKey: ["store-employee-counts"],
     queryFn: async () => {
@@ -103,6 +147,14 @@ export function StoreManager() {
       return counts;
     },
   });
+
+  // Editors/admins available to assign (not already assigned to this store)
+  const getAvailableUsers = (storeId: string) => {
+    const assigned = new Set((storeManagers[storeId] || []).map((m) => m.user_id));
+    return (allUsers || []).filter(
+      (u) => (u.role === "editor" || u.role === "admin") && !assigned.has(u.id)
+    );
+  };
 
   return (
     <div className="space-y-6">
@@ -136,10 +188,13 @@ export function StoreManager() {
         {isLoading ? (
           <div className="flex justify-center py-6"><Loader2 className="h-5 w-5 animate-spin text-muted-foreground" /></div>
         ) : (
-          <div className="space-y-1">
+          <div className="space-y-3">
             {(stores ?? []).map((store) => {
               const isEditing = editingId === store.id;
               const count = employeeCounts?.[store.id] ?? 0;
+              const managers = storeManagers[store.id] || [];
+              const isAddingManager = addingManagerStoreId === store.id;
+              const availableUsers = getAvailableUsers(store.id);
 
               if (isEditing) {
                 return (
@@ -157,52 +212,112 @@ export function StoreManager() {
               }
 
               return (
-                <div key={store.id} className="flex items-center justify-between py-2 px-2 rounded table-row-hover">
-                  <div className="flex items-center gap-3">
-                    <div className="h-8 w-8 rounded-lg bg-accent/20 flex items-center justify-center">
-                      <Store className="h-4 w-4 text-accent" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-foreground">{store.name}</p>
-                      <p className="text-xs text-muted-foreground">
-                        {store.city} · {count} {t(count !== 1 ? "misc.collaborators" as any : "misc.collaborator" as any)}
-                      </p>
-                      {(storeManagers?.[store.id] || []).map((mgr) => (
-                        <p key={mgr.email} className="text-xs text-accent mt-0.5">
-                          👤 {mgr.email} <span className="text-muted-foreground">({mgr.role})</span>
+                <div key={store.id} className="rounded-lg border bg-card p-3 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="h-8 w-8 rounded-lg bg-accent/20 flex items-center justify-center">
+                        <Store className="h-4 w-4 text-accent" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-foreground">{store.name}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {store.city} · {count} {t(count !== 1 ? "misc.collaborators" as any : "misc.collaborator" as any)}
                         </p>
-                      ))}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground"
+                        onClick={() => { setEditingId(store.id); setEditName(store.name); setEditCity(store.city); }}>
+                        <Pencil className="h-3.5 w-3.5" />
+                      </Button>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button variant="ghost" size="sm" className="text-destructive/60 hover:text-destructive">
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>{t("store.deleteTitle")} {store.name}</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              {count > 0
+                                ? `${count} ${t("store.employeesDetached")}`
+                                : t("store.irreversible")}
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>{t("action.cancel")}</AlertDialogCancel>
+                            <AlertDialogAction className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                              onClick={() => deleteMutation.mutate(store.id)}>
+                              {t("action.delete")}
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
                     </div>
                   </div>
-                  <div className="flex items-center gap-1">
-                    <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground"
-                      onClick={() => { setEditingId(store.id); setEditName(store.name); setEditCity(store.city); }}>
-                      <Pencil className="h-3.5 w-3.5" />
-                    </Button>
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
-                        <Button variant="ghost" size="sm" className="text-destructive/60 hover:text-destructive">
-                          <Trash2 className="h-3.5 w-3.5" />
+
+                  {/* Managers section */}
+                  <div className="pl-11 space-y-1">
+                    <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                      {t("store.managers")}
+                    </div>
+                    {managers.length === 0 && (
+                      <p className="text-xs text-muted-foreground italic">{t("store.noManager")}</p>
+                    )}
+                    {managers.map((mgr) => (
+                      <div key={mgr.user_id} className="flex items-center justify-between py-1 px-2 rounded bg-accent/5 text-xs group">
+                        <span>
+                          <span className="font-medium text-foreground">👤 {mgr.email}</span>
+                          <span className="text-muted-foreground ml-1">({mgr.role})</span>
+                        </span>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-6 w-6 p-0 text-destructive/50 hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
+                          onClick={() => unassignMutation.mutate({ user_id: mgr.user_id, store_id: store.id })}
+                          disabled={unassignMutation.isPending}
+                        >
+                          <UserMinus className="h-3 w-3" />
                         </Button>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>{t("store.deleteTitle")} {store.name}</AlertDialogTitle>
-                          <AlertDialogDescription>
-                            {count > 0
-                              ? `${count} ${t("store.employeesDetached")}`
-                              : t("store.irreversible")}
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>{t("action.cancel")}</AlertDialogCancel>
-                          <AlertDialogAction className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                            onClick={() => deleteMutation.mutate(store.id)}>
-                            {t("action.delete")}
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
+                      </div>
+                    ))}
+
+                    {isAddingManager ? (
+                      <div className="flex items-center gap-2 mt-1">
+                        <Select value={selectedUserId} onValueChange={setSelectedUserId}>
+                          <SelectTrigger className="h-8 text-xs flex-1">
+                            <SelectValue placeholder={t("store.selectUser")} />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {availableUsers.map((u) => (
+                              <SelectItem key={u.id} value={u.id}>{u.email} ({u.role})</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <Button
+                          size="sm"
+                          className="h-8"
+                          disabled={!selectedUserId || assignMutation.isPending}
+                          onClick={() => assignMutation.mutate({ user_id: selectedUserId, store_id: store.id })}
+                        >
+                          {assignMutation.isPending ? <Loader2 className="h-3 w-3 animate-spin" /> : <Save className="h-3 w-3" />}
+                        </Button>
+                        <Button size="sm" variant="ghost" className="h-8" onClick={() => { setAddingManagerStoreId(null); setSelectedUserId(""); }}>
+                          <X className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    ) : (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-7 text-xs text-accent hover:text-accent mt-1"
+                        onClick={() => { setAddingManagerStoreId(store.id); setSelectedUserId(""); }}
+                      >
+                        <UserPlus className="h-3 w-3 mr-1" />
+                        {t("store.addManager")}
+                      </Button>
+                    )}
                   </div>
                 </div>
               );
