@@ -23,7 +23,6 @@ Deno.serve(async (req) => {
     const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const anonKey = Deno.env.get("SUPABASE_ANON_KEY") || Deno.env.get("SUPABASE_PUBLISHABLE_KEY")!;
 
-    // Verify caller using getClaims (doesn't require active session)
     const anonClient = createClient(supabaseUrl, anonKey, {
       global: { headers: { Authorization: authHeader } },
     });
@@ -37,8 +36,9 @@ Deno.serve(async (req) => {
     }
     const callerId = claimsData.claims.sub as string;
 
-    // Check admin role with service role client
     const adminClient = createClient(supabaseUrl, serviceRoleKey);
+
+    // Get caller role
     const { data: roleData } = await adminClient
       .from("user_roles")
       .select("role")
@@ -54,7 +54,22 @@ Deno.serve(async (req) => {
     }
 
     const callerRole = roleData.role;
+
+    // Check if caller is store manager for any store
+    const { data: callerManagerStores } = await adminClient
+      .from("user_store_assignments")
+      .select("store_id")
+      .eq("user_id", callerId)
+      .eq("is_manager", true);
+    const callerManagedStoreIds = new Set((callerManagerStores || []).map((s: any) => s.store_id));
+    const isStoreManager = callerManagedStoreIds.size > 0;
+
     const { action, ...payload } = await req.json();
+
+    // Helper: check if caller can manage a given store
+    const canManageStore = (storeId: string) => {
+      return callerRole === "admin" || callerManagedStoreIds.has(storeId);
+    };
 
     if (action === "list") {
       const { data: { users }, error } = await adminClient.auth.admin.listUsers();
@@ -64,12 +79,17 @@ Deno.serve(async (req) => {
       const roleMap: Record<string, string> = {};
       (roles || []).forEach((r: any) => { roleMap[r.user_id] = r.role; });
 
-      // Get store assignments
-      const { data: assignments } = await adminClient.from("user_store_assignments").select("user_id, store_id, stores(name)");
-      const storeMap: Record<string, { store_id: string; store_name: string }[]> = {};
+      const { data: assignments } = await adminClient
+        .from("user_store_assignments")
+        .select("user_id, store_id, is_manager, stores(name)");
+      const storeMap: Record<string, { store_id: string; store_name: string; is_manager: boolean }[]> = {};
       (assignments || []).forEach((a: any) => {
         if (!storeMap[a.user_id]) storeMap[a.user_id] = [];
-        storeMap[a.user_id].push({ store_id: a.store_id, store_name: a.stores?.name || "" });
+        storeMap[a.user_id].push({
+          store_id: a.store_id,
+          store_name: a.stores?.name || "",
+          is_manager: a.is_manager || false,
+        });
       });
 
       const result = (users || []).map((u: any) => ({
@@ -94,12 +114,20 @@ Deno.serve(async (req) => {
         });
       }
 
-      // Only admins can create admin/editor accounts
-      if ((role === "admin" || role === "editor") && callerRole !== "admin") {
-        return new Response(JSON.stringify({ error: "Seul un admin peut créer des comptes admin/éditeur" }), {
-          status: 403,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
+      // Admin can create any role; store manager can create editor/user in their store
+      if (callerRole !== "admin") {
+        if (role === "admin") {
+          return new Response(JSON.stringify({ error: "Seul un admin peut créer des comptes admin" }), {
+            status: 403,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
+        if (!store_id || !canManageStore(store_id)) {
+          return new Response(JSON.stringify({ error: "Vous ne pouvez créer des comptes que dans vos magasins" }), {
+            status: 403,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
       }
 
       const { data: newUser, error } = await adminClient.auth.admin.createUser({
@@ -114,7 +142,6 @@ Deno.serve(async (req) => {
         role: role || "user",
       });
 
-      // Assign to store if provided
       if (store_id) {
         await adminClient.from("user_store_assignments").insert({
           user_id: newUser.user.id,
@@ -142,12 +169,20 @@ Deno.serve(async (req) => {
         });
       }
 
-      // Only admin can delete
+      // Admin can delete anyone; store manager can delete users in their stores
       if (callerRole !== "admin") {
-        return new Response(JSON.stringify({ error: "Seul un admin peut supprimer des comptes" }), {
-          status: 403,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
+        const { data: targetStores } = await adminClient
+          .from("user_store_assignments")
+          .select("store_id")
+          .eq("user_id", user_id);
+        const targetStoreIds = (targetStores || []).map((s: any) => s.store_id);
+        const canDelete = targetStoreIds.some((sid: string) => callerManagedStoreIds.has(sid));
+        if (!canDelete) {
+          return new Response(JSON.stringify({ error: "Vous ne pouvez supprimer que des comptes de vos magasins" }), {
+            status: 403,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
       }
 
       await adminClient.from("user_store_assignments").delete().eq("user_id", user_id);
@@ -161,12 +196,6 @@ Deno.serve(async (req) => {
     }
 
     if (action === "update_role") {
-      if (callerRole !== "admin") {
-        return new Response(JSON.stringify({ error: "Seul un admin peut changer les rôles" }), {
-          status: 403,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
       const { user_id, role } = payload;
       if (!user_id || !role) {
         return new Response(JSON.stringify({ error: "user_id et role requis" }), {
@@ -174,6 +203,28 @@ Deno.serve(async (req) => {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
+
+      // Admin can change any role; store manager can only set editor/user
+      if (callerRole !== "admin") {
+        if (role === "admin") {
+          return new Response(JSON.stringify({ error: "Seul un admin peut attribuer le rôle admin" }), {
+            status: 403,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
+        const { data: targetStores } = await adminClient
+          .from("user_store_assignments")
+          .select("store_id")
+          .eq("user_id", user_id);
+        const canUpdate = (targetStores || []).some((s: any) => callerManagedStoreIds.has(s.store_id));
+        if (!canUpdate) {
+          return new Response(JSON.stringify({ error: "Vous ne pouvez modifier que les rôles de vos magasins" }), {
+            status: 403,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
+      }
+
       const { error } = await adminClient.from("user_roles").update({ role }).eq("user_id", user_id);
       if (error) throw error;
       return new Response(JSON.stringify({ success: true }), {
@@ -182,13 +233,13 @@ Deno.serve(async (req) => {
     }
 
     if (action === "assign_store") {
-      if (callerRole !== "admin") {
+      const { user_id, store_id } = payload;
+      if (!canManageStore(store_id)) {
         return new Response(JSON.stringify({ error: "Accès refusé" }), {
           status: 403,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      const { user_id, store_id } = payload;
       const { error } = await adminClient.from("user_store_assignments").upsert(
         { user_id, store_id },
         { onConflict: "user_id,store_id" }
@@ -200,15 +251,41 @@ Deno.serve(async (req) => {
     }
 
     if (action === "unassign_store") {
-      if (callerRole !== "admin") {
+      const { user_id, store_id } = payload;
+      if (!canManageStore(store_id)) {
         return new Response(JSON.stringify({ error: "Accès refusé" }), {
           status: 403,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      const { user_id, store_id } = payload;
       const { error } = await adminClient.from("user_store_assignments").delete()
         .eq("user_id", user_id).eq("store_id", store_id);
+      if (error) throw error;
+      return new Response(JSON.stringify({ success: true }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    if (action === "set_manager") {
+      // Only admin can set/unset store managers
+      if (callerRole !== "admin") {
+        return new Response(JSON.stringify({ error: "Seul un admin peut désigner un store manager" }), {
+          status: 403,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      const { user_id, store_id, is_manager } = payload;
+      if (!user_id || !store_id) {
+        return new Response(JSON.stringify({ error: "user_id et store_id requis" }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      const { error } = await adminClient
+        .from("user_store_assignments")
+        .update({ is_manager: !!is_manager })
+        .eq("user_id", user_id)
+        .eq("store_id", store_id);
       if (error) throw error;
       return new Response(JSON.stringify({ success: true }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
