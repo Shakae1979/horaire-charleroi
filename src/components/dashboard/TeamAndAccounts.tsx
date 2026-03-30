@@ -16,6 +16,7 @@ import { Badge } from "@/components/ui/badge";
 import { useStore } from "@/hooks/useStore";
 import { useAuth } from "@/hooks/useAuth";
 import { useI18n } from "@/lib/i18n";
+import { getDisplayName } from "@/lib/format";
 import { EmployeeSheet } from "./EmployeeSheet";
 
 const ROLE_KEYS = ["responsable", "technique", "editorial", "stock", "caisse", "stagiaire"] as const;
@@ -41,6 +42,7 @@ export function TeamAndAccounts() {
   const { role: myRole } = useAuth();
   const { t } = useI18n();
   const [newName, setNewName] = useState("");
+  const [newLastName, setNewLastName] = useState("");
   const [newHours, setNewHours] = useState("36");
   const [newRole, setNewRole] = useState("technique");
   const [newEmail, setNewEmail] = useState("");
@@ -128,10 +130,13 @@ export function TeamAndAccounts() {
   // Employee mutations
   const addMutation = useMutation({
     mutationFn: async () => {
-      const trimmed = newName.trim();
-      if (!trimmed) throw new Error(t("team.nameRequired" as any));
+      const trimmedFirst = newName.trim();
+      const trimmedLast = newLastName.trim();
+      if (!trimmedFirst && !trimmedLast) throw new Error(t("team.nameRequired" as any));
+      const displayName = [trimmedFirst, trimmedLast].filter(Boolean).join(" ");
       const { error } = await supabase.from("employees").insert({
-        name: trimmed,
+        name: trimmedFirst || trimmedLast,
+        last_name: trimmedLast || null,
         contract_hours: Number(newHours) || 36,
         role: newRole,
         email: newEmail.trim() || null,
@@ -140,7 +145,7 @@ export function TeamAndAccounts() {
       if (error) throw error;
     },
     onSuccess: () => {
-      setNewName(""); setNewHours("36"); setNewRole("technique"); setNewEmail("");
+      setNewName(""); setNewLastName(""); setNewHours("36"); setNewRole("technique"); setNewEmail("");
       queryClient.invalidateQueries({ queryKey: ["employees"] });
       toast.success(t("team.employeeAdded" as any));
     },
@@ -251,10 +256,16 @@ export function TeamAndAccounts() {
       <div className="kpi-card">
         <h3 className="text-sm font-semibold text-muted-foreground mb-3">{t("team.addEmployee" as any)}</h3>
         <div className="flex items-end gap-3 flex-wrap">
-          <div className="flex-1 min-w-[150px]">
+          <div className="min-w-[120px]">
             <label className="text-xs text-muted-foreground">{t("team.name" as any)}</label>
             <input type="text" value={newName} onChange={(e) => setNewName(e.target.value)}
-              placeholder={t("team.firstName" as any)} maxLength={100}
+              placeholder={t("team.name" as any)} maxLength={50}
+              className="w-full mt-1 px-3 py-2 text-sm rounded-md border bg-background focus:outline-none focus:ring-2 focus:ring-accent" />
+          </div>
+          <div className="min-w-[120px]">
+            <label className="text-xs text-muted-foreground">{t("team.lastName" as any)}</label>
+            <input type="text" value={newLastName} onChange={(e) => setNewLastName(e.target.value)}
+              placeholder={t("team.lastName" as any)} maxLength={50}
               className="w-full mt-1 px-3 py-2 text-sm rounded-md border bg-background focus:outline-none focus:ring-2 focus:ring-accent" />
           </div>
           <div className="w-48">
