@@ -58,3 +58,8 @@ export function formatLocalDate(date: Date): string {
   const d = String(date.getDate()).padStart(2, "0");
   return `${y}-${m}-${d}`;
 }
+
+/** Build display name from first name + optional last name */
+export function getDisplayName(emp: { name: string; last_name?: string | null }): string {
+  return [emp.name, emp.last_name].filter(Boolean).join(" ");
+}

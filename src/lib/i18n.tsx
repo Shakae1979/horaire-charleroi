@@ -235,7 +235,8 @@ const translations = {
   // ========== Team & Accounts ==========
   "team.title": { fr: "Équipe & Comptes", nl: "Team & Accounts" },
   "team.addEmployee": { fr: "Ajouter un collaborateur", nl: "Medewerker toevoegen" },
-  "team.name": { fr: "Nom", nl: "Naam" },
+  "team.name": { fr: "Prénom", nl: "Voornaam" },
+  "team.lastName": { fr: "Nom", nl: "Achternaam" },
   "team.email": { fr: "Email", nl: "E-mail" },
   "team.contractHours": { fr: "Heures contrat", nl: "Contracturen" },
   "team.department": { fr: "Département", nl: "Afdeling" },
