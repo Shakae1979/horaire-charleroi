@@ -391,7 +391,7 @@ export function TeamAndAccounts() {
                       </AlertDialogTrigger>
                       <AlertDialogContent>
                         <AlertDialogHeader>
-                          <AlertDialogTitle>{t("team.deleteConfirmTitle" as any)} {emp.name} ?</AlertDialogTitle>
+                          <AlertDialogTitle>{t("team.deleteConfirmTitle" as any)} {getDisplayName(emp)} ?</AlertDialogTitle>
                           <AlertDialogDescription>
                             {t("team.deleteConfirmDesc" as any)}
                           </AlertDialogDescription>
@@ -449,7 +449,7 @@ export function TeamAndAccounts() {
           <div className="space-y-1">
             {inactive.map((emp) => (
               <div key={emp.id} className="flex items-center justify-between py-2 px-2 rounded table-row-hover opacity-60">
-                <span className="text-sm">{emp.name}</span>
+                <span className="text-sm">{getDisplayName(emp)}</span>
                 <div className="flex items-center gap-1">
                   <Button variant="outline" size="sm" onClick={() => toggleMutation.mutate({ id: emp.id, active: true })}>{t("action.reactivate" as any)}</Button>
                   <AlertDialog>
@@ -458,7 +458,7 @@ export function TeamAndAccounts() {
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                       <AlertDialogHeader>
-                        <AlertDialogTitle>{t("team.deleteConfirmTitle" as any)} {emp.name} ?</AlertDialogTitle>
+                        <AlertDialogTitle>{t("team.deleteConfirmTitle" as any)} {getDisplayName(emp)} ?</AlertDialogTitle>
                         <AlertDialogDescription>{t("conges.irreversible" as any)}</AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
