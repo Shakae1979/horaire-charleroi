@@ -1,0 +1,1 @@
+ALTER TABLE public.user_store_assignments ADD COLUMN is_manager boolean NOT NULL DEFAULT false;
