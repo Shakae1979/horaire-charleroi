@@ -89,6 +89,7 @@ export type Database = {
       }
       employee_day_flags: {
         Row: {
+          comment: string
           created_at: string
           date: string
           employee_id: string
@@ -97,6 +98,7 @@ export type Database = {
           socloz: boolean
         }
         Insert: {
+          comment?: string
           created_at?: string
           date: string
           employee_id: string
@@ -105,6 +107,7 @@ export type Database = {
           socloz?: boolean
         }
         Update: {
+          comment?: string
           created_at?: string
           date?: string
           employee_id?: string

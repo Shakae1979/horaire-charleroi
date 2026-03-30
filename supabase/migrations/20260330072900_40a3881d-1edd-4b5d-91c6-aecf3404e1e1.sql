@@ -1,0 +1,1 @@
+ALTER TABLE public.employee_day_flags ADD COLUMN comment text NOT NULL DEFAULT '';
