@@ -29,6 +29,27 @@ export function StoreManager() {
     },
   });
 
+  const { data: storeManagers } = useQuery({
+    queryKey: ["store-managers"],
+    queryFn: async () => {
+      const { data, error } = await supabase.functions.invoke("manage-users", {
+        body: { action: "list" },
+      });
+      if (error) throw error;
+      // Filter editors and admins, map by store_id
+      const managers: Record<string, { name: string; email: string; role: string }[]> = {};
+      for (const u of data || []) {
+        if (u.role === "editor" || u.role === "admin") {
+          for (const s of u.stores || []) {
+            if (!managers[s.store_id]) managers[s.store_id] = [];
+            managers[s.store_id].push({ name: u.email.split("@")[0], email: u.email, role: u.role });
+          }
+        }
+      }
+      return managers;
+    },
+  });
+
   const addMutation = useMutation({
     mutationFn: async () => {
       const trimmedName = newName.trim();
