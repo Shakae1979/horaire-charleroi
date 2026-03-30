@@ -1,0 +1,1 @@
+ALTER TABLE public.employees ADD COLUMN last_name text DEFAULT null;
