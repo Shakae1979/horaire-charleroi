@@ -307,11 +307,11 @@ export function TeamAndAccounts() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="h-8 w-8 rounded-full bg-accent/20 flex items-center justify-center text-xs font-bold text-accent">
-                      {emp.name.charAt(0)}
+                      {getDisplayName(emp).charAt(0)}
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
-                        <button className="text-sm font-medium hover:underline cursor-pointer text-left" onClick={() => setEditingEmployee(emp)}>{emp.name}</button>
+                        <button className="text-sm font-medium hover:underline cursor-pointer text-left" onClick={() => setEditingEmployee(emp)}>{getDisplayName(emp)}</button>
                         {account ? (
                           <Badge variant="outline" className="text-[10px] gap-1 py-0">
                             {account.role === "admin" ? <Shield className="h-3 w-3" /> : account.role === "editor" ? <PenTool className="h-3 w-3" /> : <User className="h-3 w-3" />}
