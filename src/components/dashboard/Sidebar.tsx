@@ -1,4 +1,4 @@
-import { BarChart3, Users, CalendarDays, Calendar, TableProperties, Palmtree, PanelLeftClose, PanelLeftOpen, LogOut, Store } from "lucide-react";
+import { BarChart3, Users, CalendarDays, Calendar, TableProperties, Palmtree, PanelLeftClose, PanelLeftOpen, LogOut, Store, UserCog } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -77,6 +77,18 @@ export function Sidebar({ activeView, onViewChange }: SidebarProps) {
 
 
         <div className={`${collapsed ? "px-2" : "px-3"} pb-4 space-y-1`}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                onClick={() => navigate("/mon-compte")}
+                className="sidebar-link sidebar-link-inactive w-full justify-center"
+              >
+                <UserCog className="h-4 w-4" />
+                {!collapsed && <span className="text-xs">{t("nav.myAccount")}</span>}
+              </button>
+            </TooltipTrigger>
+            {collapsed && <TooltipContent side="right">{t("nav.myAccount")}</TooltipContent>}
+          </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
               <button
