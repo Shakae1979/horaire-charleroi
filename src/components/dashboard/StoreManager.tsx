@@ -138,6 +138,20 @@ export function StoreManager() {
     },
     onError: (err) => toast.error((err as Error).message),
   });
+  const setManagerMutation = useMutation({
+    mutationFn: async ({ user_id, store_id, is_manager }: { user_id: string; store_id: string; is_manager: boolean }) => {
+      const { data, error } = await supabase.functions.invoke("manage-users", {
+        body: { action: "set_manager", user_id, store_id, is_manager },
+      });
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["store-all-users"] });
+      toast.success(t("store.managerSet" as any));
+    },
+    onError: (err) => toast.error((err as Error).message),
+  });
 
   const { data: employeeCounts } = useQuery({
     queryKey: ["store-employee-counts"],
