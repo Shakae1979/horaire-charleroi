@@ -167,6 +167,11 @@ export function StoreManager() {
                       <p className="text-xs text-muted-foreground">
                         {store.city} · {count} {t(count !== 1 ? "misc.collaborators" as any : "misc.collaborator" as any)}
                       </p>
+                      {(storeManagers?.[store.id] || []).map((mgr) => (
+                        <p key={mgr.email} className="text-xs text-accent mt-0.5">
+                          👤 {mgr.email} <span className="text-muted-foreground">({mgr.role})</span>
+                        </p>
+                      ))}
                     </div>
                   </div>
                   <div className="flex items-center gap-1">
