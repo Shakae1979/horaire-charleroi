@@ -226,7 +226,7 @@ export default function HourlyGrid({ employees, date }: { employees: Employee[];
                     const overrideKey = `${emp.id}-${slot.hour}-${slot.minute}`;
                     const cellRole = overrides[overrideKey] || emp.role;
                     const colorClass = ROLE_BG[cellRole] || "bg-accent/20";
-                    const isSelected = multiMode && selected.has(overrideKey);
+                    const isSelected = selected.has(overrideKey);
                     return (
                       <td key={i} className={`px-0 py-1 text-center ${slot.minute === 30 ? "border-r-2 border-r-foreground/30" : "border-r border-r-muted/40"} last:border-r-0 ${isWorking ? `${colorClass} cursor-pointer hover:opacity-80 transition-opacity` : ""} ${isSelected ? "ring-2 ring-inset ring-primary" : ""}`}
                         onClick={isWorking ? (e) => handleCellClick(emp.id, slot.hour, e, slot.minute) : undefined}
