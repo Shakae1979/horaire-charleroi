@@ -236,7 +236,7 @@ export default function HourlyGrid({ employees, date }: { employees: Employee[];
           </tbody>
         </table>
       </div>
-      {picker && <RolePicker anchorRect={picker.rect} onSelect={handleSelect} onClose={() => setPicker(null)} roleLabels={roleLabels} />}
+      
       {multiPicker && <RolePicker anchorRect={multiPicker.rect} onSelect={handleMultiApply} onClose={() => setMultiPicker(null)} roleLabels={roleLabels} multi />}
     </div>
   );
