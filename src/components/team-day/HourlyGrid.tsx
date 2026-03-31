@@ -190,12 +190,6 @@ export default function HourlyGrid({ employees, date }: { employees: Employee[];
           </Button>
         </div>
       </div>
-      {multiMode && (
-        <div className="mb-2 px-2 py-1.5 rounded-md bg-primary/10 border border-primary/20 text-xs text-primary">
-          Cliquez sur les cases à modifier, puis cliquez "Appliquer" pour choisir le rôle.
-          {selected.size > 0 && <span className="ml-2 font-semibold">{selected.size} case(s) sélectionnée(s)</span>}
-        </div>
-      )}
       <div className="overflow-x-auto rounded-lg border">
         <table className="w-full text-xs border-collapse">
           <thead>
