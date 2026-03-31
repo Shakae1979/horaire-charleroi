@@ -109,6 +109,7 @@ export function FnacHeader({ title, subtitle, icon: Icon, children }: FnacHeader
         </div>
         <div className="flex items-center gap-2">
           {children}
+          {(role === "admin" || role === "editor") && <HelpFAQ />}
           <LanguageSwitcher />
           <button
             onClick={signOut}
