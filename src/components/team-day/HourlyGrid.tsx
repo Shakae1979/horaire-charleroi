@@ -86,7 +86,7 @@ export default function HourlyGrid({ employees, date }: { employees: Employee[];
     const load = async () => {
       const [overridesRes, flagsRes] = await Promise.all([
         supabase.from("schedule_role_overrides").select("employee_id, slot_key, role").eq("date", date),
-        supabase.from("employee_day_flags").select("employee_id, socloz, sav").eq("date", date),
+        supabase.from("employee_day_flags").select("employee_id, socloz, sav, comment").eq("date", date),
       ]);
       if (overridesRes.data && overridesRes.data.length > 0) {
         const loaded: Overrides = {};
