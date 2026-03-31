@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Printer, Save, MousePointerClick, X } from "lucide-react";
+import { Printer, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
