@@ -114,11 +114,6 @@ export default function HourlyGrid({ employees, date }: { employees: Employee[];
     });
   };
 
-  const handleSelect = (role: string) => {
-    if (!picker) return;
-    setOverrides((prev) => ({ ...prev, [picker.key]: role }));
-    setDirty(true); setPicker(null);
-  };
 
   const handleMultiApply = (role: string) => {
     setOverrides((prev) => {
