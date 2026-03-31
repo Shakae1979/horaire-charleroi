@@ -69,7 +69,6 @@ export default function HourlyGrid({ employees, date }: { employees: Employee[];
   const [empComments, setEmpComments] = useState<Record<string, string>>({});
 
   // Multi-select state
-  const [multiMode, setMultiMode] = useState(false);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [multiPicker, setMultiPicker] = useState<{ rect: { top: number; left: number } } | null>(null);
 
