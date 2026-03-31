@@ -1,4 +1,5 @@
 import { Calendar, Users, CalendarDays, User, UserCog, LogOut, Palmtree, Store } from "lucide-react";
+import { HelpFAQ } from "@/components/HelpFAQ";
 import { ReactNode } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -108,6 +109,7 @@ export function FnacHeader({ title, subtitle, icon: Icon, children }: FnacHeader
         </div>
         <div className="flex items-center gap-2">
           {children}
+          {(role === "admin" || role === "editor") && <HelpFAQ />}
           <LanguageSwitcher />
           <button
             onClick={signOut}
