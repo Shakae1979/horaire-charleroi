@@ -673,8 +673,8 @@ export function ScheduleEditor() {
                       )}
                     </div>
                     {ferie && (
-                      <div className="mt-1 inline-flex items-center gap-1 px-2 py-0.5 rounded bg-gray-900 dark:bg-gray-100 text-[9px] font-bold text-white dark:text-gray-900 uppercase tracking-wider">
-                        <Flag className="h-2.5 w-2.5" />
+                      <div className="mt-1 text-[9px] font-bold uppercase tracking-wider">
+                        <Flag className="h-2.5 w-2.5 inline mr-0.5" />
                         {t("schedule.holiday")}
                       </div>
                     )}
