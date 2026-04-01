@@ -10,11 +10,11 @@ interface FAQItem {
 
 const FAQ_FR: FAQItem[] = [
   {
-    question: "Comment modifier les horaires d'un employé ?",
-    answer: "Rendez-vous sur la page 'Planning semaine', sélectionnez la semaine souhaitée et cliquez sur les cases horaires de l'employé pour saisir ses heures de début et de fin.",
+    question: "Comment modifier le planning d'un employé ?",
+    answer: "Rendez-vous sur la page 'Planning semaine', sélectionnez la semaine souhaitée et cliquez sur les cases de l'employé pour saisir ses heures de début et de fin.",
   },
   {
-    question: "Comment utiliser la grille horaire du jour ?",
+    question: "Comment utiliser la grille planning du jour ?",
     answer: "Sur la page 'Équipe du jour', la grille affiche les créneaux de 30 minutes. Cliquez sur plusieurs cases pour les sélectionner, puis utilisez le bouton 'Appliquer' pour attribuer un rôle à toute la sélection. N'oubliez pas de sauvegarder.",
   },
   {
@@ -27,11 +27,11 @@ const FAQ_FR: FAQItem[] = [
   },
   {
     question: "Comment ajouter une note sur un employé dans la grille du jour ?",
-    answer: "Dans la grille horaire, un champ 'Note...' apparaît sous le nom de chaque employé. Saisissez votre commentaire et sauvegardez la grille.",
+    answer: "Dans la grille planning, un champ 'Note...' apparaît sous le nom de chaque employé. Saisissez votre commentaire et sauvegardez la grille.",
   },
   {
     question: "Les modifications sont-elles sauvegardées automatiquement ?",
-    answer: "Non, vous devez cliquer sur le bouton 'Sauvegarder' pour enregistrer vos modifications sur la grille horaire et les plannings.",
+    answer: "Non, vous devez cliquer sur le bouton 'Sauvegarder' pour enregistrer vos modifications sur la grille et les plannings.",
   },
   {
     question: "Comment voir le récapitulatif des heures de l'équipe ?",

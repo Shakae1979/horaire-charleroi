@@ -37,7 +37,7 @@ export function FnacHeader({ title, subtitle, icon: Icon, children }: FnacHeader
           <button onClick={() => navigate((role === "admin" || role === "editor") ? "/" : "/equipe-du-jour")} className="flex items-center gap-2 hover:opacity-80 transition-opacity">
             <Calendar className="h-5 w-5" style={{ color: "hsl(var(--sidebar-active))" }} />
             <span className="text-base font-extrabold tracking-tight" style={{ color: "hsl(var(--sidebar-active))" }}>
-              fnac
+              planning fnac
             </span>
           </button>
           <div className="h-5 w-px" style={{ background: "hsl(var(--sidebar-fg) / 0.2)" }} />

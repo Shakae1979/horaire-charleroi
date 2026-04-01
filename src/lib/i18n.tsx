@@ -6,7 +6,7 @@ export type Lang = "fr" | "nl";
 const translations = {
   // ========== Navigation / Sidebar ==========
   "nav.overview": { fr: "Vue d'ensemble", nl: "Overzicht" },
-  "nav.schedule": { fr: "Horaires", nl: "Werkroosters" },
+  "nav.schedule": { fr: "Plannings", nl: "Werkroosters" },
   "nav.recap": { fr: "Récap équipe", nl: "Teamoverzicht" },
   "nav.conges": { fr: "Congés", nl: "Verlof" },
   "nav.team": { fr: "Équipe & Comptes", nl: "Team & Accounts" },
@@ -32,7 +32,7 @@ const translations = {
   "header.weekPlan": { fr: "Planning semaine", nl: "Weekplanning" },
   "header.myPlan": { fr: "Mon planning", nl: "Mijn planning" },
   "header.title": { fr: "Planning Fnac", nl: "Planning Fnac" },
-  "header.mgmt": { fr: "Gestion des horaires", nl: "Roosterbeheer" },
+  "header.mgmt": { fr: "Gestion des plannings", nl: "Roosterbeheer" },
 
   // ========== Days short ==========
   "day.short.lundi": { fr: "Lun", nl: "Ma" },
@@ -168,7 +168,7 @@ const translations = {
   "overview.collaborators": { fr: "collaborateurs", nl: "medewerkers" },
   "overview.getStarted": { fr: "Pour commencer", nl: "Aan de slag" },
   "overview.getStartedText": {
-    fr: "Allez dans <strong>Horaires</strong> pour créer et modifier les plannings semaine par semaine. Partagez ensuite les <strong>Liens vendeurs</strong> pour que chaque collaborateur puisse consulter son planning.",
+    fr: "Allez dans <strong>Plannings</strong> pour créer et modifier les plannings semaine par semaine. Partagez ensuite les <strong>Liens vendeurs</strong> pour que chaque collaborateur puisse consulter son planning.",
     nl: "Ga naar <strong>Werkroosters</strong> om weekplanningen aan te maken en te wijzigen. Deel vervolgens de <strong>Medewerkerslinks</strong> zodat iedereen zijn planning kan raadplegen."
   },
 
@@ -184,7 +184,7 @@ const translations = {
   "schedule.saveTemplate": { fr: "Sauver sem. type", nl: "Modelweek opslaan" },
   "schedule.applyTemplate": { fr: "Appliquer sem. type", nl: "Modelweek toepassen" },
   "schedule.copyPrevWeek": { fr: "Copier sem. précédente", nl: "Vorige week kopiëren" },
-  "schedule.saved": { fr: "Horaires sauvegardés !", nl: "Roosters opgeslagen!" },
+  "schedule.saved": { fr: "Planning sauvegardé !", nl: "Roosters opgeslagen!" },
   "schedule.templateApplied": { fr: "Semaine type appliquée !", nl: "Modelweek toegepast!" },
   "schedule.templateSaved": { fr: "Semaine type sauvegardée !", nl: "Modelweek opgeslagen!" },
   "schedule.prevWeekCopied": { fr: "Semaine précédente copiée — vérifiez puis sauvegardez", nl: "Vorige week gekopieerd — controleer en sla op" },
@@ -192,13 +192,13 @@ const translations = {
   "schedule.exterior": { fr: "Extérieur", nl: "Extern" },
   "schedule.holiday": { fr: "Férié", nl: "Feestdag" },
   "schedule.rotation": { fr: "Roulement", nl: "Wisseldienst" },
-  "schedule.breakNote": { fr: "Les horaires affichés sont bruts. Le total soustrait 1h de pause par jour travaillé.", nl: "De getoonde uren zijn bruto. Het totaal trekt 1u pauze per gewerkte dag af." },
+  "schedule.breakNote": { fr: "Les heures affichées sont brutes. Le total soustrait 1h de pause par jour travaillé.", nl: "De getoonde uren zijn bruto. Het totaal trekt 1u pauze per gewerkte dag af." },
 
   // ========== Recap ==========
   "recap.contractHours": { fr: "Heures contrat", nl: "Contracturen" },
   "recap.plannedHours": { fr: "Heures planifiées", nl: "Geplande uren" },
   "recap.unplanned": { fr: "Non planifiés", nl: "Niet gepland" },
-  "recap.coverage": { fr: "Couverture horaire — Nombre de vendeurs par créneau", nl: "Uurrooster — Aantal verkopers per tijdslot" },
+  "recap.coverage": { fr: "Couverture planning — Nombre de vendeurs par créneau", nl: "Uurrooster — Aantal verkopers per tijdslot" },
   "recap.categoryCoverage": { fr: "Couverture par catégorie — Présence par jour", nl: "Dekking per categorie — Aanwezigheid per dag" },
   "recap.perSeller": { fr: "Récapitulatif par vendeur", nl: "Overzicht per verkoper" },
   "recap.category": { fr: "Catégorie", nl: "Categorie" },
@@ -303,7 +303,7 @@ const translations = {
   "teamDay.uncovered": { fr: "Non couverts", nl: "Niet gedekt" },
   "teamDay.holidayBanner": { fr: "Jour férié", nl: "Feestdag" },
   "teamDay.employeeConcerned": { fr: "employé(s) concerné(s)", nl: "betrokken medewerker(s)" },
-  "teamDay.hourlyGrid": { fr: "Grille horaire", nl: "Uurrooster" },
+  "teamDay.hourlyGrid": { fr: "Grille planning", nl: "Uurrooster" },
   "teamDay.employee": { fr: "Employé", nl: "Medewerker" },
 
   // ========== Team week view ==========
@@ -314,7 +314,7 @@ const translations = {
   "teamWeek.notes": { fr: "📝 Notes", nl: "📝 Notities" },
   "teamWeek.ferie": { fr: "Férié", nl: "Feestdag" },
   "teamWeek.exterior": { fr: "Extérieur", nl: "Extern" },
-  "teamWeek.breakNote": { fr: "Les horaires affichés sont bruts. Le total soustrait 1h de pause par jour travaillé.", nl: "De getoonde uren zijn bruto. Het totaal trekt 1u pauze per gewerkte dag af." },
+  "teamWeek.breakNote": { fr: "Les heures affichées sont brutes. Le total soustrait 1h de pause par jour travaillé.", nl: "De getoonde uren zijn bruto. Het totaal trekt 1u pauze per gewerkte dag af." },
   "teamWeek.markHoliday": { fr: "Jour marqué comme férié pour tous les employés", nl: "Dag gemarkeerd als feestdag voor alle medewerkers" },
   "teamWeek.markedHoliday": { fr: "Jour marqué comme férié !", nl: "Dag gemarkeerd als feestdag!" },
 
@@ -325,7 +325,7 @@ const translations = {
   "empView.chooseSeller": { fr: "Choisir un vendeur", nl: "Kies een verkoper" },
   "empView.thisWeek": { fr: "Cette semaine", nl: "Deze week" },
   "empView.4weeks": { fr: "4 semaines affichées", nl: "4 weken weergegeven" },
-  "empView.schedules": { fr: "Horaires :", nl: "Uren:" },
+  "empView.schedules": { fr: "Planning :", nl: "Uren:" },
   "empView.net": { fr: "net", nl: "netto" },
   "empView.perWeek": { fr: "/ semaine", nl: "/ week" },
 
@@ -367,7 +367,7 @@ const translations = {
   "copy.checkTargets": { fr: "Cochez les employés cibles", nl: "Selecteer de doelmedewerkers" },
   "copy.checkDays": { fr: "Cochez les jours cibles", nl: "Selecteer de doeldagen" },
   "copy.selected": { fr: "sélectionné(s)", nl: "geselecteerd" },
-  "copy.pastedTo": { fr: "Horaires collés sur", nl: "Roosters geplakt op" },
+  "copy.pastedTo": { fr: "Planning collé sur", nl: "Roosters geplakt op" },
   "copy.employees": { fr: "employé(s)", nl: "medewerker(s)" },
   "copy.source": { fr: "(source)", nl: "(bron)" },
   "copy.pastedOn": { fr: "collé sur", nl: "geplakt op" },
@@ -389,7 +389,7 @@ const translations = {
   "misc.collaborators": { fr: "collaborateurs", nl: "medewerkers" },
 
   // ========== HourlyGrid ==========
-  "hourlyGrid.title": { fr: "Grille horaire", nl: "Uurrooster" },
+  "hourlyGrid.title": { fr: "Grille planning", nl: "Uurrooster" },
   "hourlyGrid.employee": { fr: "Employé", nl: "Medewerker" },
   "hourlyGrid.saving": { fr: "Sauvegarde...", nl: "Opslaan..." },
 
@@ -421,7 +421,7 @@ const translations = {
   "schedule.errorSaving": { fr: "Erreur lors de la sauvegarde", nl: "Fout bij het opslaan" },
   "schedule.weekOfDate": { fr: "Semaine du", nl: "Week van" },
   "schedule.prevWeekCopiedFor": { fr: "Semaine précédente copiée pour", nl: "Vorige week gekopieerd voor" },
-  "schedule.pastedOnEmployees": { fr: "Horaires collés sur", nl: "Roosters geplakt op" },
+  "schedule.pastedOnEmployees": { fr: "Planning collé sur", nl: "Roosters geplakt op" },
 } as const;
 
 type TranslationKey = keyof typeof translations;
