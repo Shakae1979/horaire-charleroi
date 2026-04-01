@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useI18n } from "@/lib/i18n";
+import { getDisplayName } from "@/lib/format";
 
 const HALF_HOURS: { hour: number; minute: number; label: string }[] = [];
 for (let h = 9; h <= 19; h++) {
@@ -205,7 +206,7 @@ export default function HourlyGrid({ employees, date }: { employees: Employee[];
                 <tr key={emp.id} className="border-t">
                   <td className="sticky left-0 bg-card px-2 py-1 border-r">
                     <div className="flex items-center gap-1.5">
-                      <span className="font-medium truncate max-w-[70px]">{emp.name}</span>
+                      <span className="font-medium truncate max-w-[90px]">{getDisplayName(emp)}</span>
                       <span className="text-[9px] text-muted-foreground">{roleLabels[emp.role] || emp.role}</span>
                     </div>
                     <Input

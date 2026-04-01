@@ -5,7 +5,7 @@ import HourlyGrid from "@/components/team-day/HourlyGrid";
 import { FnacHeader } from "@/components/FnacHeader";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { formatDateBE, formatTimeBE, formatLocalDate } from "@/lib/format";
+import { formatDateBE, formatTimeBE, formatLocalDate, getDisplayName } from "@/lib/format";
 import { useStore } from "@/hooks/useStore";
 import { useI18n } from "@/lib/i18n";
 
@@ -225,7 +225,7 @@ const TeamDayView = () => {
                     {group.map((emp) => (
                       <div key={emp.id}>
                         <div className="flex items-center justify-between py-1 px-2 rounded bg-accent/5 text-xs">
-                          <span className="font-medium">{emp.name}</span>
+                          <span className="font-medium">{getDisplayName(emp)}</span>
                           <span className="text-muted-foreground font-mono-data text-[11px]">
                             {formatTimeBE(emp.start)}–{formatTimeBE(emp.end)} <span className="ml-1">{emp.netHours.toFixed(1)}h</span>
                           </span>
@@ -281,7 +281,7 @@ const TeamDayView = () => {
                 <div className="space-y-0.5">
                   {onLeave.map((emp) => (
                     <div key={emp.id} className="flex items-center justify-between py-1 px-2 rounded bg-primary/5 text-xs">
-                      <span className="font-medium">{emp.name}</span>
+                      <span className="font-medium">{getDisplayName(emp)}</span>
                       <span className="text-primary text-[11px]">
                         {emp.conge ? congeLabels(emp.conge.type) : ""}
                       </span>
@@ -296,7 +296,7 @@ const TeamDayView = () => {
                 <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">{t("schedule.rotation")}</div>
                 <div className="flex flex-wrap gap-1">
                   {roulement.map((emp) => (
-                    <span key={emp.id} className="py-0.5 px-2 rounded bg-gray-200 dark:bg-gray-700/50 text-[11px] text-gray-600 dark:text-gray-300 font-medium">{emp.name}</span>
+                    <span key={emp.id} className="py-0.5 px-2 rounded bg-gray-200 dark:bg-gray-700/50 text-[11px] text-gray-600 dark:text-gray-300 font-medium">{getDisplayName(emp)}</span>
                   ))}
                 </div>
               </div>
@@ -307,7 +307,7 @@ const TeamDayView = () => {
                 <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">{t("teamDay.rest")}</div>
                 <div className="flex flex-wrap gap-1">
                   {off.map((emp) => (
-                    <span key={emp.id} className="py-0.5 px-2 rounded bg-muted/50 text-[11px] text-muted-foreground">{emp.name}</span>
+                    <span key={emp.id} className="py-0.5 px-2 rounded bg-muted/50 text-[11px] text-muted-foreground">{getDisplayName(emp)}</span>
                   ))}
                 </div>
               </div>
