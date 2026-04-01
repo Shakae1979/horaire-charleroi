@@ -228,13 +228,13 @@ const TeamWeekView = () => {
                   dayDate.setDate(dayDate.getDate() + di);
                   const isFerieDay = dayComments?.find(dc => dc.day_key === day.key)?.is_ferie ?? false;
                   return (
-                    <th key={day.key} className={`border-b border-r px-1 py-2 text-center font-semibold text-muted-foreground ${isFerieDay ? "bg-amber-50 dark:bg-amber-950/20" : ""}`} style={{ minWidth: 140 }}>
+                    <th key={day.key} className={`border-b border-r px-1 py-2 text-center font-semibold ${isFerieDay ? "bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900" : "text-muted-foreground"}`} style={{ minWidth: 140 }}>
                       <div className="flex items-center justify-center gap-1">
                         <span>{day.label}</span>
-                        {isFerieDay && <Flag className="h-3 w-3 text-amber-600 dark:text-amber-400" />}
+                        {isFerieDay && <Flag className="h-3 w-3" />}
                       </div>
                       <div className="text-[10px] font-normal">{formatDateBE(dayDate)}</div>
-                      {isFerieDay && <div className="text-[9px] font-bold text-amber-600 dark:text-amber-400 uppercase">{t("schedule.holiday")}</div>}
+                      {isFerieDay && <div className="text-[9px] font-bold uppercase">{t("schedule.holiday")}</div>}
                     </th>
                   );
                 })}
