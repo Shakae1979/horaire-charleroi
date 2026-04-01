@@ -203,10 +203,13 @@ const TeamDayView = () => {
           </div>
         )}
 
-        {ferie.length > 0 && (
+        {(isDayFerie || ferie.length > 0) && (
           <div className="rounded-lg border border-muted bg-muted/30 p-3 mb-4 flex items-center gap-2">
             <Flag className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm font-medium text-muted-foreground">{t("teamDay.holidayBanner")} — {ferie.length} {t("teamDay.employeeConcerned")}</span>
+            <span className="text-sm font-medium text-muted-foreground">
+              {t("teamDay.holidayBanner")}
+              {ferie.length > 0 && ` — ${ferie.length} ${t("teamDay.employeeConcerned")}`}
+            </span>
           </div>
         )}
 
