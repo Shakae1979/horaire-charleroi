@@ -17,9 +17,8 @@ function timeToHours(t: string | null): number {
   return h + (m || 0) / 60;
 }
 
-function computeNetHours(schedule: any, conges: any[], dayComments: any[], monday: Date, contractHours: number): { gross: number; breaks: number; net: number; credited: number } {
+function computeNetHours(schedule: any, conges: any[], dayComments: any[], monday: Date, template: any | null): { gross: number; breaks: number; net: number; credited: number } {
   const days = ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"];
-  const dailyCredit = contractHours / 5;
   let gross = 0; let workedDays = 0; let credited = 0;
   for (let i = 0; i < days.length; i++) {
     const d = days[i];
@@ -30,7 +29,13 @@ function computeNetHours(schedule: any, conges: any[], dayComments: any[], monda
     const isLegacyFerie = start === "FERIE" || end === "FERIE";
 
     if (conge || (isFerieDay && !start) || isLegacyFerie) {
-      credited += dailyCredit;
+      // Crédit basé sur la semaine type
+      if (template) {
+        const tStart = template[`${d}_start`]; const tEnd = template[`${d}_end`];
+        if (tStart && tEnd && tStart !== "EXT" && tStart !== "ROULEMENT" && tStart !== "FERIE") {
+          credited += timeToHours(tEnd) - timeToHours(tStart) - BREAK_HOURS;
+        }
+      }
       continue;
     }
     if (start && end && start !== "EXT" && start !== "ROULEMENT") {
