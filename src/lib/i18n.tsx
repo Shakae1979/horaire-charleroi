@@ -184,7 +184,7 @@ const translations = {
   "schedule.saveTemplate": { fr: "Sauver sem. type", nl: "Modelweek opslaan" },
   "schedule.applyTemplate": { fr: "Appliquer sem. type", nl: "Modelweek toepassen" },
   "schedule.copyPrevWeek": { fr: "Copier sem. précédente", nl: "Vorige week kopiëren" },
-  "schedule.saved": { fr: "Horaires sauvegardés !", nl: "Roosters opgeslagen!" },
+  "schedule.saved": { fr: "Planning sauvegardé !", nl: "Roosters opgeslagen!" },
   "schedule.templateApplied": { fr: "Semaine type appliquée !", nl: "Modelweek toegepast!" },
   "schedule.templateSaved": { fr: "Semaine type sauvegardée !", nl: "Modelweek opgeslagen!" },
   "schedule.prevWeekCopied": { fr: "Semaine précédente copiée — vérifiez puis sauvegardez", nl: "Vorige week gekopieerd — controleer en sla op" },
