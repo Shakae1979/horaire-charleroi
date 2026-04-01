@@ -367,7 +367,7 @@ const translations = {
   "copy.checkTargets": { fr: "Cochez les employés cibles", nl: "Selecteer de doelmedewerkers" },
   "copy.checkDays": { fr: "Cochez les jours cibles", nl: "Selecteer de doeldagen" },
   "copy.selected": { fr: "sélectionné(s)", nl: "geselecteerd" },
-  "copy.pastedTo": { fr: "Horaires collés sur", nl: "Roosters geplakt op" },
+  "copy.pastedTo": { fr: "Planning collé sur", nl: "Roosters geplakt op" },
   "copy.employees": { fr: "employé(s)", nl: "medewerker(s)" },
   "copy.source": { fr: "(source)", nl: "(bron)" },
   "copy.pastedOn": { fr: "collé sur", nl: "geplakt op" },
