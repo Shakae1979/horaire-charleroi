@@ -268,16 +268,10 @@ export function ScheduleEditor() {
   };
 
   const setDayFerie = (dayKey: string) => {
-    if (!employees) return;
-    const newEdits = { ...localEdits };
-    employees.forEach((emp) => {
-      if (!newEdits[emp.id]) newEdits[emp.id] = {};
-      newEdits[emp.id][`${dayKey}_start`] = "FERIE";
-      newEdits[emp.id][`${dayKey}_end`] = "FERIE";
-    });
-    setLocalEdits(newEdits);
+    const current = isDayFerie(dayKey);
+    setLocalFerieDays((prev) => ({ ...prev, [dayKey]: !current }));
     const dayLabel = DAYS.find((d) => d.key === dayKey)?.label ?? dayKey;
-    toast.info(`${dayLabel} ${t("schedule.markHoliday")}`);
+    toast.info(`${dayLabel} ${!current ? t("schedule.markHoliday") : t("schedule.unmarkHoliday")}`);
   };
 
   const copyCellSchedule = (empId: string, dayKey: string) => {
