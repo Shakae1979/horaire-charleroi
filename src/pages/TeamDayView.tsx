@@ -106,13 +106,14 @@ const TeamDayView = () => {
   });
 
   const dayComment = dayComments?.find((c) => c.day_key === dayKey)?.comment || null;
+  const isDayFerie = dayComments?.find((c) => c.day_key === dayKey)?.is_ferie ?? false;
 
   const teamDay = employees
     ?.map((emp) => {
       const schedule = schedules?.find((s) => s.employee_id === emp.id);
       const start = schedule ? (schedule as any)[`${dayKey}_start`] : null;
       const end = schedule ? (schedule as any)[`${dayKey}_end`] : null;
-      const isFerie = start === "FERIE" || end === "FERIE";
+      const isFerie = start === "FERIE" || end === "FERIE"; // legacy data
       const isExt = start === "EXT" || end === "EXT";
       const isRoulement = start === "ROULEMENT" || end === "ROULEMENT";
       const hasShift = !!(start && end && !isFerie && !isExt && !isRoulement);
@@ -131,7 +132,7 @@ const TeamDayView = () => {
 
   const working = teamDay?.filter((e) => e.hasShift && !e.conge) || [];
   const onLeave = teamDay?.filter((e) => e.conge) || [];
-  const ferie = teamDay?.filter((e) => e.isFerie && !e.conge) || [];
+  const ferie = teamDay?.filter((e) => e.isFerie && !e.conge) || []; // legacy
   const ext = teamDay?.filter((e) => e.isExt && !e.conge) || [];
   const roulement = teamDay?.filter((e) => e.isRoulement && !e.conge) || [];
   const off = teamDay?.filter((e) => !e.hasShift && !e.conge && !e.isFerie && !e.isExt && !e.isRoulement) || [];
