@@ -400,6 +400,7 @@ export function ScheduleEditor() {
     onSuccess: () => {
       setLocalEdits({});
       setLocalDayComments({});
+      setLocalFerieDays({});
       queryClient.invalidateQueries({ queryKey: ["schedules", weekStr] });
       queryClient.invalidateQueries({ queryKey: ["all-schedules"] });
       queryClient.invalidateQueries({ queryKey: ["day-comments", weekStr] });
