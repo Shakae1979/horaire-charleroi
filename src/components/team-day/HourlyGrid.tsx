@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useI18n } from "@/lib/i18n";
+import { getDisplayName } from "@/lib/format";
 
 const HALF_HOURS: { hour: number; minute: number; label: string }[] = [];
 for (let h = 9; h <= 19; h++) {
