@@ -168,7 +168,7 @@ const translations = {
   "overview.collaborators": { fr: "collaborateurs", nl: "medewerkers" },
   "overview.getStarted": { fr: "Pour commencer", nl: "Aan de slag" },
   "overview.getStartedText": {
-    fr: "Allez dans <strong>Horaires</strong> pour créer et modifier les plannings semaine par semaine. Partagez ensuite les <strong>Liens vendeurs</strong> pour que chaque collaborateur puisse consulter son planning.",
+    fr: "Allez dans <strong>Plannings</strong> pour créer et modifier les plannings semaine par semaine. Partagez ensuite les <strong>Liens vendeurs</strong> pour que chaque collaborateur puisse consulter son planning.",
     nl: "Ga naar <strong>Werkroosters</strong> om weekplanningen aan te maken en te wijzigen. Deel vervolgens de <strong>Medewerkerslinks</strong> zodat iedereen zijn planning kan raadplegen."
   },
 
