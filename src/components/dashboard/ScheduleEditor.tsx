@@ -805,7 +805,7 @@ export function ScheduleEditor() {
                         const isCellSource = copiedCell?.empId === emp.id && copiedCell?.dayKey === day.key;
                         const showPaste = isCellCopyMode && !isCellSource;
                         return (
-                          <td key={`${day.key}-cell`} colSpan={2} className={`py-1.5 px-0.5 ${isCellSource ? "bg-primary/10" : ferieDay ? "bg-amber-50/50 dark:bg-amber-950/10" : ""}`}>
+                          <td key={`${day.key}-cell`} colSpan={2} className={`py-1.5 px-0.5 ${isCellSource ? "bg-primary/10" : ferieDay ? "bg-gray-100 dark:bg-gray-800/50" : ""}`}>
                             <div className="flex items-center gap-0.5">
                               <select
                                 value={getDisplayValue(emp.id, `${day.key}_start`)}
