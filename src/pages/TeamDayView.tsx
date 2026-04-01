@@ -281,7 +281,7 @@ const TeamDayView = () => {
                 <div className="space-y-0.5">
                   {onLeave.map((emp) => (
                     <div key={emp.id} className="flex items-center justify-between py-1 px-2 rounded bg-primary/5 text-xs">
-                      <span className="font-medium">{emp.name}</span>
+                      <span className="font-medium">{getDisplayName(emp)}</span>
                       <span className="text-primary text-[11px]">
                         {emp.conge ? congeLabels(emp.conge.type) : ""}
                       </span>
