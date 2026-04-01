@@ -6,7 +6,7 @@ export type Lang = "fr" | "nl";
 const translations = {
   // ========== Navigation / Sidebar ==========
   "nav.overview": { fr: "Vue d'ensemble", nl: "Overzicht" },
-  "nav.schedule": { fr: "Horaires", nl: "Werkroosters" },
+  "nav.schedule": { fr: "Plannings", nl: "Werkroosters" },
   "nav.recap": { fr: "Récap équipe", nl: "Teamoverzicht" },
   "nav.conges": { fr: "Congés", nl: "Verlof" },
   "nav.team": { fr: "Équipe & Comptes", nl: "Team & Accounts" },
