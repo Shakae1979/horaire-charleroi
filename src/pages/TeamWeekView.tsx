@@ -353,7 +353,7 @@ const TeamWeekView = () => {
                                   </div>
                                 ) : (
                                   <div className="absolute inset-0 flex items-center justify-center">
-                                    <span className="text-[9px] text-muted-foreground/40">—</span>
+                                    <span className="text-[9px] font-semibold text-muted-foreground/60">R</span>
                                   </div>
                                 )}
                               </td>
