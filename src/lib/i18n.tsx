@@ -314,7 +314,7 @@ const translations = {
   "teamWeek.notes": { fr: "📝 Notes", nl: "📝 Notities" },
   "teamWeek.ferie": { fr: "Férié", nl: "Feestdag" },
   "teamWeek.exterior": { fr: "Extérieur", nl: "Extern" },
-  "teamWeek.breakNote": { fr: "Les horaires affichés sont bruts. Le total soustrait 1h de pause par jour travaillé.", nl: "De getoonde uren zijn bruto. Het totaal trekt 1u pauze per gewerkte dag af." },
+  "teamWeek.breakNote": { fr: "Les heures affichées sont brutes. Le total soustrait 1h de pause par jour travaillé.", nl: "De getoonde uren zijn bruto. Het totaal trekt 1u pauze per gewerkte dag af." },
   "teamWeek.markHoliday": { fr: "Jour marqué comme férié pour tous les employés", nl: "Dag gemarkeerd als feestdag voor alle medewerkers" },
   "teamWeek.markedHoliday": { fr: "Jour marqué comme férié !", nl: "Dag gemarkeerd als feestdag!" },
 
