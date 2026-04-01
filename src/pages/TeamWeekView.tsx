@@ -305,10 +305,12 @@ const TeamWeekView = () => {
                             const congeType = getConge(emp.id, di);
                             const start = schedule ? (schedule as any)[`${day}_start`] : null;
                             const end = schedule ? (schedule as any)[`${day}_end`] : null;
-                            const isFerie = dayComments?.find(dc => dc.day_key === day)?.is_ferie ?? false;
-                            const isExt = start === "EXT" || end === "EXT";
-                            const isRoulement = start === "ROULEMENT" || end === "ROULEMENT";
-                            const hasShift = !!(start && end && !isExt && !isRoulement && start !== "FERIE" && end !== "FERIE");
+                            const isFerieFromComments = dayComments?.find(dc => dc.day_key === day)?.is_ferie ?? false;
+                            const isLegacyFerie = start === "FERIE" || end === "FERIE";
+                            const isFerie = isFerieFromComments || isLegacyFerie;
+                            const isExt = !isLegacyFerie && (start === "EXT" || end === "EXT");
+                            const isRoulement = !isLegacyFerie && (start === "ROULEMENT" || end === "ROULEMENT");
+                            const hasShift = !!(start && end && !isExt && !isRoulement && !isLegacyFerie);
 
                             return (
                               <td key={day} className={`border-r p-0 relative ${isFerie ? "bg-gray-100 dark:bg-gray-800/50" : ""}`} style={{ height: 32 }}>
@@ -356,8 +358,9 @@ const TeamWeekView = () => {
                                   </div>
                                 ) : isFerie ? (
                                   <div className="absolute inset-0 flex items-center px-0.5">
-                                    <div className="h-5 rounded bg-indigo-400 opacity-70 flex items-center justify-center text-[9px] font-semibold text-white w-full">
-                                      {t("teamWeek.exterior")}
+                                    <div className="h-5 rounded bg-gray-900 dark:bg-gray-200 opacity-80 flex items-center justify-center text-[9px] font-semibold text-white dark:text-gray-900 w-full">
+                                      <Flag className="h-3 w-3 mr-0.5" />
+                                      {t("schedule.holiday")}
                                     </div>
                                   </div>
                                 ) : isRoulement ? (
