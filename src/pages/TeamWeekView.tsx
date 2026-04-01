@@ -330,6 +330,12 @@ const TeamWeekView = () => {
                                       {t("teamWeek.exterior")}
                                     </div>
                                   </div>
+                                ) : isRoulement ? (
+                                  <div className="absolute inset-0 flex items-center px-0.5">
+                                    <div className="h-5 rounded bg-gray-400 opacity-70 flex items-center justify-center text-[9px] font-semibold text-white w-full">
+                                      {t("schedule.rotation")}
+                                    </div>
+                                  </div>
                                 ) : hasShift ? (
                                   <div className="absolute inset-0 flex items-center">
                                     {(() => {
