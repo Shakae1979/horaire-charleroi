@@ -10,8 +10,8 @@ interface FAQItem {
 
 const FAQ_FR: FAQItem[] = [
   {
-    question: "Comment modifier les horaires d'un employé ?",
-    answer: "Rendez-vous sur la page 'Planning semaine', sélectionnez la semaine souhaitée et cliquez sur les cases horaires de l'employé pour saisir ses heures de début et de fin.",
+    question: "Comment modifier le planning d'un employé ?",
+    answer: "Rendez-vous sur la page 'Planning semaine', sélectionnez la semaine souhaitée et cliquez sur les cases de l'employé pour saisir ses heures de début et de fin.",
   },
   {
     question: "Comment utiliser la grille horaire du jour ?",
