@@ -17,15 +17,28 @@ function timeToHours(t: string | null): number {
   return h + (m || 0) / 60;
 }
 
-function computeNetHours(schedule: any): { gross: number; breaks: number; net: number } {
+function computeNetHours(schedule: any, conges: any[], dayComments: any[], monday: Date, contractHours: number): { gross: number; breaks: number; net: number; credited: number } {
   const days = ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"];
-  let gross = 0; let workedDays = 0;
-  for (const d of days) {
+  const dailyCredit = contractHours / 5;
+  let gross = 0; let workedDays = 0; let credited = 0;
+  for (let i = 0; i < days.length; i++) {
+    const d = days[i];
+    const dayDate = getDayDate(monday, i);
+    const conge = conges.find(c => dayDate >= c.date_start && dayDate <= c.date_end);
+    const isFerieDay = dayComments.find(dc => dc.day_key === d)?.is_ferie ?? false;
     const start = schedule[`${d}_start`]; const end = schedule[`${d}_end`];
-    if (start && end && start !== "EXT" && start !== "ROULEMENT" && start !== "FERIE") { gross += timeToHours(end) - timeToHours(start); workedDays++; }
+    const isLegacyFerie = start === "FERIE" || end === "FERIE";
+
+    if (conge || (isFerieDay && !start) || isLegacyFerie) {
+      credited += dailyCredit;
+      continue;
+    }
+    if (start && end && start !== "EXT" && start !== "ROULEMENT") {
+      gross += timeToHours(end) - timeToHours(start); workedDays++;
+    }
   }
   const breaks = workedDays * BREAK_HOURS;
-  return { gross, breaks, net: gross - breaks };
+  return { gross, breaks, net: gross - breaks + credited, credited };
 }
 
 const DAY_KEYS = ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"] as const;
