@@ -114,12 +114,13 @@ const TeamDayView = () => {
       const end = schedule ? (schedule as any)[`${dayKey}_end`] : null;
       const isFerie = start === "FERIE" || end === "FERIE";
       const isExt = start === "EXT" || end === "EXT";
-      const hasShift = !!(start && end && !isFerie && !isExt);
+      const isRoulement = start === "ROULEMENT" || end === "ROULEMENT";
+      const hasShift = !!(start && end && !isFerie && !isExt && !isRoulement);
       const conge = conges?.find((c) => c.employee_id === emp.id);
       const notes = schedule?.notes || null;
       let netHours = 0;
       if (hasShift) netHours = timeToHours(end) - timeToHours(start) - BREAK_HOURS;
-      return { ...emp, start, end, hasShift, isFerie, isExt, netHours, conge, notes };
+      return { ...emp, start, end, hasShift, isFerie, isExt, isRoulement, netHours, conge, notes };
     })
     .sort((a, b) => {
       const orderA = ROLE_ORDER.indexOf(a.role);
@@ -132,7 +133,8 @@ const TeamDayView = () => {
   const onLeave = teamDay?.filter((e) => e.conge) || [];
   const ferie = teamDay?.filter((e) => e.isFerie && !e.conge) || [];
   const ext = teamDay?.filter((e) => e.isExt && !e.conge) || [];
-  const off = teamDay?.filter((e) => !e.hasShift && !e.conge && !e.isFerie && !e.isExt) || [];
+  const roulement = teamDay?.filter((e) => e.isRoulement && !e.conge) || [];
+  const off = teamDay?.filter((e) => !e.hasShift && !e.conge && !e.isFerie && !e.isExt && !e.isRoulement) || [];
   const isToday = dayOffset === 0;
 
   const workingByRole: Record<string, typeof working> = {};
@@ -188,7 +190,7 @@ const TeamDayView = () => {
             <div className="text-xs text-muted-foreground">{t("teamDay.onLeave")}</div>
           </div>
           <div className="rounded-lg border bg-muted/50 p-3 text-center">
-            <div className="text-2xl font-bold text-muted-foreground">{off.length + ferie.length}</div>
+            <div className="text-2xl font-bold text-muted-foreground">{off.length + ferie.length + roulement.length}</div>
             <div className="text-xs text-muted-foreground">{ferie.length > 0 ? t("teamDay.holidayRest") : t("teamDay.rest")}</div>
           </div>
         </div>
@@ -289,12 +291,23 @@ const TeamDayView = () => {
               </div>
             )}
 
+            {roulement.length > 0 && (
+              <div>
+                <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">{t("schedule.rotation")}</div>
+                <div className="flex flex-wrap gap-1">
+                  {roulement.map((emp) => (
+                    <span key={emp.id} className="py-0.5 px-2 rounded bg-gray-200 dark:bg-gray-700/50 text-[11px] text-gray-600 dark:text-gray-300 font-medium">{emp.name}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {off.length > 0 && (
               <div>
                 <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">{t("teamDay.rest")}</div>
                 <div className="flex flex-wrap gap-1">
                   {off.map((emp) => (
-                    <span key={emp.id} className="py-0.5 px-2 rounded bg-gray-200 dark:bg-gray-700/50 text-[11px] text-gray-600 dark:text-gray-300 font-medium">{emp.name}</span>
+                    <span key={emp.id} className="py-0.5 px-2 rounded bg-muted/50 text-[11px] text-muted-foreground">{emp.name}</span>
                   ))}
                 </div>
               </div>
