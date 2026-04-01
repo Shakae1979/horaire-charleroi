@@ -17,9 +17,8 @@ function timeToHours(t: string | null): number {
   return h + (m || 0) / 60;
 }
 
-function computeNetHours(schedule: any, conges: any[], dayComments: any[], monday: Date, contractHours: number): { gross: number; breaks: number; net: number; credited: number } {
+function computeNetHours(schedule: any, conges: any[], dayComments: any[], monday: Date, template: any | null): { gross: number; breaks: number; net: number; credited: number } {
   const days = ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"];
-  const dailyCredit = contractHours / 5;
   let gross = 0; let workedDays = 0; let credited = 0;
   for (let i = 0; i < days.length; i++) {
     const d = days[i];
@@ -30,7 +29,13 @@ function computeNetHours(schedule: any, conges: any[], dayComments: any[], monda
     const isLegacyFerie = start === "FERIE" || end === "FERIE";
 
     if (conge || (isFerieDay && !start) || isLegacyFerie) {
-      credited += dailyCredit;
+      // Crédit basé sur la semaine type
+      if (template) {
+        const tStart = template[`${d}_start`]; const tEnd = template[`${d}_end`];
+        if (tStart && tEnd && tStart !== "EXT" && tStart !== "ROULEMENT" && tStart !== "FERIE") {
+          credited += timeToHours(tEnd) - timeToHours(tStart) - BREAK_HOURS;
+        }
+      }
       continue;
     }
     if (start && end && start !== "EXT" && start !== "ROULEMENT") {
@@ -123,6 +128,17 @@ const EmployeeView = () => {
     enabled: !!employee,
     queryFn: async () => {
       const { data, error } = await supabase.from("weekly_schedules").select("*").eq("employee_id", employee!.id).in("week_start", weeks).order("week_start");
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  const TEMPLATE_WEEK = "1970-01-05";
+  const { data: templateSchedule } = useQuery({
+    queryKey: ["employee-template", employee?.id],
+    enabled: !!employee,
+    queryFn: async () => {
+      const { data, error } = await supabase.from("weekly_schedules").select("*").eq("employee_id", employee!.id).eq("week_start", TEMPLATE_WEEK).maybeSingle();
       if (error) throw error;
       return data;
     },
@@ -243,7 +259,7 @@ const EmployeeView = () => {
                   {schedule && (() => {
                     const wsConges = conges?.filter(c => c.employee_id === employee!.id) || [];
                     const wsDayComments = dayComments?.filter(dc => dc.week_start === ws) || [];
-                    const { net, breaks, credited } = computeNetHours(schedule, wsConges, wsDayComments, monday, employee!.contract_hours);
+                    const { net, breaks, credited } = computeNetHours(schedule, wsConges, wsDayComments, monday, templateSchedule || null);
                     return (
                       <div className="flex items-center gap-1.5" title={`Brut - ${breaks}h pause = ${net.toFixed(1)}h net`}>
                         <Clock className="h-3.5 w-3.5 text-muted-foreground" />
