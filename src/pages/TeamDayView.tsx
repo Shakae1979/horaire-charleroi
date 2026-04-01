@@ -114,12 +114,13 @@ const TeamDayView = () => {
       const end = schedule ? (schedule as any)[`${dayKey}_end`] : null;
       const isFerie = start === "FERIE" || end === "FERIE";
       const isExt = start === "EXT" || end === "EXT";
-      const hasShift = !!(start && end && !isFerie && !isExt);
+      const isRoulement = start === "ROULEMENT" || end === "ROULEMENT";
+      const hasShift = !!(start && end && !isFerie && !isExt && !isRoulement);
       const conge = conges?.find((c) => c.employee_id === emp.id);
       const notes = schedule?.notes || null;
       let netHours = 0;
       if (hasShift) netHours = timeToHours(end) - timeToHours(start) - BREAK_HOURS;
-      return { ...emp, start, end, hasShift, isFerie, isExt, netHours, conge, notes };
+      return { ...emp, start, end, hasShift, isFerie, isExt, isRoulement, netHours, conge, notes };
     })
     .sort((a, b) => {
       const orderA = ROLE_ORDER.indexOf(a.role);
