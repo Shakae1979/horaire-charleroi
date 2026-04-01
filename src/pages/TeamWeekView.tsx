@@ -212,7 +212,7 @@ const TeamWeekView = () => {
           <span className="flex items-center gap-1.5"><span className="inline-block w-3 h-3 rounded bg-violet-500" /> {t("leave.formation")}</span>
           <span className="flex items-center gap-1.5"><span className="inline-block w-3 h-3 rounded bg-rose-600" /> {t("leave.maladie")}</span>
           <span className="flex items-center gap-1.5"><span className="inline-block w-3 h-3 rounded bg-cyan-500" /> {t("leave.rtt")}</span>
-          <span className="flex items-center gap-1.5"><span className="inline-block w-3 h-3 rounded bg-gray-400" /> {t("teamWeek.ferie")}</span>
+          <span className="flex items-center gap-1.5"><span className="inline-block w-3 h-3 rounded bg-gray-900 dark:bg-gray-100" /> {t("teamWeek.ferie")}</span>
           <span className="flex items-center gap-1.5"><span className="inline-block w-3 h-3 rounded bg-indigo-400" /> {t("teamWeek.exterior")}</span>
         </div>
 
