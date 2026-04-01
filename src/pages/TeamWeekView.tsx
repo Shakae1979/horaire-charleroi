@@ -136,22 +136,38 @@ const TeamWeekView = () => {
     return acc;
   }, {} as Record<string, typeof employees>);
 
-  const getWeekTotal = (empId: string): number => {
+  const getWeekTotal = (empId: string, contractHours: number): { total: number; creditedHours: number } => {
     const schedule = schedules?.find(s => s.employee_id === empId);
-    if (!schedule) return 0;
+    if (!schedule) return { total: 0, creditedHours: 0 };
+    const dailyCredit = contractHours / 5; // heures journalières contractuelles
     let totalMin = 0;
     let workedDays = 0;
+    let creditedHours = 0;
     DAY_KEYS.forEach((day, di) => {
       const congeType = getConge(empId, di);
-      if (congeType) return;
+      const isFerieDay = dayComments?.find(dc => dc.day_key === day)?.is_ferie ?? false;
       const start = (schedule as any)[`${day}_start`];
       const end = (schedule as any)[`${day}_end`];
+      const isLegacyFerie = start === "FERIE" || end === "FERIE";
+
+      if (congeType || (isFerieDay && !start) || isLegacyFerie) {
+        // Crédit virtuel pour CP ou férié sans horaire
+        creditedHours += dailyCredit;
+        return;
+      }
+      if (isFerieDay && start && end && start !== "EXT" && start !== "ROULEMENT") {
+        // Férié avec horaires saisis → compter les heures réelles
+        totalMin += timeToMinutes(end) - timeToMinutes(start);
+        workedDays++;
+        return;
+      }
       if (start && end && start !== "EXT" && start !== "ROULEMENT" && start !== "FERIE") {
         totalMin += timeToMinutes(end) - timeToMinutes(start);
         workedDays++;
       }
     });
-    return Math.round(((totalMin - workedDays * 60) / 60) * 100) / 100;
+    const total = Math.round(((totalMin - workedDays * 60) / 60 + creditedHours) * 100) / 100;
+    return { total, creditedHours };
   };
 
   // Férié is now managed via day_comments.is_ferie only (no schedule overwrite)
@@ -266,7 +282,7 @@ const TeamWeekView = () => {
                     </tr>
                     {emps.map(emp => {
                       const schedule = schedules?.find(s => s.employee_id === emp.id);
-                      const weekTotal = getWeekTotal(emp.id);
+                      const { total: weekTotal, creditedHours } = getWeekTotal(emp.id, emp.contract_hours);
                       const diff = weekTotal - emp.contract_hours;
                       return (
                         <tr key={emp.id} className="border-b border-border/30 hover:bg-muted/30 transition-colors">

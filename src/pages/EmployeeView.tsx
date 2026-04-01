@@ -17,15 +17,28 @@ function timeToHours(t: string | null): number {
   return h + (m || 0) / 60;
 }
 
-function computeNetHours(schedule: any): { gross: number; breaks: number; net: number } {
+function computeNetHours(schedule: any, conges: any[], dayComments: any[], monday: Date, contractHours: number): { gross: number; breaks: number; net: number; credited: number } {
   const days = ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"];
-  let gross = 0; let workedDays = 0;
-  for (const d of days) {
+  const dailyCredit = contractHours / 5;
+  let gross = 0; let workedDays = 0; let credited = 0;
+  for (let i = 0; i < days.length; i++) {
+    const d = days[i];
+    const dayDate = getDayDate(monday, i);
+    const conge = conges.find(c => dayDate >= c.date_start && dayDate <= c.date_end);
+    const isFerieDay = dayComments.find(dc => dc.day_key === d)?.is_ferie ?? false;
     const start = schedule[`${d}_start`]; const end = schedule[`${d}_end`];
-    if (start && end && start !== "EXT" && start !== "ROULEMENT" && start !== "FERIE") { gross += timeToHours(end) - timeToHours(start); workedDays++; }
+    const isLegacyFerie = start === "FERIE" || end === "FERIE";
+
+    if (conge || (isFerieDay && !start) || isLegacyFerie) {
+      credited += dailyCredit;
+      continue;
+    }
+    if (start && end && start !== "EXT" && start !== "ROULEMENT") {
+      gross += timeToHours(end) - timeToHours(start); workedDays++;
+    }
   }
   const breaks = workedDays * BREAK_HOURS;
-  return { gross, breaks, net: gross - breaks };
+  return { gross, breaks, net: gross - breaks + credited, credited };
 }
 
 const DAY_KEYS = ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"] as const;
@@ -228,7 +241,9 @@ const EmployeeView = () => {
                     {isCurrentWeek && <span className="badge-positive">{t("empView.thisWeek")}</span>}
                   </div>
                   {schedule && (() => {
-                    const { net, breaks } = computeNetHours(schedule);
+                    const wsConges = conges?.filter(c => c.employee_id === employee!.id) || [];
+                    const wsDayComments = dayComments?.filter(dc => dc.week_start === ws) || [];
+                    const { net, breaks, credited } = computeNetHours(schedule, wsConges, wsDayComments, monday, employee!.contract_hours);
                     return (
                       <div className="flex items-center gap-1.5" title={`Brut - ${breaks}h pause = ${net.toFixed(1)}h net`}>
                         <Clock className="h-3.5 w-3.5 text-muted-foreground" />
