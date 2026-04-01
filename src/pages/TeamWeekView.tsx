@@ -147,7 +147,7 @@ const TeamWeekView = () => {
       if (congeType) return;
       const start = (schedule as any)[`${day}_start`];
       const end = (schedule as any)[`${day}_end`];
-      if (start && end && start !== "FERIE" && start !== "EXT" && start !== "ROULEMENT") {
+      if (start && end && start !== "EXT" && start !== "ROULEMENT" && start !== "FERIE") {
         totalMin += timeToMinutes(end) - timeToMinutes(start);
         workedDays++;
       }
