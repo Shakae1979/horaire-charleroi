@@ -225,7 +225,7 @@ const TeamDayView = () => {
                     {group.map((emp) => (
                       <div key={emp.id}>
                         <div className="flex items-center justify-between py-1 px-2 rounded bg-accent/5 text-xs">
-                          <span className="font-medium">{emp.name}</span>
+                          <span className="font-medium">{getDisplayName(emp)}</span>
                           <span className="text-muted-foreground font-mono-data text-[11px]">
                             {formatTimeBE(emp.start)}–{formatTimeBE(emp.end)} <span className="ml-1">{emp.netHours.toFixed(1)}h</span>
                           </span>
