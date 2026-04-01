@@ -27,7 +27,7 @@ const FAQ_FR: FAQItem[] = [
   },
   {
     question: "Comment ajouter une note sur un employé dans la grille du jour ?",
-    answer: "Dans la grille horaire, un champ 'Note...' apparaît sous le nom de chaque employé. Saisissez votre commentaire et sauvegardez la grille.",
+    answer: "Dans la grille planning, un champ 'Note...' apparaît sous le nom de chaque employé. Saisissez votre commentaire et sauvegardez la grille.",
   },
   {
     question: "Les modifications sont-elles sauvegardées automatiquement ?",
