@@ -245,7 +245,7 @@ const TeamWeekView = () => {
                 {DAYS.map(day => {
                   const isFerieDay = dayComments?.find(dc => dc.day_key === day.key)?.is_ferie ?? false;
                   return (
-                  <th key={day.key} className={`border-b border-r p-0 ${isFerieDay ? "bg-amber-50 dark:bg-amber-950/20" : ""}`}>
+                  <th key={day.key} className={`border-b border-r p-0 ${isFerieDay ? "bg-gray-200 dark:bg-gray-800" : ""}`}>
                     <div className="flex">
                       {HOURS.map(h => (
                         <div key={h} className="flex-1 text-center text-[9px] text-muted-foreground/60 py-0.5 border-r border-border/30 last:border-r-0">{h}</div>
