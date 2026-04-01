@@ -811,6 +811,7 @@ export function ScheduleEditor() {
                                 className="flex-1 min-w-0 px-0.5 py-1 text-xs rounded border bg-background focus:outline-none focus:ring-1 focus:ring-accent font-mono-data text-center appearance-none cursor-pointer"
                               >
                                 <option value="">—</option>
+                                <option value="ROULEMENT">{t("schedule.rotation")}</option>
                                 <option value="EXT">{t("schedule.exterior")}</option>
                                 <option value="FERIE">{t("schedule.holiday")}</option>
                                 {TIME_SLOTS.map((ts) => (

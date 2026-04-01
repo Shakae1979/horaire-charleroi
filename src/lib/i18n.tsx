@@ -191,6 +191,7 @@ const translations = {
   "schedule.noPrevWeek": { fr: "Aucun planning trouvé pour la semaine précédente", nl: "Geen planning gevonden voor de vorige week" },
   "schedule.exterior": { fr: "Extérieur", nl: "Extern" },
   "schedule.holiday": { fr: "Férié", nl: "Feestdag" },
+  "schedule.rotation": { fr: "Roulement", nl: "Wisseldienst" },
   "schedule.breakNote": { fr: "Les horaires affichés sont bruts. Le total soustrait 1h de pause par jour travaillé.", nl: "De getoonde uren zijn bruto. Het totaal trekt 1u pauze per gewerkte dag af." },
 
   // ========== Recap ==========
