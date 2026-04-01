@@ -167,6 +167,12 @@ export function ScheduleEditor() {
   });
 
   const [localDayComments, setLocalDayComments] = useState<Record<string, string>>({});
+  const [localFerieDays, setLocalFerieDays] = useState<Record<string, boolean>>({});
+
+  const isDayFerie = (dayKey: string): boolean => {
+    if (localFerieDays[dayKey] !== undefined) return localFerieDays[dayKey];
+    return dayComments?.find((dc) => dc.day_key === dayKey)?.is_ferie ?? false;
+  };
 
   const isOnLeave = (empId: string, dayIndex: number): string | null => {
     if (!conges) return null;
