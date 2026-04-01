@@ -58,7 +58,6 @@ function timeToMinutes(t: string | null): number {
 }
 
 const TeamWeekView = () => {
-  const queryClient = useQueryClient();
   const { t } = useI18n();
   const [weekOffset, setWeekOffset] = useState(0);
   const currentMonday = addWeeks(getMonday(new Date()), weekOffset);
