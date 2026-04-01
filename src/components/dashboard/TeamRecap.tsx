@@ -122,7 +122,11 @@ export function TeamRecap() {
       const end = (schedule as any)?.[`${day.key}_end`];
       return start && end;
     }).length;
-    return { ...emp, hoursWorked: Number(hoursWorked), diff, daysWorked, hasSchedule: !!schedule };
+    const isRoulement = !!schedule && DAY_KEYS.every((day) => {
+      const start = (schedule as any)?.[`${day}_start`];
+      return !start || start === "ROULEMENT";
+    });
+    return { ...emp, hoursWorked: Number(hoursWorked), diff, daysWorked, hasSchedule: !!schedule, isRoulement };
   });
 
   const ROLE_ORDER = ["responsable", "technique", "editorial", "stock", "caisse", "stagiaire"];
@@ -340,7 +344,9 @@ export function TeamRecap() {
                     </td>
                     <td className="py-2 text-center font-mono-data">{emp.hasSchedule ? `${emp.daysWorked}j` : "—"}</td>
                     <td className="py-2 text-center">
-                      {emp.hasSchedule ? (
+                      {emp.isRoulement ? (
+                        <span className="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium bg-muted text-muted-foreground">{t("schedule.rotation")}</span>
+                      ) : emp.hasSchedule ? (
                         <span className="badge-positive">{t("recap.statusPlanned")}</span>
                       ) : (
                         <span className="badge-negative">{t("recap.statusUnplanned")}</span>
