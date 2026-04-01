@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { ChevronLeft, ChevronRight, Users, Printer, Palmtree, AlertTriangle, Flag } from "lucide-react";
 import { FnacHeader } from "@/components/FnacHeader";
@@ -58,7 +58,6 @@ function timeToMinutes(t: string | null): number {
 }
 
 const TeamWeekView = () => {
-  const queryClient = useQueryClient();
   const { t } = useI18n();
   const [weekOffset, setWeekOffset] = useState(0);
   const currentMonday = addWeeks(getMonday(new Date()), weekOffset);
@@ -147,7 +146,7 @@ const TeamWeekView = () => {
       if (congeType) return;
       const start = (schedule as any)[`${day}_start`];
       const end = (schedule as any)[`${day}_end`];
-      if (start && end && start !== "FERIE" && start !== "EXT" && start !== "ROULEMENT") {
+      if (start && end && start !== "EXT" && start !== "ROULEMENT" && start !== "FERIE") {
         totalMin += timeToMinutes(end) - timeToMinutes(start);
         workedDays++;
       }
@@ -155,29 +154,7 @@ const TeamWeekView = () => {
     return Math.round(((totalMin - workedDays * 60) / 60) * 100) / 100;
   };
 
-  const ferieMutation = useMutation({
-    mutationFn: async (dayKey: string) => {
-      if (!employees || !schedules) return;
-      const promises = employees.map(async (emp) => {
-        const existing = schedules.find(s => s.employee_id === emp.id);
-        const payload = { [`${dayKey}_start`]: "FERIE", [`${dayKey}_end`]: "FERIE" };
-        if (existing) {
-          const { error } = await supabase.from("weekly_schedules").update(payload).eq("id", existing.id);
-          if (error) throw error;
-        } else {
-          const { error } = await supabase.from("weekly_schedules").insert({ employee_id: emp.id, week_start: weekStr, ...payload });
-          if (error) throw error;
-        }
-      });
-      await Promise.all(promises);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["team-week-schedules", weekStr] });
-      queryClient.invalidateQueries({ queryKey: ["schedules", weekStr] });
-      toast.success(t("teamWeek.markedHoliday"));
-    },
-    onError: (err) => toast.error("Error: " + (err as Error).message),
-  });
+  // Férié is now managed via day_comments.is_ferie only (no schedule overwrite)
 
   return (
     <div className="min-h-screen bg-background">

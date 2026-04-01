@@ -22,7 +22,7 @@ function computeNetHours(schedule: any): { gross: number; breaks: number; net: n
   let gross = 0; let workedDays = 0;
   for (const d of days) {
     const start = schedule[`${d}_start`]; const end = schedule[`${d}_end`];
-    if (start && end && start !== "FERIE" && start !== "EXT" && start !== "ROULEMENT") { gross += timeToHours(end) - timeToHours(start); workedDays++; }
+    if (start && end && start !== "EXT" && start !== "ROULEMENT" && start !== "FERIE") { gross += timeToHours(end) - timeToHours(start); workedDays++; }
   }
   const breaks = workedDays * BREAK_HOURS;
   return { gross, breaks, net: gross - breaks };
@@ -265,7 +265,7 @@ const EmployeeView = () => {
                     const shiftColor = colorIdx !== undefined ? SHIFT_COLORS[colorIdx] : null;
 
                     return (
-                      <div key={day.key} className={`rounded-md p-2 text-center text-xs border relative ${hasShift && shiftColor ? `${shiftColor.bg}` : hasShift ? "bg-accent/10 border-accent/20" : "bg-muted/50 border-transparent"}`}>
+                      <div key={day.key} className={`rounded-md p-2 text-center text-xs border relative ${isFerie ? "bg-gray-100 dark:bg-gray-800/50 border-gray-300 dark:border-gray-600" : hasShift && shiftColor ? `${shiftColor.bg}` : hasShift ? "bg-accent/10 border-accent/20" : "bg-muted/50 border-transparent"}`}>
                         <div className="font-medium text-muted-foreground mb-1">
                           {day.label}
                           {isFerie && <Flag className="h-2.5 w-2.5 inline ml-1 text-muted-foreground" />}
