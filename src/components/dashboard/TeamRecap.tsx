@@ -122,7 +122,11 @@ export function TeamRecap() {
       const end = (schedule as any)?.[`${day.key}_end`];
       return start && end;
     }).length;
-    return { ...emp, hoursWorked: Number(hoursWorked), diff, daysWorked, hasSchedule: !!schedule };
+    const isRoulement = !!schedule && DAY_KEYS.every((day) => {
+      const start = (schedule as any)?.[`${day}_start`];
+      return !start || start === "ROULEMENT";
+    });
+    return { ...emp, hoursWorked: Number(hoursWorked), diff, daysWorked, hasSchedule: !!schedule, isRoulement };
   });
 
   const ROLE_ORDER = ["responsable", "technique", "editorial", "stock", "caisse", "stagiaire"];
