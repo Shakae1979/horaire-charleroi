@@ -293,7 +293,7 @@ const TeamWeekView = () => {
                     </tr>
                     {emps.map(emp => {
                       const schedule = schedules?.find(s => s.employee_id === emp.id);
-                      const { total: weekTotal, creditedHours } = getWeekTotal(emp.id, emp.contract_hours);
+                      const { total: weekTotal, creditedHours } = getWeekTotal(emp.id);
                       const diff = weekTotal - emp.contract_hours;
                       return (
                         <tr key={emp.id} className="border-b border-border/30 hover:bg-muted/30 transition-colors">
