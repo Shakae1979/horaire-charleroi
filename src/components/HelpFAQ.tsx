@@ -31,7 +31,7 @@ const FAQ_FR: FAQItem[] = [
   },
   {
     question: "Les modifications sont-elles sauvegardées automatiquement ?",
-    answer: "Non, vous devez cliquer sur le bouton 'Sauvegarder' pour enregistrer vos modifications sur la grille horaire et les plannings.",
+    answer: "Non, vous devez cliquer sur le bouton 'Sauvegarder' pour enregistrer vos modifications sur la grille et les plannings.",
   },
   {
     question: "Comment voir le récapitulatif des heures de l'équipe ?",
