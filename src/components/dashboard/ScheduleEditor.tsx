@@ -413,6 +413,8 @@ export function ScheduleEditor() {
   });
 
   const TEMPLATE_WEEK = "1970-01-05";
+  const TEMPLATE_WEEK_B = "1970-01-12";
+  const hasABWeeks = currentStore?.has_ab_weeks ?? false;
 
   const initAllMutation = useMutation({
     mutationFn: async () => {
