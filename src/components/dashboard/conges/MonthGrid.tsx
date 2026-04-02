@@ -327,6 +327,32 @@ export function MonthGrid({ year, month, employees, conges, deleteMutation, onAd
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      <Dialog open={!!deleteOptions} onOpenChange={(open) => { if (!open) setDeleteOptions(null); }}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>{t("conges.deleteLeave")}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-2">
+            <p className="text-sm text-muted-foreground">{t("action.choose")} :</p>
+            {deleteOptions?.map((opt) => (
+              <button
+                key={opt.id}
+                className="w-full flex items-center justify-between px-3 py-2 rounded-md border border-border hover:border-destructive hover:bg-destructive/10 text-sm transition-colors"
+                onClick={() => {
+                  setDeleteTarget({ id: opt.id, name: opt.name, type: opt.type });
+                  setDeleteOptions(null);
+                }}
+              >
+                <span><strong>{opt.name}</strong> — {opt.type}</span>
+                <span className="text-xs text-muted-foreground">{formatDateBE(new Date(opt.start))} → {formatDateBE(new Date(opt.end))}</span>
+              </button>
+            ))}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDeleteOptions(null)}>{t("action.cancel")}</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
