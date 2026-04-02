@@ -545,20 +545,28 @@ export function ScheduleEditor() {
   };
 
   const saveAsTemplateMutation = useMutation({
-    mutationFn: async () => {
+    mutationFn: async (templateWeek?: string) => {
+      const tplWeek = templateWeek || TEMPLATE_WEEK;
       if (!employees || !schedules) return;
-      await supabase.from("weekly_schedules").delete().eq("week_start", TEMPLATE_WEEK);
+      await supabase.from("weekly_schedules").delete().eq("week_start", tplWeek);
       const rows = schedules.map((s) => {
         const { id, created_at, updated_at, week_start, ...fields } = s as any;
-        return { ...fields, week_start: TEMPLATE_WEEK };
+        return { ...fields, week_start: tplWeek };
       });
       if (rows.length > 0) {
         const { error } = await supabase.from("weekly_schedules").insert(rows);
         if (error) throw error;
       }
+      return tplWeek;
     },
-    onSuccess: () => {
-      toast.success(t("schedule.templateSaved"));
+    onSuccess: (tplWeek) => {
+      if (tplWeek === TEMPLATE_WEEK_B) {
+        toast.success(t("schedule.templateBSaved" as any));
+      } else if (hasABWeeks) {
+        toast.success(t("schedule.templateASaved" as any));
+      } else {
+        toast.success(t("schedule.templateSaved"));
+      }
     },
     onError: (err) => {
       toast.error("Error: " + (err as Error).message);
