@@ -149,7 +149,6 @@ export function ScheduleEditor() {
   });
   const { data: templatesB } = useQuery({
     queryKey: ["templates-b"],
-    enabled: hasABWeeks,
     queryFn: async () => {
       const { data, error } = await supabase.from("weekly_schedules").select("*").eq("week_start", "1970-01-12");
       if (error) throw error;
