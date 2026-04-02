@@ -6,6 +6,7 @@ interface Store {
   id: string;
   name: string;
   city: string;
+  has_ab_weeks?: boolean;
 }
 
 interface StoreContextType {
@@ -37,7 +38,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       if (role === "admin") {
         // Admin sees all stores
         const { data } = await supabase.from("stores").select("*").order("name");
-        const storeList = (data ?? []).map((s: any) => ({ id: s.id, name: s.name, city: s.city }));
+        const storeList = (data ?? []).map((s: any) => ({ id: s.id, name: s.name, city: s.city, has_ab_weeks: s.has_ab_weeks ?? false }));
         setStores(storeList);
         if (!currentStore && storeList.length > 0) {
           setCurrentStore(storeList[0]);

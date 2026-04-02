@@ -413,14 +413,17 @@ export function ScheduleEditor() {
   });
 
   const TEMPLATE_WEEK = "1970-01-05";
+  const TEMPLATE_WEEK_B = "1970-01-12";
+  const hasABWeeks = currentStore?.has_ab_weeks ?? false;
 
   const initAllMutation = useMutation({
-    mutationFn: async () => {
+    mutationFn: async (templateWeek?: string) => {
+      const tplWeek = templateWeek || TEMPLATE_WEEK;
       if (!employees) return;
       const { data: templates } = await supabase
         .from("weekly_schedules")
         .select("*")
-        .eq("week_start", TEMPLATE_WEEK);
+        .eq("week_start", tplWeek);
 
       const existingIds = schedules?.map((s) => s.employee_id) ?? [];
       const toCreate = employees.filter((e) => !existingIds.includes(e.id));
@@ -452,10 +455,17 @@ export function ScheduleEditor() {
         if (error) throw error;
       });
       await Promise.all(updatePromises);
+      return tplWeek;
     },
-    onSuccess: () => {
+    onSuccess: (tplWeek) => {
       queryClient.invalidateQueries({ queryKey: ["schedules", weekStr] });
-      toast.success(t("schedule.templateApplied"));
+      if (tplWeek === TEMPLATE_WEEK_B) {
+        toast.success(t("schedule.templateBApplied" as any));
+      } else if (hasABWeeks) {
+        toast.success(t("schedule.templateAApplied" as any));
+      } else {
+        toast.success(t("schedule.templateApplied"));
+      }
     },
   });
 
@@ -535,20 +545,28 @@ export function ScheduleEditor() {
   };
 
   const saveAsTemplateMutation = useMutation({
-    mutationFn: async () => {
+    mutationFn: async (templateWeek?: string) => {
+      const tplWeek = templateWeek || TEMPLATE_WEEK;
       if (!employees || !schedules) return;
-      await supabase.from("weekly_schedules").delete().eq("week_start", TEMPLATE_WEEK);
+      await supabase.from("weekly_schedules").delete().eq("week_start", tplWeek);
       const rows = schedules.map((s) => {
         const { id, created_at, updated_at, week_start, ...fields } = s as any;
-        return { ...fields, week_start: TEMPLATE_WEEK };
+        return { ...fields, week_start: tplWeek };
       });
       if (rows.length > 0) {
         const { error } = await supabase.from("weekly_schedules").insert(rows);
         if (error) throw error;
       }
+      return tplWeek;
     },
-    onSuccess: () => {
-      toast.success(t("schedule.templateSaved"));
+    onSuccess: (tplWeek) => {
+      if (tplWeek === TEMPLATE_WEEK_B) {
+        toast.success(t("schedule.templateBSaved" as any));
+      } else if (hasABWeeks) {
+        toast.success(t("schedule.templateASaved" as any));
+      } else {
+        toast.success(t("schedule.templateSaved"));
+      }
     },
     onError: (err) => {
       toast.error("Error: " + (err as Error).message);
@@ -586,12 +604,31 @@ export function ScheduleEditor() {
           <Button variant="outline" size="sm" onClick={() => window.print()}>
             <Printer className="h-3.5 w-3.5 mr-1" /> {t("action.print")}
           </Button>
-          <Button variant="outline" size="sm" onClick={() => saveAsTemplateMutation.mutate()} disabled={!schedules?.length}>
-            <Copy className="h-3.5 w-3.5 mr-1" /> {t("schedule.saveTemplate")}
-          </Button>
-          <Button variant="outline" size="sm" onClick={() => initAllMutation.mutate()}>
-            <ClipboardPaste className="h-3.5 w-3.5 mr-1" /> {t("schedule.applyTemplate")}
-          </Button>
+          {hasABWeeks ? (
+            <>
+              <Button variant="outline" size="sm" onClick={() => saveAsTemplateMutation.mutate(TEMPLATE_WEEK)} disabled={!schedules?.length}>
+                <Copy className="h-3.5 w-3.5 mr-1" /> {t("schedule.saveTemplateA" as any)}
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => saveAsTemplateMutation.mutate(TEMPLATE_WEEK_B)} disabled={!schedules?.length}>
+                <Copy className="h-3.5 w-3.5 mr-1" /> {t("schedule.saveTemplateB" as any)}
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => initAllMutation.mutate(TEMPLATE_WEEK)}>
+                <ClipboardPaste className="h-3.5 w-3.5 mr-1" /> {t("schedule.applyTemplateA" as any)}
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => initAllMutation.mutate(TEMPLATE_WEEK_B)}>
+                <ClipboardPaste className="h-3.5 w-3.5 mr-1" /> {t("schedule.applyTemplateB" as any)}
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button variant="outline" size="sm" onClick={() => saveAsTemplateMutation.mutate(TEMPLATE_WEEK)} disabled={!schedules?.length}>
+                <Copy className="h-3.5 w-3.5 mr-1" /> {t("schedule.saveTemplate")}
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => initAllMutation.mutate(TEMPLATE_WEEK)}>
+                <ClipboardPaste className="h-3.5 w-3.5 mr-1" /> {t("schedule.applyTemplate")}
+              </Button>
+            </>
+          )}
           <Button variant="outline" size="sm" onClick={() => copyPreviousWeekMutation.mutate()}>
             <ChevronLeft className="h-3.5 w-3.5 mr-1" /> {t("schedule.copyPrevWeek")}
           </Button>
