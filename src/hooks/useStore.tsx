@@ -6,6 +6,7 @@ interface Store {
   id: string;
   name: string;
   city: string;
+  has_ab_weeks?: boolean;
 }
 
 interface StoreContextType {
