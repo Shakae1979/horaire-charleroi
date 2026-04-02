@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -134,6 +134,23 @@ export function ScheduleEditor() {
         .from("weekly_schedules")
         .select("*")
         .eq("week_start", weekStr);
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  const { data: templatesA } = useQuery({
+    queryKey: ["templates-a"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("weekly_schedules").select("*").eq("week_start", "1970-01-05");
+      if (error) throw error;
+      return data;
+    },
+  });
+  const { data: templatesB } = useQuery({
+    queryKey: ["templates-b"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("weekly_schedules").select("*").eq("week_start", "1970-01-12");
       if (error) throw error;
       return data;
     },
@@ -573,6 +590,34 @@ export function ScheduleEditor() {
     },
   });
 
+  // Detect which template matches current week
+  const detectedTemplate = useMemo(() => {
+    if (!hasABWeeks || !schedules || schedules.length === 0) return null;
+    const dayFields = DAY_KEYS.flatMap((d) => [`${d}_start`, `${d}_end`]);
+
+    const matchScore = (templates: any[] | undefined) => {
+      if (!templates || templates.length === 0) return 0;
+      let matched = 0;
+      let total = 0;
+      for (const sched of schedules) {
+        const tpl = templates.find((t: any) => t.employee_id === sched.employee_id);
+        if (!tpl) continue;
+        for (const f of dayFields) {
+          const sv = (sched as any)[f] || "";
+          const tv = (tpl as any)[f] || "";
+          if (sv || tv) { total++; if (sv === tv) matched++; }
+        }
+      }
+      return total > 0 ? matched / total : 0;
+    };
+
+    const scoreA = matchScore(templatesA);
+    const scoreB = matchScore(templatesB);
+    if (scoreA > 0.8 && scoreA > scoreB) return "A";
+    if (scoreB > 0.8 && scoreB > scoreA) return "B";
+    return null;
+  }, [hasABWeeks, schedules, templatesA, templatesB]);
+
   const hasEdits = Object.keys(localEdits).length > 0 || Object.keys(localDayComments).length > 0;
 
   const weekLabel = formatDateLongBE(currentMonday);
@@ -593,7 +638,16 @@ export function ScheduleEditor() {
             <ChevronLeft className="h-4 w-4" />
           </Button>
           <div className="text-center">
-            <div className="text-sm font-semibold">S{getWeekNumber(currentMonday)} — {weekLabel} — {weekEndLabel}</div>
+            <div className="text-sm font-semibold flex items-center justify-center gap-2">
+              S{getWeekNumber(currentMonday)} — {weekLabel} — {weekEndLabel}
+              {hasABWeeks && detectedTemplate && (
+                <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                  detectedTemplate === "A" ? "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300" : "bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300"
+                }`}>
+                  {t("schedule.week" as any)} {detectedTemplate}
+                </span>
+              )}
+            </div>
             <div className="text-xs text-muted-foreground">{t("schedule.weekOfDate")} {formatDateBE(currentMonday)}</div>
           </div>
           <Button variant="outline" size="icon" onClick={() => { setWeekOffset((w) => w + 1); setLocalEdits({}); setLocalDayComments({}); cancelCopy(); }}>
