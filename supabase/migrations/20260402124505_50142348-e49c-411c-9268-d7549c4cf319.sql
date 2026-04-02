@@ -1,0 +1,1 @@
+ALTER TABLE public.stores ADD COLUMN has_ab_weeks boolean NOT NULL DEFAULT false;

@@ -211,18 +211,21 @@ export type Database = {
         Row: {
           city: string
           created_at: string
+          has_ab_weeks: boolean
           id: string
           name: string
         }
         Insert: {
           city: string
           created_at?: string
+          has_ab_weeks?: boolean
           id?: string
           name: string
         }
         Update: {
           city?: string
           created_at?: string
+          has_ab_weeks?: boolean
           id?: string
           name?: string
         }
