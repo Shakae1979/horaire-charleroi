@@ -1,6 +1,6 @@
 import { BarChart3, Users, CalendarDays, Calendar, TableProperties, Palmtree, PanelLeftClose, PanelLeftOpen, LogOut, Store, UserCog } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useAuth } from "@/hooks/useAuth";
 import { useI18n } from "@/lib/i18n";
@@ -27,6 +27,21 @@ export function Sidebar({ activeView, onViewChange }: SidebarProps) {
   const { role, signOut } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
   const { t } = useI18n();
+  const clickCountRef = useRef(0);
+  const clickTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [showEaster, setShowEaster] = useState(false);
+
+  const handleLogoClick = () => {
+    clickCountRef.current += 1;
+    if (clickTimerRef.current) clearTimeout(clickTimerRef.current);
+    if (clickCountRef.current >= 3) {
+      clickCountRef.current = 0;
+      setShowEaster(true);
+      setTimeout(() => setShowEaster(false), 3000);
+    } else {
+      clickTimerRef.current = setTimeout(() => { clickCountRef.current = 0; }, 600);
+    }
+  };
 
   const links = linkDefs.map(l => ({ ...l, label: t(l.labelKey as any) }));
   const filteredLinks = role === "admin" ? links : (role === "editor" ? links.filter(l => l.id !== "stores") : []);
@@ -36,7 +51,7 @@ export function Sidebar({ activeView, onViewChange }: SidebarProps) {
         className={`${collapsed ? "w-16" : "w-60"} shrink-0 h-screen flex flex-col transition-all duration-200`}
         style={{ background: "hsl(var(--sidebar-bg))" }}
       >
-        <div className={`${collapsed ? "px-3 justify-center" : "px-5"} py-5 flex items-center gap-2.5 border-b border-white/10`}>
+        <div onClick={handleLogoClick} className={`${collapsed ? "px-3 justify-center" : "px-5"} py-5 flex items-center gap-2.5 border-b border-white/10 cursor-pointer relative`}>
           <Calendar className="h-6 w-6 shrink-0" style={{ color: "hsl(var(--sidebar-active))" }} />
           {!collapsed && (
             <>
@@ -47,6 +62,11 @@ export function Sidebar({ activeView, onViewChange }: SidebarProps) {
                 {t("nav.planning")}
               </span>
             </>
+          )}
+          {showEaster && (
+            <span className="absolute -bottom-5 left-1/2 -translate-x-1/2 whitespace-nowrap text-[10px] font-medium px-2 py-0.5 rounded-full animate-fade-in z-10" style={{ background: "hsl(var(--sidebar-active))", color: "hsl(var(--sidebar-bg))" }}>
+              Crafted with ❤️ by Karim
+            </span>
           )}
         </div>
 
