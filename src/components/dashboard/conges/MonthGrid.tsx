@@ -48,6 +48,7 @@ interface Selection {
 export function MonthGrid({ year, month, employees, conges, deleteMutation, onAddConge, readOnly = false }: MonthGridProps) {
   const { t, monthShort } = useI18n();
   const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string; type: string } | null>(null);
+  const [deleteOptions, setDeleteOptions] = useState<{ id: string; name: string; type: string; start: string; end: string }[] | null>(null);
   const [selection, setSelection] = useState<Selection | null>(null);
   const [selectedEmpId, setSelectedEmpId] = useState<string | null>(null);
   const [showTypeDialog, setShowTypeDialog] = useState(false);
@@ -224,6 +225,14 @@ export function MonthGrid({ year, month, employees, conges, deleteMutation, onAd
                                 const { emp, leave } = leaves[0];
                                 const typeLabel = congeTypes.find(ct => ct.value === leave.type)?.label ?? "";
                                 setDeleteTarget({ id: leave.id, name: emp.name, type: typeLabel });
+                              } else {
+                                setDeleteOptions(leaves.map(({ emp, leave }) => ({
+                                  id: leave.id,
+                                  name: emp.name,
+                                  type: congeTypes.find(ct => ct.value === leave.type)?.label ?? leave.type,
+                                  start: leave.date_start,
+                                  end: leave.date_end,
+                                })));
                               }
                             } else {
                               handleCellClick(role.key, dateStr);
@@ -318,6 +327,32 @@ export function MonthGrid({ year, month, employees, conges, deleteMutation, onAd
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      <Dialog open={!!deleteOptions} onOpenChange={(open) => { if (!open) setDeleteOptions(null); }}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>{t("conges.deleteLeave")}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-2">
+            <p className="text-sm text-muted-foreground">{t("action.choose")} :</p>
+            {deleteOptions?.map((opt) => (
+              <button
+                key={opt.id}
+                className="w-full flex items-center justify-between px-3 py-2 rounded-md border border-border hover:border-destructive hover:bg-destructive/10 text-sm transition-colors"
+                onClick={() => {
+                  setDeleteTarget({ id: opt.id, name: opt.name, type: opt.type });
+                  setDeleteOptions(null);
+                }}
+              >
+                <span><strong>{opt.name}</strong> — {opt.type}</span>
+                <span className="text-xs text-muted-foreground">{formatDateBE(new Date(opt.start))} → {formatDateBE(new Date(opt.end))}</span>
+              </button>
+            ))}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDeleteOptions(null)}>{t("action.cancel")}</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
