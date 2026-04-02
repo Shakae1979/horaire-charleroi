@@ -1,6 +1,6 @@
 import { useState, useMemo, useCallback } from "react";
 import { CONGE_TYPES } from "../CongesCalendar";
-import { isSchoolHoliday } from "@/lib/school-holidays";
+import { getSchoolHolidayInfo } from "@/lib/school-holidays";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
