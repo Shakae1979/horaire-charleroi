@@ -53,8 +53,6 @@ export function CongesCalendar() {
 
   const { currentStore } = useStore();
   const { employees, isDirection, managerStoreNames } = useStoreEmployees(roleOrder);
-    },
-  });
 
   const { data: conges } = useQuery({
     queryKey: ["conges", year],
