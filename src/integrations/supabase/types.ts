@@ -381,6 +381,7 @@ export type Database = {
         Returns: {
           store_city: string
           store_id: string
+          store_is_direction: boolean
           store_name: string
         }[]
       }
