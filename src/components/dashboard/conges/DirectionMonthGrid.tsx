@@ -26,7 +26,7 @@ interface DirectionMonthGridProps {
   managerStoreNames?: Record<string, string>;
 }
 
-export function DirectionMonthGrid({ year, month, employees, conges }: DirectionMonthGridProps) {
+export function DirectionMonthGrid({ year, month, employees, conges, managerStoreNames = {} }: DirectionMonthGridProps) {
   const { t, monthShort } = useI18n();
   const HOLIDAYS = getHolidays2026(t);
   const DAY_NAMES = getDayNames(t);
