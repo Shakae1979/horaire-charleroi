@@ -39,7 +39,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       if (role === "admin") {
         // Admin sees all stores
         const { data } = await supabase.from("stores").select("*").order("name");
-        const storeList = (data ?? []).map((s: any) => ({ id: s.id, name: s.name, city: s.city, has_ab_weeks: s.has_ab_weeks ?? false }));
+        const storeList = (data ?? []).map((s: any) => ({ id: s.id, name: s.name, city: s.city, has_ab_weeks: s.has_ab_weeks ?? false, is_direction: s.is_direction ?? false }));
         setStores(storeList);
         if (!currentStore && storeList.length > 0) {
           setCurrentStore(storeList[0]);
