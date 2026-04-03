@@ -31,7 +31,7 @@ interface DirectionMonthGridProps {
   onAddConge?: (employeeId: string, dateStart: string, dateEnd: string, type: string) => void;
 }
 
-export function DirectionMonthGrid({ year, month, employees, conges, managerStoreNames = {} }: DirectionMonthGridProps) {
+export function DirectionMonthGrid({ year, month, employees, conges, managerStoreNames = {}, deleteMutation, onAddConge }: DirectionMonthGridProps) {
   const { t, monthShort } = useI18n();
   const HOLIDAYS = getHolidays2026(t);
   const DAY_NAMES = getDayNames(t);
