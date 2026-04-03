@@ -24,6 +24,8 @@ interface DirectionMonthGridProps {
   employees: any[] | undefined;
   conges: any[] | undefined;
   managerStoreNames?: Record<string, string>;
+  deleteMutation?: any;
+  onAddConge?: (employeeId: string, dateStart: string, dateEnd: string, type: string) => void;
 }
 
 export function DirectionMonthGrid({ year, month, employees, conges, managerStoreNames = {} }: DirectionMonthGridProps) {
