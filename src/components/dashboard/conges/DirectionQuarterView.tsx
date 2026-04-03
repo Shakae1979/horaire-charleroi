@@ -11,7 +11,7 @@ interface DirectionQuarterViewProps {
   onAddConge?: (employeeId: string, dateStart: string, dateEnd: string, type: string) => void;
 }
 
-export function DirectionQuarterView({ year, months, employees, conges, managerStoreNames }: DirectionQuarterViewProps) {
+export function DirectionQuarterView({ year, months, employees, conges, managerStoreNames, deleteMutation, onAddConge }: DirectionQuarterViewProps) {
   const { monthName } = useI18n();
 
   return (
@@ -23,7 +23,7 @@ export function DirectionQuarterView({ year, months, employees, conges, managerS
               <div className="text-sm font-bold text-center py-2 bg-muted/50 border-b">
                 {monthName(m)}
               </div>
-              <DirectionMonthGrid year={year} month={m} employees={employees} conges={conges} managerStoreNames={managerStoreNames} />
+              <DirectionMonthGrid year={year} month={m} employees={employees} conges={conges} managerStoreNames={managerStoreNames} deleteMutation={deleteMutation} onAddConge={onAddConge} />
             </div>
           ))}
         </div>
