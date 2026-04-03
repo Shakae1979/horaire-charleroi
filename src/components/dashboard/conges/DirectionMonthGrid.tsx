@@ -73,6 +73,11 @@ export function DirectionMonthGrid({ year, month, employees, conges, managerStor
                 <div className="text-[10px] leading-tight truncate max-w-[90px]" title={[emp.name, emp.last_name].filter(Boolean).join(" ")}>
                   {emp.name}
                 </div>
+                {managerStoreNames[emp.id] && (
+                  <div className="text-[8px] text-muted-foreground font-normal truncate max-w-[90px]" title={managerStoreNames[emp.id]}>
+                    {managerStoreNames[emp.id]}
+                  </div>
+                )}
               </th>
             ))}
           </tr>
