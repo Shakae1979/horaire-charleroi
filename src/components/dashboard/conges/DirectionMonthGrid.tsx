@@ -112,7 +112,7 @@ export function DirectionMonthGrid({ year, month, employees, conges, managerStor
               return (
                 <th
                   key={d.day}
-                  className={`px-0 py-1.5 text-center font-medium min-w-[30px] w-[30px] border-r last:border-r-0 ${
+                  className={`px-0 py-1.5 text-center font-medium border-r last:border-r-0 ${
                     d.holiday
                       ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400"
                       : d.isWeekend
