@@ -108,12 +108,14 @@ const TeamDayView = () => {
       const isFerie = start === "FERIE" || end === "FERIE"; // legacy data
       const isExt = start === "EXT" || end === "EXT";
       const isRoulement = start === "ROULEMENT" || end === "ROULEMENT";
-      const hasShift = !!(start && end && !isFerie && !isExt && !isRoulement);
+      const isRepos = start === "REPOS";
+      const isLocation = !!(start && (!end || end.trim() === "") && !isFerie && !isExt && !isRoulement && !isRepos && !/^\d{1,2}:\d{2}$/.test(start));
+      const hasShift = !!(start && end && !isFerie && !isExt && !isRoulement && !isLocation);
       const conge = conges?.find((c) => c.employee_id === emp.id);
       const notes = schedule?.notes || null;
       let netHours = 0;
       if (hasShift) netHours = timeToHours(end) - timeToHours(start) - BREAK_HOURS;
-      return { ...emp, start, end, hasShift, isFerie, isExt, isRoulement, netHours, conge, notes };
+      return { ...emp, start, end, hasShift, isFerie, isExt, isRoulement, isLocation, locationName: isLocation ? start : null, netHours, conge, notes };
     })
     .sort((a, b) => {
       const orderA = ROLE_ORDER.indexOf(a.role);
