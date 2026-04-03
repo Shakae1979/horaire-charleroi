@@ -295,7 +295,27 @@ const TeamDayView = () => {
                 <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">{t("schedule.rotation")}</div>
                 <div className="flex flex-wrap gap-1">
                   {roulement.map((emp) => (
-                    <span key={emp.id} className="py-0.5 px-2 rounded bg-gray-200 dark:bg-gray-700/50 text-[11px] text-gray-600 dark:text-gray-300 font-medium">{getDisplayName(emp)}</span>
+                    <span key={emp.id} className="py-0.5 px-2 rounded bg-muted/80 text-[11px] text-muted-foreground font-medium">{getDisplayName(emp)}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {locationEmps.length > 0 && (
+              <div>
+                <div className="flex items-center gap-1.5 mb-1">
+                  <MapPin className="h-3.5 w-3.5 text-indigo-500" />
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{t("teamDay.travel" as any) || "Déplacements"}</span>
+                </div>
+                <div className="space-y-0.5">
+                  {locationEmps.map((emp) => (
+                    <div key={emp.id} className="flex items-center justify-between py-1 px-2 rounded bg-indigo-500/10 text-xs">
+                      <span className="font-medium">{getDisplayName(emp)}</span>
+                      <span className="text-indigo-600 dark:text-indigo-400 font-semibold text-[11px] flex items-center gap-1">
+                        <MapPin className="h-3 w-3" />
+                        {emp.locationName}
+                      </span>
+                    </div>
                   ))}
                 </div>
               </div>
