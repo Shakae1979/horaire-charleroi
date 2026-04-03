@@ -10,8 +10,11 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar";
 import { formatDateBE, formatLocalDate } from "@/lib/format";
 import { cn } from "@/lib/utils";
+import { useStoreEmployees } from "@/hooks/useStoreEmployees";
 import { QuarterView } from "./conges/QuarterView";
 import { MonthGrid } from "./conges/MonthGrid";
+import { DirectionMonthGrid } from "./conges/DirectionMonthGrid";
+import { DirectionQuarterView } from "./conges/DirectionQuarterView";
 
 export const CONGE_TYPES_KEYS = ["conge", "rtt", "maladie", "formation", "autre", "divers"] as const;
 export const CONGE_TYPE_COLORS: Record<string, string> = {
@@ -49,21 +52,7 @@ export function CongesCalendar() {
   const roleOrder = ["responsable", "technique", "editorial", "stock", "caisse", "stagiaire"];
 
   const { currentStore } = useStore();
-  const { data: employees } = useQuery({
-    queryKey: ["employees", currentStore?.id],
-    queryFn: async () => {
-      let query = supabase.from("employees").select("*").eq("is_active", true).order("name");
-      if (currentStore) query = query.eq("store_id", currentStore.id);
-      const { data, error } = await query;
-      if (error) throw error;
-      return data.sort((a, b) => {
-        const ra = roleOrder.indexOf(a.role);
-        const rb = roleOrder.indexOf(b.role);
-        if (ra !== rb) return (ra === -1 ? 99 : ra) - (rb === -1 ? 99 : rb);
-        return a.name.localeCompare(b.name);
-      });
-    },
-  });
+  const { employees, isDirection, managerStoreNames } = useStoreEmployees(roleOrder);
 
   const { data: conges } = useQuery({
     queryKey: ["conges", year],
@@ -248,7 +237,15 @@ export function CongesCalendar() {
         </div>
       )}
 
-      {viewMode === "month" ? (
+      {isDirection ? (
+        viewMode === "month" ? (
+          <div className="kpi-card overflow-hidden">
+            <DirectionMonthGrid year={year} month={currentMonth} employees={employees} conges={conges} managerStoreNames={managerStoreNames} deleteMutation={deleteMutation} onAddConge={handleAddConge} />
+          </div>
+        ) : (
+          <DirectionQuarterView year={year} months={quarterMonths} employees={employees} conges={conges} managerStoreNames={managerStoreNames} deleteMutation={deleteMutation} onAddConge={handleAddConge} />
+        )
+      ) : viewMode === "month" ? (
         <div className="kpi-card overflow-hidden">
           <MonthGrid
             year={year}

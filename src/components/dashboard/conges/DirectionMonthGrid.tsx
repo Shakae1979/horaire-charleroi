@@ -1,5 +1,8 @@
-import { useMemo } from "react";
-import { CONGE_TYPES } from "../CongesCalendar";
+import { useState, useMemo } from "react";
+import { CONGE_TYPES, CONGE_TYPES_KEYS, CONGE_TYPE_COLORS } from "../CongesCalendar";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { getSchoolHolidayInfo } from "@/lib/school-holidays";
 import { useI18n, getHolidays2026, getDayNames } from "@/lib/i18n";
 
@@ -24,9 +27,11 @@ interface DirectionMonthGridProps {
   employees: any[] | undefined;
   conges: any[] | undefined;
   managerStoreNames?: Record<string, string>;
+  deleteMutation?: any;
+  onAddConge?: (employeeId: string, dateStart: string, dateEnd: string, type: string) => void;
 }
 
-export function DirectionMonthGrid({ year, month, employees, conges, managerStoreNames = {} }: DirectionMonthGridProps) {
+export function DirectionMonthGrid({ year, month, employees, conges, managerStoreNames = {}, deleteMutation, onAddConge }: DirectionMonthGridProps) {
   const { t, monthShort } = useI18n();
   const HOLIDAYS = getHolidays2026(t);
   const DAY_NAMES = getDayNames(t);
@@ -50,6 +55,22 @@ export function DirectionMonthGrid({ year, month, employees, conges, managerStor
     return conges?.find(
       (c: any) => c.employee_id === empId && dateStr >= c.date_start && dateStr <= c.date_end
     );
+  };
+
+  const isEditable = !!deleteMutation || !!onAddConge;
+  const [confirmDelete, setConfirmDelete] = useState<any>(null);
+  const [addDialog, setAddDialog] = useState<{ empId: string; date: string } | null>(null);
+  const [addType, setAddType] = useState("conge");
+
+  const handleCellClick = (empId: string, dateStr: string, isWeekend: boolean) => {
+    if (!isEditable || isWeekend) return;
+    const leave = getLeaveForDate(empId, dateStr);
+    if (leave && deleteMutation) {
+      setConfirmDelete(leave);
+    } else if (!leave && onAddConge) {
+      setAddDialog({ empId, date: dateStr });
+      setAddType("conge");
+    }
   };
 
   let lastWeekShown = -1;
@@ -150,7 +171,8 @@ export function DirectionMonthGrid({ year, month, employees, conges, managerStor
                       return (
                         <td
                           key={emp.id}
-                          className="px-0.5 py-0.5 text-center border-r last:border-r-0 border-l-2 border-l-amber-300/30 dark:border-l-amber-700/30"
+                          className={`px-0.5 py-0.5 text-center border-r last:border-r-0 border-l-2 border-l-amber-300/30 dark:border-l-amber-700/30 ${isEditable ? "cursor-pointer hover:bg-destructive/10" : ""}`}
+                          onClick={() => handleCellClick(emp.id, dateStr, isWeekend)}
                         >
                           <span
                             className={`${typeColor} text-white text-[9px] px-1 py-0.5 rounded block truncate`}
@@ -164,7 +186,8 @@ export function DirectionMonthGrid({ year, month, employees, conges, managerStor
                     return (
                       <td
                         key={emp.id}
-                        className="px-0.5 py-0.5 text-center border-r last:border-r-0 border-l-2 border-l-amber-300/30 dark:border-l-amber-700/30"
+                        className={`px-0.5 py-0.5 text-center border-r last:border-r-0 border-l-2 border-l-amber-300/30 dark:border-l-amber-700/30 ${isEditable && !isWeekend ? "cursor-pointer hover:bg-accent/30" : ""}`}
+                        onClick={() => handleCellClick(emp.id, dateStr, isWeekend)}
                       />
                     );
                   })
@@ -174,6 +197,49 @@ export function DirectionMonthGrid({ year, month, employees, conges, managerStor
           })}
         </tbody>
       </table>
+
+      {confirmDelete && (
+        <AlertDialog open onOpenChange={() => setConfirmDelete(null)}>
+          <AlertDialogContent>
+          <AlertDialogHeader>
+              <AlertDialogTitle>{t("conges.deleteLeave")}</AlertDialogTitle>
+              <AlertDialogDescription>
+                {t("conges.deleteConfirm")} ({confirmDelete?.type}) ? {t("conges.irreversible")}
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>{t("action.cancel")}</AlertDialogCancel>
+              <AlertDialogAction onClick={() => { deleteMutation?.mutate(confirmDelete.id); setConfirmDelete(null); }}>
+                {t("action.delete")}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
+
+      {addDialog && (
+        <Dialog open onOpenChange={() => setAddDialog(null)}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>{t("conges.addLeave")}</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-3">
+              <div>
+                <label className="text-sm text-muted-foreground">{t("conges.type")}</label>
+                <select value={addType} onChange={(e) => setAddType(e.target.value)} className="w-full mt-1 px-3 py-2 text-sm rounded-md border bg-background">
+                  {congeTypes.map((ct) => <option key={ct.value} value={ct.value}>{ct.label}</option>)}
+                </select>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setAddDialog(null)}>{t("action.cancel")}</Button>
+              <Button onClick={() => { onAddConge?.(addDialog.empId, addDialog.date, addDialog.date, addType); setAddDialog(null); }}>
+                {t("action.validate")}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 }
