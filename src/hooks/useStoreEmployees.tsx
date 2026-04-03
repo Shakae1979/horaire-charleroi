@@ -75,7 +75,7 @@ export function useStoreEmployees(sortByRole?: string[]) {
         seen.add(u.id);
         return true;
       });
-      result = assignedUsers
+      result = uniqueUsers
         .map((usr) => {
           const emp = (allEmployees || []).find(
             (e) => e.email && usr.email && e.email.toLowerCase() === usr.email.toLowerCase()
