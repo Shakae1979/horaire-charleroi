@@ -77,24 +77,27 @@ export function DirectionFnac() {
     },
   });
 
-  // Get store managers (is_manager = true) and match to employees
+  // Get users assigned to direction store and match to employees
   const managerEmployees = useMemo(() => {
-    const storeManagers = (allUsers || []).filter((u) =>
-      u.stores?.some((s) => s.is_manager)
+    const directionStoreId = currentStore?.id;
+    if (!directionStoreId) return [];
+    const assignedUsers = (allUsers || []).filter((u) =>
+      u.stores?.some((s) => s.store_id === directionStoreId)
     );
-    return storeManagers.map((mgr) => {
+    return assignedUsers.map((usr) => {
       const emp = (allEmployees || []).find(
-        (e) => e.email && mgr.email && e.email.toLowerCase() === mgr.email.toLowerCase()
+        (e) => e.email && usr.email && e.email.toLowerCase() === usr.email.toLowerCase()
       );
-      const managerStores = mgr.stores.filter((s) => s.is_manager);
+      const mgrStores = usr.stores.filter((s) => s.is_manager);
+      const displayStores = mgrStores.length > 0 ? mgrStores : usr.stores.filter((s) => s.store_id !== directionStoreId);
       return {
-        userId: mgr.id,
-        email: mgr.email,
+        userId: usr.id,
+        email: usr.email,
         employee: emp || null,
-        storeNames: managerStores.map((s) => s.store_name),
+        storeNames: displayStores.map((s) => s.store_name),
       };
     });
-  }, [allUsers, allEmployees]);
+  }, [allUsers, allEmployees, currentStore]);
 
   const employeeIds = useMemo(
     () => managerEmployees.filter((m) => m.employee).map((m) => m.employee!.id),
