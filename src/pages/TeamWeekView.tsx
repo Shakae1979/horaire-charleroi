@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { formatDateBE, formatTimeBE, formatLocalDate, getDisplayName } from "@/lib/format";
 import { useStore } from "@/hooks/useStore";
+import { useStoreEmployees } from "@/hooks/useStoreEmployees";
 import { useI18n } from "@/lib/i18n";
 import React from "react";
 
@@ -74,21 +75,7 @@ const TeamWeekView = () => {
   const DAYS = DAY_KEYS.map((key) => ({ key, label: t(`day.long.${key}` as any) }));
 
   const { currentStore } = useStore();
-  const { data: employees } = useQuery({
-    queryKey: ["team-week-employees", currentStore?.id],
-    queryFn: async () => {
-      let query = supabase.from("employees").select("*").eq("is_active", true).order("name");
-      if (currentStore) query = query.eq("store_id", currentStore.id);
-      const { data, error } = await query;
-      if (error) throw error;
-      return data?.sort((a, b) => {
-        const ra = ROLE_ORDER.indexOf(a.role);
-        const rb = ROLE_ORDER.indexOf(b.role);
-        if (ra !== rb) return (ra === -1 ? 99 : ra) - (rb === -1 ? 99 : rb);
-        return a.name.localeCompare(b.name, "fr");
-      });
-    },
-  });
+  const { employees } = useStoreEmployees(ROLE_ORDER);
 
   const { data: schedules } = useQuery({
     queryKey: ["team-week-schedules", weekStr],
