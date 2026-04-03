@@ -46,6 +46,16 @@ export function StoreManager() {
     },
   });
 
+  // Fetch the Direction store separately
+  const { data: directionStore } = useQuery({
+    queryKey: ["direction-store"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("stores").select("*").eq("is_direction", true).maybeSingle();
+      if (error) throw error;
+      return data;
+    },
+  });
+
   const { data: allUsers } = useQuery({
     queryKey: ["store-all-users"],
     queryFn: async () => {
