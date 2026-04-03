@@ -98,7 +98,7 @@ export function DirectionMonthGrid({ year, month, employees, conges, managerStor
       <table className="w-full text-xs border-collapse table-fixed">
         <thead>
           <tr className="border-b bg-muted/30">
-            <th className="sticky left-0 bg-muted/30 px-2 py-1.5 text-left font-medium text-muted-foreground w-[60px] border-r z-10">
+            <th className="sticky left-0 bg-muted/30 px-2 py-1.5 text-left font-medium text-muted-foreground w-[120px] min-w-[120px] border-r z-10">
             </th>
             {days.map((d) => {
               const schoolBg =
