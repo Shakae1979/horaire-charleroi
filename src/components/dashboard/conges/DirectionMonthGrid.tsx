@@ -75,8 +75,11 @@ export function DirectionMonthGrid({ year, month, employees, conges, managerStor
     if (leave && deleteMutation) {
       setConfirmDelete(leave);
     } else if (!leave && onAddConge) {
+      const clickedDate = new Date(dateStr + "T00:00:00");
       setAddDialog({ empId, date: dateStr });
       setAddType("conge");
+      setAddStart(clickedDate);
+      setAddEnd(clickedDate);
     }
   };
 
