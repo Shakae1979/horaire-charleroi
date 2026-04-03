@@ -109,8 +109,34 @@ export function ScheduleEditor() {
   }));
 
   const { currentStore } = useStore();
-  const { data: employees } = useQuery({
+  const isDirection = currentStore?.is_direction === true;
+
+  // Fetch all non-direction stores for location options in direction mode
+  const { data: allStores } = useQuery({
+    queryKey: ["all-stores-for-direction"],
+    enabled: isDirection,
+    queryFn: async () => {
+      const { data, error } = await supabase.from("stores").select("id, name, city").eq("is_direction", false).order("name");
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  const locationOptions = useMemo(() => {
+    if (!allStores) return [];
+    const options = allStores.map((s) => ({ value: s.name, label: `${s.name} (${s.city})` }));
+    options.push({ value: "Centrale", label: "Centrale" });
+    options.push({ value: "EXT", label: t("schedule.exterior") });
+    options.push({ value: "REPOS", label: t("schedule.off" as any) || "Repos" });
+    return options;
+  }, [allStores, t]);
+
+  // Direction: use useStoreEmployees to get matched employees
+  const { employees: directionEmployees } = useStoreEmployees(ROLE_ORDER);
+
+  const { data: regularEmployees } = useQuery({
     queryKey: ["employees", currentStore?.id],
+    enabled: !!currentStore && !isDirection,
     queryFn: async () => {
       let query = supabase.from("employees").select("*").eq("is_active", true).order("name");
       if (currentStore) query = query.eq("store_id", currentStore.id);
@@ -126,6 +152,8 @@ export function ScheduleEditor() {
       });
     },
   });
+
+  const employees = isDirection ? directionEmployees : regularEmployees;
 
   const { data: schedules, isLoading } = useQuery({
     queryKey: ["schedules", weekStr],
