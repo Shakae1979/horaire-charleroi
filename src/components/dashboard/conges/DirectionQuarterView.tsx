@@ -21,7 +21,7 @@ export function DirectionQuarterView({ year, months, employees, conges, managerS
               <div className="text-sm font-bold text-center py-2 bg-muted/50 border-b">
                 {monthName(m)}
               </div>
-              <DirectionMonthGrid year={year} month={m} employees={employees} conges={conges} />
+              <DirectionMonthGrid year={year} month={m} employees={employees} conges={conges} managerStoreNames={managerStoreNames} />
             </div>
           ))}
         </div>
