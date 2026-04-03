@@ -31,7 +31,7 @@ export default function CongesView() {
   }));
 
   const { currentStore } = useStore();
-  const { employees } = useStoreEmployees(roleOrder);
+  const { employees, isDirection } = useStoreEmployees(roleOrder);
 
   const { data: conges } = useQuery({
     queryKey: ["conges", year],
