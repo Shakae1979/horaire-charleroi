@@ -65,16 +65,7 @@ const TeamDayView = () => {
   };
 
   const { currentStore } = useStore();
-  const { data: employees } = useQuery({
-    queryKey: ["team-day-employees", currentStore?.id],
-    queryFn: async () => {
-      let query = supabase.from("employees").select("*").eq("is_active", true).order("name");
-      if (currentStore) query = query.eq("store_id", currentStore.id);
-      const { data, error } = await query;
-      if (error) throw error;
-      return data;
-    },
-  });
+  const { employees } = useStoreEmployees();
 
   const { data: schedules } = useQuery({
     queryKey: ["team-day-schedules", weekStr],

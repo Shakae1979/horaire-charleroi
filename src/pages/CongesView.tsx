@@ -28,21 +28,7 @@ export default function CongesView() {
   }));
 
   const { currentStore } = useStore();
-  const { data: employees } = useQuery({
-    queryKey: ["employees", currentStore?.id],
-    queryFn: async () => {
-      let query = supabase.from("employees").select("*").eq("is_active", true).order("name");
-      if (currentStore) query = query.eq("store_id", currentStore.id);
-      const { data, error } = await query;
-      if (error) throw error;
-      return data.sort((a, b) => {
-        const ra = roleOrder.indexOf(a.role);
-        const rb = roleOrder.indexOf(b.role);
-        if (ra !== rb) return (ra === -1 ? 99 : ra) - (rb === -1 ? 99 : rb);
-        return a.name.localeCompare(b.name);
-      });
-    },
-  });
+  const { employees } = useStoreEmployees(roleOrder);
 
   const { data: conges } = useQuery({
     queryKey: ["conges", year],
