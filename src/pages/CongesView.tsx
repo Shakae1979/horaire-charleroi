@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useStore } from "@/hooks/useStore";
+import { useStoreEmployees } from "@/hooks/useStoreEmployees";
 import { useI18n } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Printer } from "lucide-react";
