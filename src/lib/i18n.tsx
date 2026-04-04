@@ -256,6 +256,7 @@ const translations = {
   "conges.leaveType": { fr: "Type de congé", nl: "Verloftype" },
   "conges.date": { fr: "Date", nl: "Datum" },
   "conges.dayLabel": { fr: "Jour", nl: "Dag" },
+  "conges.legend": { fr: "Légende", nl: "Legende" },
 
   // ========== Team & Accounts ==========
   "team.title": { fr: "Équipe & Comptes", nl: "Team & Accounts" },
