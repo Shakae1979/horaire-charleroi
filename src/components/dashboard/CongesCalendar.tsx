@@ -16,7 +16,7 @@ import { MonthGrid } from "./conges/MonthGrid";
 import { DirectionMonthGrid } from "./conges/DirectionMonthGrid";
 import { DirectionQuarterView } from "./conges/DirectionQuarterView";
 
-export const CONGE_TYPES_KEYS = ["conge", "rtt", "maladie", "formation", "autre", "divers"] as const;
+export const CONGE_TYPES_KEYS = ["conge", "rtt", "maladie", "formation", "autre", "divers", "parental", "medical", "fincarriere"] as const;
 export const CONGE_TYPE_COLORS: Record<string, string> = {
   conge: "bg-blue-400",
   rtt: "bg-emerald-400",
@@ -24,6 +24,9 @@ export const CONGE_TYPE_COLORS: Record<string, string> = {
   formation: "bg-purple-400",
   autre: "bg-muted-foreground",
   divers: "bg-orange-400",
+  parental: "bg-pink-400",
+  medical: "bg-rose-500",
+  fincarriere: "bg-teal-400",
 };
 
 // Keep backward compat export
