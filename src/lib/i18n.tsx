@@ -127,6 +127,12 @@ const translations = {
   "leave.autre.short": { fr: "AUT", nl: "AND" },
   "leave.divers": { fr: "Autre", nl: "Andere" },
   "leave.divers.short": { fr: "AUT", nl: "AND" },
+  "leave.parental": { fr: "Congé parental", nl: "Ouderschapsverlof" },
+  "leave.parental.short": { fr: "PAR", nl: "OUD" },
+  "leave.medical": { fr: "Congé médical", nl: "Medisch verlof" },
+  "leave.medical.short": { fr: "MÉD", nl: "MED" },
+  "leave.fincarriere": { fr: "Fin de carrière", nl: "Einde loopbaan" },
+  "leave.fincarriere.short": { fr: "FDC", nl: "ELB" },
   "leave.school": { fr: "Congé scolaire", nl: "Schoolvakantie" },
   "leave.school.fr": { fr: "Congé scol. FR", nl: "Schoolvak. FR" },
   "leave.school.nl": { fr: "Congé scol. NL", nl: "Schoolvak. NL" },
@@ -250,6 +256,7 @@ const translations = {
   "conges.leaveType": { fr: "Type de congé", nl: "Verloftype" },
   "conges.date": { fr: "Date", nl: "Datum" },
   "conges.dayLabel": { fr: "Jour", nl: "Dag" },
+  "conges.legend": { fr: "Légende", nl: "Legende" },
 
   // ========== Team & Accounts ==========
   "team.title": { fr: "Équipe & Comptes", nl: "Team & Accounts" },
