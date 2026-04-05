@@ -125,8 +125,8 @@ const TeamWeekView = () => {
     return match ? match.type : null;
   };
 
-  const GRID_START = 9 * 60;
-  const GRID_END = 21 * 60;
+  const GRID_START = scheduleStart * 60;
+  const GRID_END = scheduleEnd * 60;
   const GRID_SPAN = GRID_END - GRID_START;
 
   const grouped = employees?.reduce((acc, emp) => {
