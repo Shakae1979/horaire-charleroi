@@ -28,7 +28,6 @@ const CONGE_COLORS: Record<string, string> = {
 };
 
 const DAY_KEYS = ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"] as const;
-const HOURS = Array.from({ length: 12 }, (_, i) => i + 9);
 
 function getMonday(date: Date): Date {
   const d = new Date(date);
