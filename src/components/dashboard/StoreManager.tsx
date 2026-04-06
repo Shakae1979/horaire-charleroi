@@ -264,12 +264,14 @@ export function StoreManager() {
                 );
               }
 
+              const isDirectionStore = (store as any).is_direction === true;
+
               return (
-                <div key={store.id} className="rounded-lg border bg-card p-3 space-y-2">
+                <div key={store.id} className={`rounded-lg border bg-card p-3 space-y-2 ${isDirectionStore ? "border-amber-300/50" : ""}`}>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="h-8 w-8 rounded-lg bg-accent/20 flex items-center justify-center">
-                        <Store className="h-4 w-4 text-accent" />
+                      <div className={`h-8 w-8 rounded-lg flex items-center justify-center ${isDirectionStore ? "bg-amber-100 dark:bg-amber-900/30" : "bg-accent/20"}`}>
+                        {isDirectionStore ? <Crown className="h-4 w-4 text-amber-500" /> : <Store className="h-4 w-4 text-accent" />}
                       </div>
                       <div>
                         <p className="text-sm font-medium text-foreground">{store.name}</p>
@@ -283,30 +285,32 @@ export function StoreManager() {
                         onClick={() => { setEditingId(store.id); setEditName(store.name); setEditCity(store.city); }}>
                         <Pencil className="h-3.5 w-3.5" />
                       </Button>
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <Button variant="ghost" size="sm" className="text-destructive/60 hover:text-destructive">
-                            <Trash2 className="h-3.5 w-3.5" />
-                          </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>{t("store.deleteTitle")} {store.name}</AlertDialogTitle>
-                            <AlertDialogDescription>
-                              {count > 0
-                                ? `${count} ${t("store.employeesDetached")}`
-                                : t("store.irreversible")}
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>{t("action.cancel")}</AlertDialogCancel>
-                            <AlertDialogAction className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                              onClick={() => deleteMutation.mutate(store.id)}>
-                              {t("action.delete")}
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
+                      {!isDirectionStore && (
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button variant="ghost" size="sm" className="text-destructive/60 hover:text-destructive">
+                              <Trash2 className="h-3.5 w-3.5" />
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>{t("store.deleteTitle")} {store.name}</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                {count > 0
+                                  ? `${count} ${t("store.employeesDetached")}`
+                                  : t("store.irreversible")}
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>{t("action.cancel")}</AlertDialogCancel>
+                              <AlertDialogAction className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                onClick={() => deleteMutation.mutate(store.id)}>
+                                {t("action.delete")}
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      )}
                     </div>
                   </div>
 
