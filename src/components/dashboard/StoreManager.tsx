@@ -14,7 +14,7 @@ import { Plus, Trash2, Pencil, Store, X, Save, Loader2, UserPlus, UserMinus, Cro
 import { Badge } from "@/components/ui/badge";
 import { useI18n } from "@/lib/i18n";
 import { useAuth } from "@/hooks/useAuth";
-import { StoreSettingsPanel } from "./StoreSettingsPanel";
+import { InlineStoreSettings } from "./InlineStoreSettings";
 
 interface ManagerInfo {
   user_id: string;
@@ -544,6 +544,7 @@ export function StoreManager() {
                       </div>
                     )}
                   </div>
+                  <InlineStoreSettings storeId={store.id} storeName={store.name} />
                 </div>
               );
             })}
@@ -552,9 +553,6 @@ export function StoreManager() {
             )}
           </div>
         )}
-      </div>
-      <div className="mt-8">
-        <StoreSettingsPanel />
       </div>
     </div>
   );
