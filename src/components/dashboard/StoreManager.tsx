@@ -41,17 +41,7 @@ export function StoreManager() {
   const { data: stores, isLoading } = useQuery({
     queryKey: ["stores"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("stores").select("*").eq("is_direction", false).order("name");
-      if (error) throw error;
-      return data;
-    },
-  });
-
-  // Fetch the Direction store separately
-  const { data: directionStore } = useQuery({
-    queryKey: ["direction-store"],
-    queryFn: async () => {
-      const { data, error } = await supabase.from("stores").select("*").eq("is_direction", true).maybeSingle();
+      const { data, error } = await supabase.from("stores").select("*").order("name");
       if (error) throw error;
       return data;
     },
@@ -244,74 +234,6 @@ export function StoreManager() {
         </div>
       </div>
 
-      {/* Direction Fnac section */}
-      {directionStore && (
-        <div className="kpi-card border-amber-300/50">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="h-8 w-8 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
-              <Crown className="h-4 w-4 text-amber-500" />
-            </div>
-            <div>
-              <h3 className="text-sm font-semibold text-foreground">{directionStore.name}</h3>
-              <p className="text-[10px] text-muted-foreground">{t("direction.assignDesc" as any)}</p>
-            </div>
-          </div>
-          <div className="pl-11 space-y-1">
-            <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-              {t("store.managers")}
-            </div>
-            {(storeManagers[directionStore.id] || []).length === 0 && (
-              <p className="text-xs text-muted-foreground italic">{t("store.noManager")}</p>
-            )}
-            {(storeManagers[directionStore.id] || []).map((mgr) => (
-              <div key={mgr.user_id} className="flex items-center justify-between py-1 px-2 rounded bg-accent/5 text-xs group">
-                <span className="flex items-center gap-1.5">
-                  <Crown className="h-3.5 w-3.5 text-amber-500" />
-                  <span className="font-medium text-foreground">{mgr.email}</span>
-                  <span className="text-muted-foreground">({mgr.role})</span>
-                </span>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-6 w-6 p-0 text-destructive/50 hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
-                  onClick={() => unassignMutation.mutate({ user_id: mgr.user_id, store_id: directionStore.id })}
-                  disabled={unassignMutation.isPending}
-                >
-                  <UserMinus className="h-3 w-3" />
-                </Button>
-              </div>
-            ))}
-            {addingManagerStoreId === directionStore.id ? (
-              <div className="flex items-center gap-2 mt-1">
-                <Select value={selectedUserId} onValueChange={setSelectedUserId}>
-                  <SelectTrigger className="h-8 text-xs flex-1">
-                    <SelectValue placeholder={t("store.selectUser")} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {getAvailableUsers(directionStore.id).map((u) => (
-                      <SelectItem key={u.id} value={u.id}>{u.email} ({u.role})</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Button size="sm" className="h-8" disabled={!selectedUserId || assignMutation.isPending}
-                  onClick={() => assignMutation.mutate({ user_id: selectedUserId, store_id: directionStore.id })}>
-                  {assignMutation.isPending ? <Loader2 className="h-3 w-3 animate-spin" /> : <Save className="h-3 w-3" />}
-                </Button>
-                <Button size="sm" variant="ghost" className="h-8" onClick={() => { setAddingManagerStoreId(null); setSelectedUserId(""); }}>
-                  <X className="h-3 w-3" />
-                </Button>
-              </div>
-            ) : (
-              <Button variant="outline" size="sm" className="h-7 text-xs mt-1"
-                onClick={() => { setAddingManagerStoreId(directionStore.id); setSelectedUserId(""); }}>
-                <UserPlus className="h-3 w-3 mr-1" />
-                {t("store.assignUser" as any)}
-              </Button>
-            )}
-          </div>
-        </div>
-      )}
-
       <div className="kpi-card">
         <h3 className="text-sm font-semibold text-muted-foreground mb-3">
           {t("store.stores")} ({stores?.length ?? 0})
@@ -342,12 +264,14 @@ export function StoreManager() {
                 );
               }
 
+              const isDirectionStore = (store as any).is_direction === true;
+
               return (
-                <div key={store.id} className="rounded-lg border bg-card p-3 space-y-2">
+                <div key={store.id} className={`rounded-lg border bg-card p-3 space-y-2 ${isDirectionStore ? "border-amber-300/50" : ""}`}>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="h-8 w-8 rounded-lg bg-accent/20 flex items-center justify-center">
-                        <Store className="h-4 w-4 text-accent" />
+                      <div className={`h-8 w-8 rounded-lg flex items-center justify-center ${isDirectionStore ? "bg-amber-100 dark:bg-amber-900/30" : "bg-accent/20"}`}>
+                        {isDirectionStore ? <Crown className="h-4 w-4 text-amber-500" /> : <Store className="h-4 w-4 text-accent" />}
                       </div>
                       <div>
                         <p className="text-sm font-medium text-foreground">{store.name}</p>
@@ -361,30 +285,32 @@ export function StoreManager() {
                         onClick={() => { setEditingId(store.id); setEditName(store.name); setEditCity(store.city); }}>
                         <Pencil className="h-3.5 w-3.5" />
                       </Button>
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <Button variant="ghost" size="sm" className="text-destructive/60 hover:text-destructive">
-                            <Trash2 className="h-3.5 w-3.5" />
-                          </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>{t("store.deleteTitle")} {store.name}</AlertDialogTitle>
-                            <AlertDialogDescription>
-                              {count > 0
-                                ? `${count} ${t("store.employeesDetached")}`
-                                : t("store.irreversible")}
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>{t("action.cancel")}</AlertDialogCancel>
-                            <AlertDialogAction className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                              onClick={() => deleteMutation.mutate(store.id)}>
-                              {t("action.delete")}
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
+                      {!isDirectionStore && (
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button variant="ghost" size="sm" className="text-destructive/60 hover:text-destructive">
+                              <Trash2 className="h-3.5 w-3.5" />
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>{t("store.deleteTitle")} {store.name}</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                {count > 0
+                                  ? `${count} ${t("store.employeesDetached")}`
+                                  : t("store.irreversible")}
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>{t("action.cancel")}</AlertDialogCancel>
+                              <AlertDialogAction className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                onClick={() => deleteMutation.mutate(store.id)}>
+                                {t("action.delete")}
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      )}
                     </div>
                   </div>
 
