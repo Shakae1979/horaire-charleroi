@@ -552,6 +552,9 @@ export function StoreManager() {
           </div>
         )}
       </div>
+      <div className="mt-8">
+        <StoreSettingsPanel />
+      </div>
     </div>
   );
 }
