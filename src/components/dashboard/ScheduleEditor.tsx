@@ -9,6 +9,7 @@ import { useStoreEmployees } from "@/hooks/useStoreEmployees";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { formatDateLongBE, formatDateMonthBE, formatDateBE, formatTimeBE, formatLocalDate, getWeekNumber } from "@/lib/format";
+import { useStoreSettings } from "@/hooks/useStoreSettings";
 
 /** Convert "HHhMM" or "HH:MM" or "HHMM" to "HH:MM" for storage */
 function parseTimeBE(input: string): string {
@@ -48,15 +49,6 @@ const DEPT_COLORS: Record<string, { bg: string; border: string }> = {
   technique: { bg: "bg-orange-100 dark:bg-orange-950/40", border: "border-l-orange-500" },
   editorial: { bg: "bg-yellow-100 dark:bg-yellow-950/40", border: "border-l-yellow-500" },
   stock: { bg: "bg-blue-100 dark:bg-blue-950/40", border: "border-l-blue-500" },
-  caisse: { bg: "bg-emerald-100 dark:bg-emerald-950/40", border: "border-l-emerald-500" },
-};
-
-/** Generate time slots from 09:00 to 20:00 every 30 min */
-const TIME_SLOTS: string[] = [];
-for (let h = 9; h <= 20; h++) {
-  TIME_SLOTS.push(`${String(h).padStart(2, "0")}:00`);
-  if (h < 20) TIME_SLOTS.push(`${String(h).padStart(2, "0")}:30`);
-}
 
 type DayKey = (typeof DAY_KEYS)[number];
 
