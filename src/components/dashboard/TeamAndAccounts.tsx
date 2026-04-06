@@ -39,7 +39,25 @@ interface AppUser {
 export function TeamAndAccounts() {
   const queryClient = useQueryClient();
   const { currentStore } = useStore();
-  const { role: myRole } = useAuth();
+  const { role: myRole, user } = useAuth();
+
+  // Check if current user is store manager for current store
+  const { data: isStoreManager } = useQuery({
+    queryKey: ["is-store-manager", user?.id, currentStore?.id],
+    enabled: !!user && !!currentStore && myRole === "editor",
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("user_store_assignments")
+        .select("is_manager")
+        .eq("user_id", user!.id)
+        .eq("store_id", currentStore!.id)
+        .maybeSingle();
+      if (error) throw error;
+      return data?.is_manager ?? false;
+    },
+  });
+
+  const canCreateEditors = myRole === "admin" || isStoreManager === true;
   const { t } = useI18n();
   const [newName, setNewName] = useState("");
   const [newLastName, setNewLastName] = useState("");
