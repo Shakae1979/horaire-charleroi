@@ -49,7 +49,9 @@ const DEPT_COLORS: Record<string, { bg: string; border: string }> = {
   technique: { bg: "bg-orange-100 dark:bg-orange-950/40", border: "border-l-orange-500" },
   editorial: { bg: "bg-yellow-100 dark:bg-yellow-950/40", border: "border-l-yellow-500" },
   stock: { bg: "bg-blue-100 dark:bg-blue-950/40", border: "border-l-blue-500" },
-
+  caisse: { bg: "bg-emerald-100 dark:bg-emerald-950/40", border: "border-l-emerald-500" },
+  stagiaire: { bg: "bg-pink-100 dark:bg-pink-950/40", border: "border-l-pink-500" },
+};
 type DayKey = (typeof DAY_KEYS)[number];
 
 function getMonday(date: Date): Date {
