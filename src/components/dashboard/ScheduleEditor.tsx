@@ -328,7 +328,7 @@ export function ScheduleEditor() {
     setCopiedCell({ empId, dayKey });
     setCopiedEmployee(null);
     setCopiedDay(null);
-    const empName = employees?.find((e) => e.id === empId)?.name ?? "";
+    const empName = employees?.find((e) => e.id === empId) ? getDisplayName(employees.find((e) => e.id === empId)!) : "";
     const dayLabel = DAYS.find((d) => d.key === dayKey)?.label ?? dayKey;
     toast.info(`${dayLabel} ${empName} ${t("copy.copied")}`);
   };
