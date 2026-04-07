@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { ChevronLeft, ChevronRight, Users, AlertTriangle, CheckCircle2, Printer } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { formatDateLongBE, formatDateBE, formatLocalDate, getWeekNumber } from "@/lib/format";
+import { formatDateLongBE, formatDateBE, formatLocalDate, getWeekNumber, getDisplayName } from "@/lib/format";
 import { useStore } from "@/hooks/useStore";
 import { useI18n } from "@/lib/i18n";
 
@@ -106,7 +106,7 @@ export function TeamRecap() {
         const end = (s as any)[`${day.key}_end`];
         if (isWorking(start, end, hour)) {
           const emp = employees?.find((e) => e.id === s.employee_id);
-          if (emp) working.push({ name: emp.name, role: emp.role });
+          if (emp) working.push({ name: getDisplayName(emp), role: emp.role });
         }
       });
       coverage[day.key][hour] = working;
@@ -325,9 +325,9 @@ export function TeamRecap() {
                     <td className="py-2">
                       <div className="flex items-center gap-2">
                         <div className="h-7 w-7 rounded-full bg-accent/20 flex items-center justify-center text-xs font-bold text-accent">
-                          {emp.name.charAt(0)}
+                          {getDisplayName(emp).split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase()}
                         </div>
-                        <span className="font-medium">{emp.name}</span>
+                        <span className="font-medium">{getDisplayName(emp)}</span>
                       </div>
                     </td>
                     <td className={`py-2 text-center text-xs font-medium ${catColor}`}>

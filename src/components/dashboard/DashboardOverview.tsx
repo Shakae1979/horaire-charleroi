@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Users, CalendarDays, AlertTriangle } from "lucide-react";
 import { useStore } from "@/hooks/useStore";
 import { useI18n } from "@/lib/i18n";
+import { getDisplayName } from "@/lib/format";
 
 const ROLE_META: Record<string, { label: string; bg: string; text: string }> = {
   responsable: { label: "Resp.", bg: "bg-red-100", text: "text-red-800" },
@@ -87,10 +88,10 @@ export function DashboardOverview() {
                 {roleEmps.map((emp) => (
                   <div key={emp.id} className="flex items-center gap-2 p-2 rounded-md bg-secondary/50">
                     <div className={`h-8 w-8 rounded-full ${meta.bg} flex items-center justify-center text-xs font-bold ${meta.text}`}>
-                      {emp.name.charAt(0)}
+                      {getDisplayName(emp).split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase()}
                     </div>
                     <div>
-                      <div className="text-sm font-medium">{emp.name}</div>
+                      <div className="text-sm font-medium">{getDisplayName(emp)}</div>
                       <div className="text-xs text-muted-foreground font-mono-data">{emp.contract_hours}h</div>
                     </div>
                   </div>
