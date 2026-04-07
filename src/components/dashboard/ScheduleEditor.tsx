@@ -345,7 +345,7 @@ export function ScheduleEditor() {
         [`${targetDayKey}_end`]: endVal,
       },
     }));
-    const empName = employees?.find((e) => e.id === targetEmpId)?.name ?? "";
+    const empName = employees?.find((e) => e.id === targetEmpId) ? getDisplayName(employees.find((e) => e.id === targetEmpId)!) : "";
     toast.success(`${t("copy.pastedTo")} ${empName}`);
     setCopiedCell(null);
   };
