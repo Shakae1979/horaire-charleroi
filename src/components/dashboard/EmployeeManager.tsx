@@ -277,7 +277,7 @@ export function EmployeeManager() {
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                       <AlertDialogHeader>
-                        <AlertDialogTitle>Supprimer {emp.name} ?</AlertDialogTitle>
+                        <AlertDialogTitle>Supprimer {getDisplayName(emp)} ?</AlertDialogTitle>
                         <AlertDialogDescription>
                           Cette action est irréversible. Toutes les données liées seront supprimées.
                         </AlertDialogDescription>

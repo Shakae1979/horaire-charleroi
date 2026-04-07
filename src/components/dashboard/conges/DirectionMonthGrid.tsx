@@ -7,7 +7,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { formatDateBE, formatLocalDate } from "@/lib/format";
+import { formatDateBE, formatLocalDate, getDisplayName } from "@/lib/format";
 import { getSchoolHolidayInfo } from "@/lib/school-holidays";
 import { useI18n, getHolidays2026, getDayNames } from "@/lib/i18n";
 
@@ -144,8 +144,8 @@ export function DirectionMonthGrid({ year, month, employees, conges, managerStor
           {sortedEmployees.map((emp) => (
             <tr key={emp.id} className="border-b border-border/40 hover:bg-accent/5">
               <td className="sticky left-0 bg-card px-2 py-1.5 border-r z-10 whitespace-nowrap">
-                <div className="font-semibold text-foreground text-xs truncate" title={[emp.name, emp.last_name].filter(Boolean).join(" ")}>
-                  {emp.name}
+                <div className="font-semibold text-foreground text-xs truncate" title={getDisplayName(emp)}>
+                  {getDisplayName(emp)}
                 </div>
                 {managerStoreNames[emp.id] && (
                   <div className="text-[9px] text-muted-foreground truncate" title={managerStoreNames[emp.id]}>
@@ -185,7 +185,7 @@ export function DirectionMonthGrid({ year, month, employees, conges, managerStor
                       key={d.day}
                       className={`px-0 py-0.5 text-center border-r last:border-r-0 ${d.isMonday ? "border-l-2 border-l-accent/40" : ""} ${isEditable ? "cursor-pointer hover:bg-destructive/10" : ""}`}
                       onClick={() => handleCellClick(emp.id, d.dateStr, d.isWeekend)}
-                      title={`${emp.name} — ${typeLabel}`}
+                      title={`${getDisplayName(emp)} — ${typeLabel}`}
                     >
                       <span className={`${typeColor} text-white text-[9px] px-0.5 py-0.5 rounded block mx-auto w-[26px] leading-tight font-medium`}>
                         {typeLabel.slice(0, 3)}

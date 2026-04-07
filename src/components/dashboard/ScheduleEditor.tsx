@@ -8,7 +8,7 @@ import { ChevronLeft, ChevronRight, Save, Plus, Printer, Copy, ClipboardPaste, X
 import { useStoreEmployees } from "@/hooks/useStoreEmployees";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import { formatDateLongBE, formatDateMonthBE, formatDateBE, formatTimeBE, formatLocalDate, getWeekNumber } from "@/lib/format";
+import { formatDateLongBE, formatDateMonthBE, formatDateBE, formatTimeBE, formatLocalDate, getWeekNumber, getDisplayName } from "@/lib/format";
 import { useStoreSettings } from "@/hooks/useStoreSettings";
 
 /** Convert "HHhMM" or "HH:MM" or "HHMM" to "HH:MM" for storage */
@@ -262,7 +262,7 @@ export function ScheduleEditor() {
     setCopiedDay(null);
     setSelectedTargets(new Set());
     setSelectedDays(new Set());
-    const empName = employees?.find((e) => e.id === empId)?.name ?? "";
+    const empName = employees?.find((e) => e.id === empId) ? getDisplayName(employees.find((e) => e.id === empId)!) : "";
     toast.info(`${empName} ${t("copy.copied")} — ${t("copy.checkTargets")}`);
   };
 
@@ -328,7 +328,7 @@ export function ScheduleEditor() {
     setCopiedCell({ empId, dayKey });
     setCopiedEmployee(null);
     setCopiedDay(null);
-    const empName = employees?.find((e) => e.id === empId)?.name ?? "";
+    const empName = employees?.find((e) => e.id === empId) ? getDisplayName(employees.find((e) => e.id === empId)!) : "";
     const dayLabel = DAYS.find((d) => d.key === dayKey)?.label ?? dayKey;
     toast.info(`${dayLabel} ${empName} ${t("copy.copied")}`);
   };
@@ -345,7 +345,7 @@ export function ScheduleEditor() {
         [`${targetDayKey}_end`]: endVal,
       },
     }));
-    const empName = employees?.find((e) => e.id === targetEmpId)?.name ?? "";
+    const empName = employees?.find((e) => e.id === targetEmpId) ? getDisplayName(employees.find((e) => e.id === targetEmpId)!) : "";
     toast.success(`${t("copy.pastedTo")} ${empName}`);
     setCopiedCell(null);
   };
@@ -587,7 +587,7 @@ export function ScheduleEditor() {
         [empId]: { ...prev[empId], ...edits },
       }));
 
-      const empName = employees?.find((e) => e.id === empId)?.name ?? "";
+      const empName = employees?.find((e) => e.id === empId) ? getDisplayName(employees.find((e) => e.id === empId)!) : "";
       toast.success(`${t("schedule.prevWeekCopiedFor")} ${empName}`);
     } catch (err) {
       toast.error("Error: " + (err as Error).message);
@@ -731,7 +731,7 @@ export function ScheduleEditor() {
         <div className="flex items-center gap-3 p-3 rounded-lg border border-accent bg-accent/10">
           <ClipboardPaste className="h-4 w-4 text-accent-foreground" />
           <span className="text-sm font-medium">
-            {copiedEmployee && `${employees?.find((e) => e.id === copiedEmployee)?.name} ${t("copy.copied")}`}
+            {copiedEmployee && `${employees?.find((e) => e.id === copiedEmployee) ? getDisplayName(employees.find((e) => e.id === copiedEmployee)!) : ""} ${t("copy.copied")}`}
             {copiedDay && `${DAYS.find((d) => d.key === copiedDay)?.label} ${t("copy.copied")}`}
             {" — "}
             {copiedEmployee && `${t("copy.checkTargets")} (${selectedTargets.size} ${t("copy.selected")})`}
@@ -897,12 +897,12 @@ export function ScheduleEditor() {
                           )}
                           <div className="flex-1 min-w-0">
                             <div className="font-medium flex items-center gap-1">
-                              {emp.name}
+                              {getDisplayName(emp)}
                               {!isCopyMode && (
                                 <button
                                   onClick={() => copyPreviousWeekForEmployee(emp.id)}
                                   className="p-0.5 rounded hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
-                                  title={`${t("schedule.copyPrevWeek")} ${emp.name}`}
+                                  title={`${t("schedule.copyPrevWeek")} ${getDisplayName(emp)}`}
                                 >
                                   <History className="h-3 w-3" />
                                 </button>

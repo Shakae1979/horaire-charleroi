@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useStore } from "@/hooks/useStore";
 import { useI18n } from "@/lib/i18n";
+import { getDisplayName } from "@/lib/format";
 
 const ROLE_COLORS: Record<string, string> = {
   responsable: "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400",
@@ -45,7 +46,7 @@ export function ShareLinks() {
   const copyAllLinks = () => {
     if (!employees) return;
     const text = employees
-      .map((emp) => `${emp.name}: ${baseUrl}/mon-planning/${encodeURIComponent(emp.name)}`)
+      .map((emp) => `${getDisplayName(emp)}: ${baseUrl}/mon-planning/${encodeURIComponent(getDisplayName(emp))}`)
       .join("\n");
     navigator.clipboard.writeText(text);
     toast.success(t("share.allCopied"));
@@ -124,19 +125,19 @@ export function ShareLinks() {
 
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
                 {emps.map((emp) => {
-                  const url = `${baseUrl}/mon-planning/${encodeURIComponent(emp.name)}`;
-                  const colorClass = AVATAR_COLORS[emp.name.charCodeAt(0) % AVATAR_COLORS.length];
+                  const url = `${baseUrl}/mon-planning/${encodeURIComponent(getDisplayName(emp))}`;
+                  const colorClass = AVATAR_COLORS[getDisplayName(emp).charCodeAt(0) % AVATAR_COLORS.length];
                   return (
                     <button
                       key={emp.id}
-                      onClick={() => copyLink(emp.name)}
+                      onClick={() => copyLink(getDisplayName(emp))}
                       className="group relative flex flex-col items-center gap-2 p-4 rounded-xl border border-border/50 bg-card hover:bg-accent/10 hover:border-accent/30 transition-all duration-200 cursor-pointer hover:shadow-md"
                     >
                       <div className={`h-12 w-12 rounded-full ${colorClass} flex items-center justify-center text-white text-lg font-bold shadow-sm group-hover:scale-110 transition-transform`}>
-                        {emp.name.split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase()}
+                        {getDisplayName(emp).split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase()}
                       </div>
                       <span className="text-sm font-semibold text-foreground text-center leading-tight">
-                        {emp.name}
+                        {getDisplayName(emp)}
                       </span>
                       <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${ROLE_COLORS[emp.role] ?? "bg-muted text-muted-foreground"}`}>
                         {t(`role.${emp.role}` as any) || emp.role}

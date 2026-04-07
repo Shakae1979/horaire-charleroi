@@ -4,7 +4,7 @@ import { getSchoolHolidayInfo } from "@/lib/school-holidays";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { formatDateBE } from "@/lib/format";
+import { formatDateBE, getDisplayName } from "@/lib/format";
 import { useI18n, getHolidays2026, getDayNames } from "@/lib/i18n";
 
 const ROLE_COLUMNS = [
@@ -140,7 +140,7 @@ function VerticalMonthColumn({ year, month, employees, conges, deleteMutation, o
                             if (leaves.length === 1) {
                               const { emp, leave } = leaves[0];
                               const typeLabel = congeTypes.find(ct => ct.value === leave.type)?.label ?? "";
-                              onRequestDelete({ id: leave.id, name: emp.name, type: typeLabel });
+                              onRequestDelete({ id: leave.id, name: getDisplayName(emp), type: typeLabel });
                             }
                           } else { onCellClick(role.key, dateStr); }
                         }}
@@ -150,8 +150,8 @@ function VerticalMonthColumn({ year, month, employees, conges, deleteMutation, o
                             {leaves.map(({ emp, leave }) => {
                               const typeColor = congeTypes.find(ct => ct.value === leave.type)?.color ?? "bg-muted";
                               return (
-                                <span key={emp.id} className={`${typeColor} text-white text-[10px] px-1 py-0.5 rounded truncate block`} title={`${emp.name} — ${congeTypes.find(ct => ct.value === leave.type)?.label ?? ""}`}>
-                                  {emp.name.split(" ")[0]}
+                                <span key={emp.id} className={`${typeColor} text-white text-[10px] px-1 py-0.5 rounded truncate block`} title={`${getDisplayName(emp)} — ${congeTypes.find(ct => ct.value === leave.type)?.label ?? ""}`}>
+                                  {getDisplayName(emp).split(" ")[0]}
                                 </span>
                               );
                             })}
@@ -269,7 +269,7 @@ export function QuarterView({ year, months, employees, conges, deleteMutation, o
               <label className="text-xs font-medium text-muted-foreground mb-1.5 block">{t("conges.seller")}</label>
               <select value={selectedEmpId || ""} onChange={(e) => setSelectedEmpId(e.target.value)} className="w-full px-3 py-2 text-sm rounded-md border bg-background">
                 <option value="">{t("action.choose")}</option>
-                {roleEmployees.map((emp: any) => <option key={emp.id} value={emp.id}>{emp.name}</option>)}
+                {roleEmployees.map((emp: any) => <option key={emp.id} value={emp.id}>{getDisplayName(emp)}</option>)}
               </select>
             </div>
             <div>
