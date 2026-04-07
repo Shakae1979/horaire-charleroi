@@ -46,7 +46,7 @@ export function ShareLinks() {
   const copyAllLinks = () => {
     if (!employees) return;
     const text = employees
-      .map((emp) => `${emp.name}: ${baseUrl}/mon-planning/${encodeURIComponent(emp.name)}`)
+      .map((emp) => `${getDisplayName(emp)}: ${baseUrl}/mon-planning/${encodeURIComponent(getDisplayName(emp))}`)
       .join("\n");
     navigator.clipboard.writeText(text);
     toast.success(t("share.allCopied"));
