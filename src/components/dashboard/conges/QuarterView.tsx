@@ -140,7 +140,7 @@ function VerticalMonthColumn({ year, month, employees, conges, deleteMutation, o
                             if (leaves.length === 1) {
                               const { emp, leave } = leaves[0];
                               const typeLabel = congeTypes.find(ct => ct.value === leave.type)?.label ?? "";
-                              onRequestDelete({ id: leave.id, name: emp.name, type: typeLabel });
+                              onRequestDelete({ id: leave.id, name: getDisplayName(emp), type: typeLabel });
                             }
                           } else { onCellClick(role.key, dateStr); }
                         }}
