@@ -230,11 +230,11 @@ export function MonthGrid({ year, month, employees, conges, deleteMutation, onAd
                               if (leaves.length === 1) {
                                 const { emp, leave } = leaves[0];
                                 const typeLabel = congeTypes.find(ct => ct.value === leave.type)?.label ?? "";
-                                setDeleteTarget({ id: leave.id, name: emp.name, type: typeLabel });
+                                setDeleteTarget({ id: leave.id, name: getDisplayName(emp), type: typeLabel });
                               } else {
                                 setDeleteOptions(leaves.map(({ emp, leave }) => ({
                                   id: leave.id,
-                                  name: emp.name,
+                                  name: getDisplayName(emp),
                                   type: congeTypes.find(ct => ct.value === leave.type)?.label ?? leave.type,
                                   start: leave.date_start,
                                   end: leave.date_end,
