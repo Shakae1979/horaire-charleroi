@@ -150,8 +150,8 @@ function VerticalMonthColumn({ year, month, employees, conges, deleteMutation, o
                             {leaves.map(({ emp, leave }) => {
                               const typeColor = congeTypes.find(ct => ct.value === leave.type)?.color ?? "bg-muted";
                               return (
-                                <span key={emp.id} className={`${typeColor} text-white text-[10px] px-1 py-0.5 rounded truncate block`} title={`${emp.name} — ${congeTypes.find(ct => ct.value === leave.type)?.label ?? ""}`}>
-                                  {emp.name.split(" ")[0]}
+                                <span key={emp.id} className={`${typeColor} text-white text-[10px] px-1 py-0.5 rounded truncate block`} title={`${getDisplayName(emp)} — ${congeTypes.find(ct => ct.value === leave.type)?.label ?? ""}`}>
+                                  {getDisplayName(emp).split(" ")[0]}
                                 </span>
                               );
                             })}
