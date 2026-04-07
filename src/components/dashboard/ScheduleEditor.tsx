@@ -8,7 +8,7 @@ import { ChevronLeft, ChevronRight, Save, Plus, Printer, Copy, ClipboardPaste, X
 import { useStoreEmployees } from "@/hooks/useStoreEmployees";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import { formatDateLongBE, formatDateMonthBE, formatDateBE, formatTimeBE, formatLocalDate, getWeekNumber } from "@/lib/format";
+import { formatDateLongBE, formatDateMonthBE, formatDateBE, formatTimeBE, formatLocalDate, getWeekNumber, getDisplayName } from "@/lib/format";
 import { useStoreSettings } from "@/hooks/useStoreSettings";
 
 /** Convert "HHhMM" or "HH:MM" or "HHMM" to "HH:MM" for storage */
