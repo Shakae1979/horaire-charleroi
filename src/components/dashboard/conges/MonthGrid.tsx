@@ -289,7 +289,7 @@ export function MonthGrid({ year, month, employees, conges, deleteMutation, onAd
               <label className="text-xs font-medium text-muted-foreground mb-1.5 block">{t("conges.seller")}</label>
               <select value={selectedEmpId || ""} onChange={(e) => setSelectedEmpId(e.target.value)} className="w-full px-3 py-2 text-sm rounded-md border bg-background">
                 <option value="">{t("action.choose")}</option>
-                {roleEmployees.map((emp: any) => <option key={emp.id} value={emp.id}>{emp.name}</option>)}
+                {roleEmployees.map((emp: any) => <option key={emp.id} value={emp.id}>{getDisplayName(emp)}</option>)}
               </select>
             </div>
             <div>

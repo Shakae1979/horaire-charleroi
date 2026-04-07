@@ -897,12 +897,12 @@ export function ScheduleEditor() {
                           )}
                           <div className="flex-1 min-w-0">
                             <div className="font-medium flex items-center gap-1">
-                              {emp.name}
+                              {getDisplayName(emp)}
                               {!isCopyMode && (
                                 <button
                                   onClick={() => copyPreviousWeekForEmployee(emp.id)}
                                   className="p-0.5 rounded hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
-                                  title={`${t("schedule.copyPrevWeek")} ${emp.name}`}
+                                  title={`${t("schedule.copyPrevWeek")} ${getDisplayName(emp)}`}
                                 >
                                   <History className="h-3 w-3" />
                                 </button>

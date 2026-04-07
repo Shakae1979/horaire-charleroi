@@ -185,7 +185,7 @@ export function DirectionMonthGrid({ year, month, employees, conges, managerStor
                       key={d.day}
                       className={`px-0 py-0.5 text-center border-r last:border-r-0 ${d.isMonday ? "border-l-2 border-l-accent/40" : ""} ${isEditable ? "cursor-pointer hover:bg-destructive/10" : ""}`}
                       onClick={() => handleCellClick(emp.id, d.dateStr, d.isWeekend)}
-                      title={`${emp.name} — ${typeLabel}`}
+                      title={`${getDisplayName(emp)} — ${typeLabel}`}
                     >
                       <span className={`${typeColor} text-white text-[9px] px-0.5 py-0.5 rounded block mx-auto w-[26px] leading-tight font-medium`}>
                         {typeLabel.slice(0, 3)}

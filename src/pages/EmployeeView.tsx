@@ -177,7 +177,7 @@ const EmployeeView = () => {
             <p className="text-muted-foreground mb-6">{t("empView.selectName")}</p>
             <div className="space-y-2">
               {employees?.map((emp) => (
-                <button key={emp.id} onClick={() => navigate(`/mon-planning/${encodeURIComponent(emp.name)}`)}
+                <button key={emp.id} onClick={() => navigate(`/mon-planning/${encodeURIComponent(getDisplayName(emp))}`)}
                   className="w-full flex items-center gap-3 p-3 rounded-lg border bg-card hover:bg-secondary transition-colors text-left">
                   <div className="h-10 w-10 rounded-full bg-accent/20 flex items-center justify-center text-sm font-bold text-accent">{getDisplayName(emp).split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase()}</div>
                   <div>
