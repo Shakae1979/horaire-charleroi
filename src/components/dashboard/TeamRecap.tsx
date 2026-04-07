@@ -106,7 +106,7 @@ export function TeamRecap() {
         const end = (s as any)[`${day.key}_end`];
         if (isWorking(start, end, hour)) {
           const emp = employees?.find((e) => e.id === s.employee_id);
-          if (emp) working.push({ name: emp.name, role: emp.role });
+          if (emp) working.push({ name: getDisplayName(emp), role: emp.role });
         }
       });
       coverage[day.key][hour] = working;
