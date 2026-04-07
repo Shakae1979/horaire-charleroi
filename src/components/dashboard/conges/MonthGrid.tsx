@@ -251,8 +251,8 @@ export function MonthGrid({ year, month, employees, conges, deleteMutation, onAd
                                 const typeColor = congeTypes.find(ct => ct.value === leave.type)?.color ?? "bg-muted";
                                 const typeLabel = congeTypes.find(ct => ct.value === leave.type)?.label ?? "";
                                 return (
-                                  <span key={emp.id} className={`${typeColor} text-white text-[10px] px-1 py-0.5 rounded truncate block`} title={`${emp.name} — ${typeLabel}`}>
-                                    {emp.name.split(" ")[0]}
+                                  <span key={emp.id} className={`${typeColor} text-white text-[10px] px-1 py-0.5 rounded truncate block`} title={`${getDisplayName(emp)} — ${typeLabel}`}>
+                                    {getDisplayName(emp).split(" ")[0]}
                                   </span>
                                 );
                               })}
