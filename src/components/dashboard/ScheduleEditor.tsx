@@ -587,7 +587,7 @@ export function ScheduleEditor() {
         [empId]: { ...prev[empId], ...edits },
       }));
 
-      const empName = employees?.find((e) => e.id === empId)?.name ?? "";
+      const empName = employees?.find((e) => e.id === empId) ? getDisplayName(employees.find((e) => e.id === empId)!) : "";
       toast.success(`${t("schedule.prevWeekCopiedFor")} ${empName}`);
     } catch (err) {
       toast.error("Error: " + (err as Error).message);
