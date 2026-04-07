@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useStore } from "@/hooks/useStore";
 import { useI18n } from "@/lib/i18n";
+import { getDisplayName } from "@/lib/format";
 
 const ROLE_COLORS: Record<string, string> = {
   responsable: "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400",
