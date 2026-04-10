@@ -457,6 +457,10 @@ const translations = {
   "schedule.week": { fr: "Sem.", nl: "Week" },
   "schedule.prevWeekCopiedFor": { fr: "Semaine précédente copiée pour", nl: "Vorige week gekopieerd voor" },
   "schedule.pastedOnEmployees": { fr: "Planning collé sur", nl: "Roosters geplakt op" },
+
+  // ========== Contact / Messages ==========
+  "nav.messages": { fr: "Messages", nl: "Berichten" },
+  "nav.contact": { fr: "Nous contacter", nl: "Contacteer ons" },
 } as const;
 
 type TranslationKey = keyof typeof translations;
