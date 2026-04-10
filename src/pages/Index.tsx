@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Calendar, Users, CalendarDays, User, Store, Palmtree, Crown } from "lucide-react";
+import { Calendar, Users, CalendarDays, User, Store, Palmtree, Crown, Mail } from "lucide-react";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { ScheduleEditor } from "@/components/dashboard/ScheduleEditor";
 import { DashboardOverview } from "@/components/dashboard/DashboardOverview";
@@ -39,6 +39,7 @@ const Index = () => {
     { label: t("header.weekPlan"), path: "/planning-equipe", icon: CalendarDays },
     { label: t("header.myPlan"), path: "/mon-planning", icon: User },
     { label: t("nav.conges"), path: "/conges", icon: Palmtree },
+    { label: t("nav.contact"), path: "/nous-contacter", icon: Mail },
   ];
 
   const showStoreSelector = stores.length > 1 || directionStore;
