@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Calendar, Users, CalendarDays, User, Store, Palmtree, Crown, Mail } from "lucide-react";
+import { Calendar, Users, CalendarDays, User, Store, Palmtree, Crown } from "lucide-react";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { ScheduleEditor } from "@/components/dashboard/ScheduleEditor";
 import { DashboardOverview } from "@/components/dashboard/DashboardOverview";
@@ -9,7 +9,6 @@ import { CongesCalendar } from "@/components/dashboard/CongesCalendar";
 import { TeamAndAccounts } from "@/components/dashboard/TeamAndAccounts";
 import { StoreManager } from "@/components/dashboard/StoreManager";
 import { DirectionFnac } from "@/components/dashboard/DirectionFnac";
-import { ContactMessages } from "@/components/dashboard/ContactMessages";
 
 import { useStore } from "@/hooks/useStore";
 import { useAuth } from "@/hooks/useAuth";
@@ -18,7 +17,7 @@ import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 
-type View = "overview" | "schedule" | "team" | "conges" | "stores" | "messages";
+type View = "overview" | "schedule" | "team" | "conges" | "stores";
 
 const Index = () => {
   const [view, setView] = useState<View>("overview");
@@ -39,7 +38,6 @@ const Index = () => {
     { label: t("header.weekPlan"), path: "/planning-equipe", icon: CalendarDays },
     { label: t("header.myPlan"), path: "/mon-planning", icon: User },
     { label: t("nav.conges"), path: "/conges", icon: Palmtree },
-    { label: t("nav.contact"), path: "/nous-contacter", icon: Mail },
   ];
 
   const showStoreSelector = stores.length > 1 || directionStore;
@@ -143,7 +141,6 @@ const Index = () => {
           {view === "team" && <TeamAndAccounts />}
           {view === "conges" && <CongesCalendar />}
           {view === "stores" && <StoreManager />}
-          {view === "messages" && <ContactMessages />}
         </div>
       </main>
     </div>
