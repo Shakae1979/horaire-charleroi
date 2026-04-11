@@ -1,4 +1,4 @@
-import { Calendar, Users, CalendarDays, User, UserCog, LogOut, Palmtree, Store } from "lucide-react";
+import { Users, CalendarDays, User, UserCog, LogOut, Palmtree, Store } from "lucide-react";
 import { HelpFAQ } from "@/components/HelpFAQ";
 import { ReactNode, useRef, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
