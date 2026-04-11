@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { Calendar, LogIn, Loader2 } from "lucide-react";
+import { Calendar, LogIn, Loader2, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -73,6 +73,15 @@ export default function Login() {
               {t("login.submit")}
             </Button>
           </form>
+          <div className="mt-4 text-center">
+            <a
+              href="mailto:karim.haoud@be.fnac.com?subject=Demande%20d'assistance%20-%20Planning%20Fnac"
+              className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-primary transition-colors"
+            >
+              <Mail className="h-3.5 w-3.5" />
+              Contacter l'administrateur
+            </a>
+          </div>
         </CardContent>
       </Card>
     </div>
