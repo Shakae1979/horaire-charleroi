@@ -56,7 +56,7 @@ export function FnacHeader({ title, subtitle, icon: Icon, children }: FnacHeader
       <div className="max-w-[1600px] mx-auto px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <button onClick={() => { handleLogoClick(); navigate((role === "admin" || role === "editor") ? "/" : "/equipe-du-jour"); }} className="flex items-center gap-2 hover:opacity-80 transition-opacity relative">
-            <Calendar className="h-5 w-5" style={{ color: "hsl(var(--sidebar-active))" }} />
+            <img src="/favicon.png" alt="Planning Fnac" className="h-6 w-6" />
             <span className="text-base font-extrabold tracking-tight" style={{ color: "hsl(var(--sidebar-active))" }}>
               planning fnac
             </span>
