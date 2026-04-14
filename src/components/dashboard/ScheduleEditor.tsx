@@ -996,31 +996,26 @@ export function ScheduleEditor() {
                                 )}
                               </div>
                             ) : (
-                              /* Normal mode: two time selects */
+                              /* Normal mode: two time text inputs */
                               <div className="flex items-center gap-0.5">
-                              <select
-                                value={getDisplayValue(emp.id, `${day.key}_start`)}
-                                onChange={(e) => handleChange(emp.id, `${day.key}_start`, e.target.value)}
-                                className="flex-1 min-w-0 px-0.5 py-1 text-xs rounded border bg-background focus:outline-none focus:ring-1 focus:ring-accent font-mono-data text-center appearance-none cursor-pointer"
-                              >
-                                <option value="">—</option>
-                                <option value="ROULEMENT">{t("schedule.rotation")}</option>
-                                <option value="EXT">{t("schedule.exterior")}</option>
-                                {TIME_SLOTS.map((ts) => (
-                                  <option key={ts} value={ts}>{displayTimeBE(ts)}</option>
-                                ))}
-                              </select>
-                              <select
-                                value={getDisplayValue(emp.id, `${day.key}_end`)}
-                                onChange={(e) => handleChange(emp.id, `${day.key}_end`, e.target.value)}
-                                className="flex-1 min-w-0 px-0.5 py-1 text-xs rounded border bg-background focus:outline-none focus:ring-1 focus:ring-accent font-mono-data text-center appearance-none cursor-pointer"
-                              >
-                                <option value="">—</option>
-                                <option value="ROULEMENT">{t("schedule.rotation")}</option>
-                                <option value="EXT">{t("schedule.exterior")}</option>
-                                {TIME_SLOTS.map((ts) => (
-                                  <option key={ts} value={ts}>{displayTimeBE(ts)}</option>
-                                ))}
+                              <input
+                                type="text"
+                                value={getTimeInputValue(emp.id, `${day.key}_start`)}
+                                onFocus={() => setActiveInput({ key: `${emp.id}__${day.key}_start`, raw: getTimeInputValue(emp.id, `${day.key}_start`) })}
+                                onChange={(e) => setActiveInput({ key: `${emp.id}__${day.key}_start`, raw: e.target.value })}
+                                onBlur={() => handleTimeBlur(emp.id, `${day.key}_start`)}
+                                placeholder="—"
+                                className="flex-1 min-w-0 px-0.5 py-1 text-xs rounded border bg-background focus:outline-none focus:ring-1 focus:ring-accent font-mono-data text-center"
+                              />
+                              <input
+                                type="text"
+                                value={getTimeInputValue(emp.id, `${day.key}_end`)}
+                                onFocus={() => setActiveInput({ key: `${emp.id}__${day.key}_end`, raw: getTimeInputValue(emp.id, `${day.key}_end`) })}
+                                onChange={(e) => setActiveInput({ key: `${emp.id}__${day.key}_end`, raw: e.target.value })}
+                                onBlur={() => handleTimeBlur(emp.id, `${day.key}_end`)}
+                                placeholder="—"
+                                className="flex-1 min-w-0 px-0.5 py-1 text-xs rounded border bg-background focus:outline-none focus:ring-1 focus:ring-accent font-mono-data text-center"
+                              />
                               </select>
                               {!isCopyMode && !isCellCopyMode && hasValue && (
                                 <button
