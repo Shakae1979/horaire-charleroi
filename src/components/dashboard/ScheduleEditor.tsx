@@ -390,7 +390,7 @@ export function ScheduleEditor() {
         const payload: any = { employee_id: empId, week_start: weekStr, ...fields };
 
         let totalMinutes = 0;
-        let workedDays = 0;
+        let breakMinutes = 0;
         for (const day of DAYS) {
           const startField = `${day.key}_start`;
           const endField = `${day.key}_end`;
@@ -400,12 +400,12 @@ export function ScheduleEditor() {
             const [sh, sm] = startVal.split(":").map(Number);
             const [eh, em] = endVal.split(":").map(Number);
             if (!isNaN(sh) && !isNaN(eh)) {
-              totalMinutes += (eh * 60 + (em || 0)) - (sh * 60 + (sm || 0));
-              workedDays++;
+              const dayMinutes = (eh * 60 + (em || 0)) - (sh * 60 + (sm || 0));
+              totalMinutes += dayMinutes;
+              if (dayMinutes >= 360) breakMinutes += 60;
             }
           }
         }
-        const breakMinutes = workedDays * 60;
         payload.hours_modified = Math.round(((totalMinutes - breakMinutes) / 60) * 100) / 100;
 
         const emp = employees?.find((e) => e.id === empId);
@@ -758,13 +758,13 @@ export function ScheduleEditor() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b">
-                <th className="pb-2 pr-4 text-left font-semibold text-muted-foreground sticky left-0 bg-card z-10 min-w-[140px]">
+                <th className="pb-2 pr-4 text-left font-semibold text-muted-foreground sticky left-0 bg-card z-10 min-w-[110px] max-w-[130px]">
                   {t("schedule.seller")}
                 </th>
                 {DAYS.map((day) => {
                   const ferie = isDayFerie(day.key);
                   return (
-                  <th key={day.key} colSpan={2} className={`pb-2 text-center font-semibold min-w-[160px] ${ferie ? "bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900" : "text-muted-foreground"}`}>
+                  <th key={day.key} colSpan={2} className={`pb-2 text-center font-semibold min-w-[115px] ${ferie ? "bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900" : "text-muted-foreground"}`}>
                     <div className="flex items-center justify-center gap-1">
                       {copiedDay !== null && copiedDay !== day.key && (
                         <Checkbox
@@ -805,7 +805,7 @@ export function ScheduleEditor() {
                   </th>
                   );
                 })}
-                <th className="pb-2 text-center font-semibold text-muted-foreground min-w-[60px]">{t("schedule.total")}</th>
+                <th className="pb-2 text-center font-semibold text-muted-foreground min-w-[50px]">{t("schedule.total")}</th>
               </tr>
               {/* Day comments row */}
               <tr className="border-b bg-muted/30">
@@ -860,7 +860,7 @@ export function ScheduleEditor() {
               ) : (
                 employees?.map((emp) => {
                   let totalMinutes = 0;
-                  let workedDays = 0;
+                  let breakMinutes = 0;
                   for (const day of DAYS) {
                     const s = getValue(emp.id, `${day.key}_start`);
                     const e = getValue(emp.id, `${day.key}_end`);
@@ -868,12 +868,12 @@ export function ScheduleEditor() {
                       const [sh, sm] = s.split(":").map(Number);
                       const [eh, em] = e.split(":").map(Number);
                       if (!isNaN(sh) && !isNaN(eh)) {
-                        totalMinutes += (eh * 60 + (em || 0)) - (sh * 60 + (sm || 0));
-                        workedDays++;
+                        const dayMinutes = (eh * 60 + (em || 0)) - (sh * 60 + (sm || 0));
+                        totalMinutes += dayMinutes;
+                        if (dayMinutes >= 360) breakMinutes += 60;
                       }
                     }
                   }
-                  const breakMinutes = workedDays * 60;
                   const totalH = Math.round(((totalMinutes - breakMinutes) / 60) * 10) / 10;
                   const diff = totalH - emp.contract_hours;
 
@@ -925,11 +925,14 @@ export function ScheduleEditor() {
                             </td>
                           );
                         }
-                        const hasValue = !!(getValue(emp.id, `${day.key}_start`) || getValue(emp.id, `${day.key}_end`));
+                        const startVal = getValue(emp.id, `${day.key}_start`);
+                        const endVal = getValue(emp.id, `${day.key}_end`);
+                        const hasValue = !!(startVal || endVal);
                         const isCellSource = copiedCell?.empId === emp.id && copiedCell?.dayKey === day.key;
                         const showPaste = isCellCopyMode && !isCellSource;
+                        const isRoulement = startVal?.toLowerCase() === "roulement" || endVal?.toLowerCase() === "roulement";
                         return (
-                          <td key={`${day.key}-cell`} colSpan={2} className={`py-1.5 px-0.5 ${isCellSource ? "bg-primary/10" : ferieDay ? "bg-muted/50" : ""}`}>
+                          <td key={`${day.key}-cell`} colSpan={2} className={`py-1.5 px-0.5 ${isRoulement ? "bg-muted/60" : isCellSource ? "bg-primary/10" : ferieDay ? "bg-muted/50" : ""}`}>
                             {isDirection ? (
                               /* Direction mode: single location select */
                               <div className="flex items-center gap-0.5">
