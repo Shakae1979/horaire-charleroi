@@ -172,6 +172,7 @@ export type Database = {
           id: string
           is_active: boolean
           last_name: string | null
+          must_change_password: boolean
           name: string
           role: string
           store_id: string | null
@@ -183,6 +184,7 @@ export type Database = {
           id?: string
           is_active?: boolean
           last_name?: string | null
+          must_change_password?: boolean
           name: string
           role?: string
           store_id?: string | null
@@ -194,6 +196,7 @@ export type Database = {
           id?: string
           is_active?: boolean
           last_name?: string | null
+          must_change_password?: boolean
           name?: string
           role?: string
           store_id?: string | null
