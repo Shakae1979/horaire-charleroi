@@ -1055,10 +1055,10 @@ export function ScheduleEditor() {
                           </td>
                         );
                       })}
-                      <td className="py-1.5 text-center">
-                        <span className="font-mono-data font-medium">{totalH || "—"}</span>
+                      <td className="py-0.5 text-center">
+                        <span className="font-mono-data font-medium text-[11px]">{totalH || "—"}</span>
                         {totalH > 0 && diff !== 0 && (
-                          <div className={`text-xs ${diff > 0 ? "text-warning" : "text-destructive"}`}>
+                          <div className={`text-[9px] ${diff > 0 ? "text-warning" : "text-destructive"}`}>
                             {diff > 0 ? "+" : ""}{diff}h
                           </div>
                         )}
