@@ -927,7 +927,7 @@ export function ScheduleEditor() {
                               )}
                               {isSource && <span className="text-xs text-primary">{t("copy.source")}</span>}
                             </div>
-                            <div className="text-xs text-muted-foreground font-mono-data">{emp.contract_hours}h {t("schedule.contract")}</div>
+                            <div className="text-[9px] text-muted-foreground font-mono-data">{emp.contract_hours}h {t("schedule.contract")}</div>
                           </div>
                         </div>
                       </td>
