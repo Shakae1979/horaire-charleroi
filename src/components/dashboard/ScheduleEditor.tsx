@@ -773,16 +773,16 @@ export function ScheduleEditor() {
       {/* Schedule grid */}
       <div className="kpi-card overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full text-[11px]">
             <thead>
               <tr className="border-b">
-                <th className="pb-2 pr-4 text-left font-semibold text-muted-foreground sticky left-0 bg-card z-10 min-w-[110px] max-w-[130px]">
+                <th className="pb-1 pr-2 text-left font-semibold text-muted-foreground sticky left-0 bg-card z-10 min-w-[90px] max-w-[110px]">
                   {t("schedule.seller")}
                 </th>
                 {DAYS.map((day) => {
                   const ferie = isDayFerie(day.key);
                   return (
-                  <th key={day.key} colSpan={2} className={`pb-2 text-center font-semibold min-w-[115px] ${ferie ? "bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900" : "text-muted-foreground"}`}>
+                  <th key={day.key} colSpan={2} className={`pb-1 text-center font-semibold min-w-[80px] ${ferie ? "bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900" : "text-muted-foreground"}`}>
                     <div className="flex items-center justify-center gap-1">
                       {copiedDay !== null && copiedDay !== day.key && (
                         <Checkbox
@@ -823,7 +823,7 @@ export function ScheduleEditor() {
                   </th>
                   );
                 })}
-                <th className="pb-2 text-center font-semibold text-muted-foreground min-w-[50px]">{t("schedule.total")}</th>
+                <th className="pb-1 text-center font-semibold text-muted-foreground min-w-[40px]">{t("schedule.total")}</th>
               </tr>
               {/* Day comments row */}
               <tr className="border-b bg-muted/30">
@@ -905,7 +905,7 @@ export function ScheduleEditor() {
 
                   return (
                     <tr key={emp.id} className={`border-b border-border/50 border-l-4 ${deptColor.border} ${isUnderstaffed ? "bg-destructive/10" : isSource ? "bg-primary/10" : deptColor.bg}`}>
-                      <td className={`py-1.5 pr-2 sticky left-0 z-10 ${isUnderstaffed ? "bg-destructive/10" : isSource ? "bg-primary/10" : deptColor.bg}`}>
+                      <td className={`py-0.5 pr-1 sticky left-0 z-10 ${isUnderstaffed ? "bg-destructive/10" : isSource ? "bg-primary/10" : deptColor.bg}`}>
                         <div className="flex items-center gap-2">
                           {copiedEmployee !== null && !isSource && (
                             <Checkbox
@@ -927,7 +927,7 @@ export function ScheduleEditor() {
                               )}
                               {isSource && <span className="text-xs text-primary">{t("copy.source")}</span>}
                             </div>
-                            <div className="text-xs text-muted-foreground font-mono-data">{emp.contract_hours}h {t("schedule.contract")}</div>
+                            <div className="text-[9px] text-muted-foreground font-mono-data">{emp.contract_hours}h {t("schedule.contract")}</div>
                           </div>
                         </div>
                       </td>
@@ -936,8 +936,8 @@ export function ScheduleEditor() {
                         const ferieDay = isDayFerie(day.key);
                         if (leaveType) {
                           return (
-                            <td key={`${day.key}-leave`} colSpan={2} className={`py-1.5 px-0.5 text-center ${ferieDay ? "bg-gray-100 dark:bg-gray-800/50" : ""}`}>
-                              <span className="inline-block px-2 py-1 text-xs font-semibold rounded bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-300">
+                            <td key={`${day.key}-leave`} colSpan={2} className={`py-0.5 px-0.5 text-center ${ferieDay ? "bg-gray-100 dark:bg-gray-800/50" : ""}`}>
+                              <span className="inline-block px-1.5 py-0.5 text-[10px] font-semibold rounded bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-300">
                                 {t(`leave.${leaveType}.short` as any)}
                               </span>
                             </td>
@@ -950,7 +950,7 @@ export function ScheduleEditor() {
                         const showPaste = isCellCopyMode && !isCellSource;
                         const isRoulement = startVal?.toLowerCase() === "roulement" || endVal?.toLowerCase() === "roulement";
                         return (
-                          <td key={`${day.key}-cell`} colSpan={2} className={`py-1.5 px-0.5 ${isRoulement ? "bg-muted/60" : isCellSource ? "bg-primary/10" : ferieDay ? "bg-muted/50" : ""}`}>
+                          <td key={`${day.key}-cell`} colSpan={2} className={`py-0.5 px-0.5 ${isRoulement ? "bg-muted/60" : isCellSource ? "bg-primary/10" : ferieDay ? "bg-muted/50" : ""}`}>
                             {isDirection ? (
                               /* Direction mode: single location select */
                               <div className="flex items-center gap-0.5">
@@ -1005,7 +1005,7 @@ export function ScheduleEditor() {
                                 onChange={(e) => setActiveInput({ key: `${emp.id}__${day.key}_start`, raw: e.target.value })}
                                 onBlur={() => handleTimeBlur(emp.id, `${day.key}_start`)}
                                 placeholder="—"
-                                className="flex-1 min-w-0 px-0.5 py-1 text-xs rounded border bg-background focus:outline-none focus:ring-1 focus:ring-accent font-mono-data text-center"
+                                className="flex-1 min-w-0 px-0 py-0.5 text-[11px] rounded border bg-background focus:outline-none focus:ring-1 focus:ring-accent font-mono-data text-center"
                               />
                               <input
                                 type="text"
@@ -1014,7 +1014,7 @@ export function ScheduleEditor() {
                                 onChange={(e) => setActiveInput({ key: `${emp.id}__${day.key}_end`, raw: e.target.value })}
                                 onBlur={() => handleTimeBlur(emp.id, `${day.key}_end`)}
                                 placeholder="—"
-                                className="flex-1 min-w-0 px-0.5 py-1 text-xs rounded border bg-background focus:outline-none focus:ring-1 focus:ring-accent font-mono-data text-center"
+                                className="flex-1 min-w-0 px-0 py-0.5 text-[11px] rounded border bg-background focus:outline-none focus:ring-1 focus:ring-accent font-mono-data text-center"
                               />
                               {!isCopyMode && !isCellCopyMode && hasValue && (
                                 <button
@@ -1055,10 +1055,10 @@ export function ScheduleEditor() {
                           </td>
                         );
                       })}
-                      <td className="py-1.5 text-center">
-                        <span className="font-mono-data font-medium">{totalH || "—"}</span>
+                      <td className="py-0.5 text-center">
+                        <span className="font-mono-data font-medium text-[11px]">{totalH || "—"}</span>
                         {totalH > 0 && diff !== 0 && (
-                          <div className={`text-xs ${diff > 0 ? "text-warning" : "text-destructive"}`}>
+                          <div className={`text-[9px] ${diff > 0 ? "text-warning" : "text-destructive"}`}>
                             {diff > 0 ? "+" : ""}{diff}h
                           </div>
                         )}
