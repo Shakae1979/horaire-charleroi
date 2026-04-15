@@ -782,7 +782,7 @@ export function ScheduleEditor() {
                 {DAYS.map((day) => {
                   const ferie = isDayFerie(day.key);
                   return (
-                  <th key={day.key} colSpan={2} className={`pb-2 text-center font-semibold min-w-[115px] ${ferie ? "bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900" : "text-muted-foreground"}`}>
+                  <th key={day.key} colSpan={2} className={`pb-1 text-center font-semibold min-w-[80px] ${ferie ? "bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900" : "text-muted-foreground"}`}>
                     <div className="flex items-center justify-center gap-1">
                       {copiedDay !== null && copiedDay !== day.key && (
                         <Checkbox
