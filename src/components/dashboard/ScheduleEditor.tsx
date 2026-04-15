@@ -773,7 +773,7 @@ export function ScheduleEditor() {
       {/* Schedule grid */}
       <div className="kpi-card overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full text-[11px]">
             <thead>
               <tr className="border-b">
                 <th className="pb-2 pr-4 text-left font-semibold text-muted-foreground sticky left-0 bg-card z-10 min-w-[110px] max-w-[130px]">
