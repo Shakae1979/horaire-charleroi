@@ -21,6 +21,20 @@ const queryClient = new QueryClient();
 
 function ProtectedRoute({ children, adminOnly = false }: { children: React.ReactNode; adminOnly?: boolean }) {
   const { user, role, loading } = useAuth();
+  const [mustChange, setMustChange] = React.useState<boolean | null>(null);
+  const location = useLocation();
+
+  React.useEffect(() => {
+    if (!user?.email) return;
+    supabase
+      .from("employees")
+      .select("must_change_password")
+      .eq("email", user.email)
+      .maybeSingle()
+      .then(({ data }) => {
+        setMustChange(data?.must_change_password === true);
+      });
+  }, [user?.email]);
 
   if (loading) {
     return (
@@ -31,6 +45,12 @@ function ProtectedRoute({ children, adminOnly = false }: { children: React.React
   }
 
   if (!user) return <Navigate to="/login" replace />;
+
+  // Redirect to password change if needed (but not if already on that page)
+  if (mustChange === true && location.pathname !== "/changer-mot-de-passe") {
+    return <Navigate to="/changer-mot-de-passe" replace />;
+  }
+
   if (adminOnly && role !== "admin" && role !== "editor") return <Navigate to="/equipe-du-jour" replace />;
 
   return <>{children}</>;
