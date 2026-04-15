@@ -47,15 +47,17 @@ export function BulkEmployeeImport() {
       ["Dupont", "Marie", "marie.dupont@email.com", 36, "Responsable", "Fnac Bellecour"],
     ]);
     ws["!cols"] = [{ wch: 15 }, { wch: 15 }, { wch: 30 }, { wch: 15 }, { wch: 15 }, { wch: 20 }];
-    // Add dropdown data validation for Catégorie column (E2:E1000)
-    ws["!dataValidation"] = ws["!dataValidation"] || [];
-    (ws as any)["!dataValidation"] = [{
-      type: "list",
-      sqref: "E2:E1000",
-      formula1: `"${VALID_CATEGORIES_DISPLAY.join(",")}"`,
-    }];
+
+    // Reference sheet listing allowed categories
+    const wsRef = XLSX.utils.aoa_to_sheet([
+      ["Catégories autorisées"],
+      ...VALID_CATEGORIES_DISPLAY.map((c) => [c]),
+    ]);
+    wsRef["!cols"] = [{ wch: 25 }];
+
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Employés");
+    XLSX.utils.book_append_sheet(wb, wsRef, "Catégories");
     XLSX.writeFile(wb, "modele_import_employes.xlsx");
   };
 
