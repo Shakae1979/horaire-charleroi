@@ -292,6 +292,102 @@ Deno.serve(async (req) => {
       });
     }
 
+    if (action === "bulk_import") {
+      if (callerRole !== "admin") {
+        return new Response(JSON.stringify({ error: "Seul un admin peut importer en masse" }), {
+          status: 403,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      const { employees } = payload;
+      if (!Array.isArray(employees) || employees.length === 0) {
+        return new Response(JSON.stringify({ error: "Liste d'employés requise" }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      const results: { imported: number; duplicates: number; errors: number; details: any[] } = {
+        imported: 0, duplicates: 0, errors: 0, details: [],
+      };
+
+      for (const emp of employees) {
+        const { nom, prenom, email, heures_contrat, categorie, magasin_id } = emp;
+        if (!email || !nom) {
+          results.errors++;
+          results.details.push({ email: email || "?", reason: "Données manquantes (nom ou email)" });
+          continue;
+        }
+
+        // Check if email already exists in employees table
+        const { data: existing } = await adminClient
+          .from("employees")
+          .select("id")
+          .eq("email", email)
+          .maybeSingle();
+
+        if (existing) {
+          results.duplicates++;
+          results.details.push({ email, reason: "Email déjà existant dans la base employés" });
+          continue;
+        }
+
+        try {
+          // Create auth user
+          const { data: newUser, error: createErr } = await adminClient.auth.admin.createUser({
+            email,
+            password: "123456",
+            email_confirm: true,
+          });
+
+          if (createErr) {
+            // Could be duplicate auth user
+            if (createErr.message?.includes("already been registered") || createErr.message?.includes("already exists")) {
+              results.duplicates++;
+              results.details.push({ email, reason: "Compte utilisateur déjà existant" });
+              continue;
+            }
+            throw createErr;
+          }
+
+          // Create user role
+          await adminClient.from("user_roles").insert({
+            user_id: newUser.user.id,
+            role: "user",
+          });
+
+          // Assign store if provided
+          if (magasin_id) {
+            await adminClient.from("user_store_assignments").insert({
+              user_id: newUser.user.id,
+              store_id: magasin_id,
+            });
+          }
+
+          // Create employee record
+          await adminClient.from("employees").insert({
+            name: prenom || nom,
+            last_name: nom,
+            email,
+            contract_hours: heures_contrat || 36,
+            role: categorie || "vendeur",
+            store_id: magasin_id || null,
+            must_change_password: true,
+          });
+
+          results.imported++;
+        } catch (e: any) {
+          results.errors++;
+          results.details.push({ email, reason: e.message || "Erreur inconnue" });
+        }
+      }
+
+      return new Response(JSON.stringify(results), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     return new Response(JSON.stringify({ error: "Action inconnue" }), {
       status: 400,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
