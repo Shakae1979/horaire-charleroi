@@ -1,4 +1,4 @@
-import { Users, CalendarDays, User, UserCog, LogOut, Palmtree, Store, Menu } from "lucide-react";
+import { Users, CalendarDays, User, UserCog, LogOut, Palmtree, Store } from "lucide-react";
 import { HelpFAQ } from "@/components/HelpFAQ";
 import { ReactNode, useRef, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -7,8 +7,6 @@ import { useStore } from "@/hooks/useStore";
 import { useI18n } from "@/lib/i18n";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
 
 interface FnacHeaderProps {
   title: string;
@@ -26,7 +24,6 @@ export function FnacHeader({ title, subtitle, icon: Icon, children }: FnacHeader
   const clickCountRef = useRef(0);
   const clickTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [showEaster, setShowEaster] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleLogoClick = () => {
     clickCountRef.current += 1;
@@ -56,8 +53,8 @@ export function FnacHeader({ title, subtitle, icon: Icon, children }: FnacHeader
 
   return (
     <header className="border-b" style={{ background: "hsl(var(--sidebar-bg))" }}>
-      <div className="max-w-[1600px] mx-auto px-2 sm:px-4 py-2 sm:py-3 flex items-center justify-between gap-2">
-        <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+      <div className="max-w-[1600px] mx-auto px-2 sm:px-4 py-2 sm:py-3 flex items-center justify-between gap-2 flex-wrap">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1 flex-wrap">
           <button onClick={() => { handleLogoClick(); navigate((role === "admin" || role === "editor") ? "/" : "/equipe-du-jour"); }} className="flex items-center gap-1.5 hover:opacity-80 transition-opacity relative shrink-0">
             <img src="/favicon.png" alt="Planning Fnac" className="h-6 w-6" />
             <span className="hidden sm:inline text-base font-extrabold tracking-tight" style={{ color: "hsl(var(--sidebar-active))" }}>
@@ -108,7 +105,7 @@ export function FnacHeader({ title, subtitle, icon: Icon, children }: FnacHeader
             </div>
           </div>
 
-          <nav className="hidden md:flex items-center gap-1 ml-auto md:ml-1">
+          <nav className="flex items-center gap-1 flex-wrap">
             {NAV_SHORTCUTS.map((s) => {
               const active = location.pathname.startsWith(s.path);
               return (
@@ -133,8 +130,7 @@ export function FnacHeader({ title, subtitle, icon: Icon, children }: FnacHeader
           </nav>
         </div>
 
-        {/* Desktop actions */}
-        <div className="hidden md:flex items-center gap-1 shrink-0">
+        <div className="flex items-center gap-1 shrink-0">
           {children}
           <HelpFAQ />
           <LanguageSwitcher />
@@ -151,62 +147,6 @@ export function FnacHeader({ title, subtitle, icon: Icon, children }: FnacHeader
             <LogOut className="h-3.5 w-3.5" />
             <span className="hidden xl:inline">{t("nav.logout")}</span>
           </button>
-        </div>
-
-        {/* Mobile: hamburger menu */}
-        <div className="flex md:hidden items-center gap-1 shrink-0">
-          {children}
-          <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-            <SheetTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 shrink-0"
-                style={{ background: "hsl(var(--sidebar-hover))", color: "hsl(var(--sidebar-fg))" }}
-                aria-label="Menu"
-              >
-                <Menu className="h-4 w-4" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className="w-[280px] p-0 flex flex-col">
-              <SheetHeader className="p-4 border-b">
-                <SheetTitle className="flex items-center gap-2">
-                  <img src="/favicon.png" alt="" className="h-5 w-5" />
-                  Planning Fnac
-                </SheetTitle>
-              </SheetHeader>
-              <nav className="flex-1 flex flex-col gap-1 p-3 overflow-y-auto">
-                {NAV_SHORTCUTS.map((s) => {
-                  const active = location.pathname.startsWith(s.path);
-                  return (
-                    <button
-                      key={s.path}
-                      onClick={() => { navigate(s.path); setMobileMenuOpen(false); }}
-                      className={`flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors text-left ${
-                        active ? "bg-primary text-primary-foreground" : "hover:bg-muted"
-                      }`}
-                    >
-                      <s.icon className="h-4 w-4 shrink-0" />
-                      {s.label}
-                    </button>
-                  );
-                })}
-              </nav>
-              <div className="border-t p-3 flex flex-col gap-2">
-                <div className="flex items-center justify-between gap-2">
-                  <HelpFAQ />
-                  <LanguageSwitcher />
-                </div>
-                <button
-                  onClick={() => { setMobileMenuOpen(false); signOut(); }}
-                  className="flex items-center justify-center gap-2 h-9 px-3 rounded-md text-sm font-medium bg-muted hover:bg-muted/80 transition-colors"
-                >
-                  <LogOut className="h-4 w-4" />
-                  {t("nav.logout")}
-                </button>
-              </div>
-            </SheetContent>
-          </Sheet>
         </div>
       </div>
     </header>
