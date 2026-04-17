@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button";
 import { formatDateLongBE, formatDateMonthBE, formatTimeBE, formatLocalDate, getWeekNumber, getDisplayName } from "@/lib/format";
 import { FnacHeader } from "@/components/FnacHeader";
 import { useI18n } from "@/lib/i18n";
+import { EmployeeMobileView } from "@/components/employee/EmployeeMobileView";
+import { useEffect, useState as useStateReact } from "react";
 
 const BREAK_HOURS = 1;
 
