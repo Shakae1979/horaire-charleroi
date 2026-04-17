@@ -12,6 +12,29 @@ const BREAK_HOURS = 1;
 const DAY_KEYS = ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"] as const;
 type DayKey = typeof DAY_KEYS[number];
 
+const SHIFT_COLORS = [
+  { bg: "bg-emerald-100 border-emerald-300", text: "text-emerald-800" },
+  { bg: "bg-sky-100 border-sky-300", text: "text-sky-800" },
+  { bg: "bg-amber-100 border-amber-300", text: "text-amber-800" },
+  { bg: "bg-violet-100 border-violet-300", text: "text-violet-800" },
+  { bg: "bg-rose-100 border-rose-300", text: "text-rose-800" },
+  { bg: "bg-teal-100 border-teal-300", text: "text-teal-800" },
+  { bg: "bg-orange-100 border-orange-300", text: "text-orange-800" },
+  { bg: "bg-fuchsia-100 border-fuchsia-300", text: "text-fuchsia-800" },
+];
+
+function buildShiftColorMap(schedule: any): Map<string, number> {
+  const map = new Map<string, number>(); if (!schedule) return map; let idx = 0;
+  for (const day of DAY_KEYS) {
+    const s = schedule[`${day}_start`]; const e = schedule[`${day}_end`];
+    if (s && e && s !== "FERIE" && s !== "EXT" && s !== "ROULEMENT") {
+      const key = `${s}-${e}`;
+      if (!map.has(key)) { map.set(key, idx % SHIFT_COLORS.length); idx++; }
+    }
+  }
+  return map;
+}
+
 const ROLE_COLORS: Record<string, { bar: string; chip: string; chipText: string }> = {
   responsable: { bar: "bg-amber-500", chip: "bg-amber-100", chipText: "text-amber-800" },
   technique: { bar: "bg-sky-500", chip: "bg-sky-100", chipText: "text-sky-800" },
