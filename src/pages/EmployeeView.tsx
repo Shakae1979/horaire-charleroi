@@ -217,6 +217,10 @@ const EmployeeView = () => {
     );
   }
 
+  if (isCompact) {
+    return <EmployeeMobileView employee={employee} />;
+  }
+
   const weekLabel = formatDateLongBE(currentMonday);
 
   return (
