@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useRef, useEffect, useMemo, forwardRef, useImperativeHandle } from "react";
 import { Printer, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,6 +7,12 @@ import { toast } from "sonner";
 import { useI18n } from "@/lib/i18n";
 import { getDisplayName } from "@/lib/format";
 import { useStoreSettings } from "@/hooks/useStoreSettings";
+
+export interface HourlyGridHandle {
+  save: () => Promise<void>;
+  canSave: boolean;
+  saving: boolean;
+}
 
 function buildHalfHours(startHour: number, endHour: number) {
   const slots: { hour: number; minute: number; label: string }[] = [];
@@ -64,7 +70,7 @@ function RolePicker({ anchorRect, onSelect, onClose, roleLabels, multi }: {
   );
 }
 
-export default function HourlyGrid({ employees, date }: { employees: Employee[]; date: string }) {
+const HourlyGrid = forwardRef<HourlyGridHandle, { employees: Employee[]; date: string; onStateChange?: (s: { canSave: boolean; saving: boolean }) => void }>(function HourlyGridImpl({ employees, date, onStateChange }, ref) {
   const { t } = useI18n();
   const { scheduleStart, scheduleEnd } = useStoreSettings();
   const HALF_HOURS = useMemo(() => buildHalfHours(scheduleStart, scheduleEnd), [scheduleStart, scheduleEnd]);
@@ -109,6 +115,16 @@ export default function HourlyGrid({ employees, date }: { employees: Employee[];
     };
     load();
   }, [date]);
+
+  const dirtyRef = useRef(dirty);
+  dirtyRef.current = dirty;
+  const handleSaveRef = useRef<() => Promise<void>>(async () => {});
+  useImperativeHandle(ref, () => ({
+    save: () => handleSaveRef.current(),
+    canSave: dirty && !saving,
+    saving,
+  }), [dirty, saving]);
+  useEffect(() => { onStateChange?.({ canSave: dirty && !saving, saving }); }, [dirty, saving, onStateChange]);
 
   if (active.length === 0) return null;
 
@@ -165,6 +181,8 @@ export default function HourlyGrid({ employees, date }: { employees: Employee[];
       toast.error(t("misc.errorSaving"));
     } finally { setSaving(false); }
   };
+  handleSaveRef.current = handleSave;
+
 
   return (
     <div className="mb-6">
@@ -186,9 +204,6 @@ export default function HourlyGrid({ employees, date }: { employees: Employee[];
           )}
           <Button variant="outline" size="sm" className="no-print h-7 px-2 sm:px-3 text-xs gap-1.5" onClick={() => window.print()} title={t("action.print")} aria-label={t("action.print")}>
             <Printer className="h-3.5 w-3.5" /><span className="hidden sm:inline">{t("action.print")}</span>
-          </Button>
-          <Button size="sm" className="no-print h-7 px-2 sm:px-3 text-xs gap-1.5" onClick={handleSave} disabled={saving || !dirty} title={t("action.save")} aria-label={t("action.save")}>
-            <Save className="h-3.5 w-3.5" /><span className="hidden sm:inline">{saving ? t("hourlyGrid.saving") : t("action.save")}</span>
           </Button>
         </div>
       </div>
@@ -247,4 +262,6 @@ export default function HourlyGrid({ employees, date }: { employees: Employee[];
       {multiPicker && <RolePicker anchorRect={multiPicker.rect} onSelect={handleMultiApply} onClose={() => setMultiPicker(null)} roleLabels={roleLabels} multi />}
     </div>
   );
-}
+});
+
+export default HourlyGrid;
