@@ -172,6 +172,10 @@ const HourlyGrid = forwardRef<HourlyGridHandle, { employees: Employee[]; date: s
     } finally { setSaving(false); }
   };
 
+  const canSave = dirty && !saving;
+  useImperativeHandle(ref, () => ({ save: handleSave, canSave, saving }), [canSave, saving, handleSave]);
+  useEffect(() => { onStateChange?.({ canSave, saving }); }, [canSave, saving, onStateChange]);
+
   return (
     <div className="mb-6">
       <div className="flex items-center justify-between mb-2">
