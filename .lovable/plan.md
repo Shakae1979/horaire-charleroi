@@ -1,25 +1,29 @@
 
 
-## Remplacer le bouton "Copier horaires" par "Copier semaine précédente" par employé
+## Objectif
+Rendre les couleurs des rôles dans la **grille horaire interactive** (`HourlyGrid.tsx`) plus vives et lisibles, tout en gardant le mapping couleur ↔ département identique (Responsable=rouge, Technique=orange, Éditorial=jaune, Stock=bleu, Caisse=vert, Stagiaire=rose).
 
-### Contexte
-Actuellement, à côté du prénom de chaque vendeur dans l'éditeur de planning, il y a un bouton **Copier** (icône Copy) qui copie les horaires de cet employé pour les coller sur d'autres employés. L'utilisateur souhaite que ce bouton copie plutôt les **horaires de la semaine précédente** de ce même employé.
+## Proposition : passer de 30% d'opacité à 60% + nuance plus saturée
 
-### Modification : `src/components/dashboard/ScheduleEditor.tsx`
+Actuellement les cellules utilisent `bg-{color}-500/30` (très transparent). Je propose de passer à `bg-{color}-400/70` qui donne des couleurs franches mais qui restent lisibles avec le texte.
 
-1. **Nouvelle fonction `copyPreviousWeekForEmployee(empId)`** :
-   - Récupère le planning de la semaine N-1 pour cet employé via Supabase
-   - Injecte les valeurs dans `localEdits` pour cet employé uniquement
-   - Affiche un toast de confirmation
+| Rôle | Avant (délavé) | Après (tranché) |
+|---|---|---|
+| Responsable | `bg-red-500/30` | `bg-red-400/70` |
+| Technique | `bg-orange-500/30` | `bg-orange-400/75` |
+| Éditorial | `bg-yellow-500/30` | `bg-yellow-300/80` |
+| Stock | `bg-blue-500/30` | `bg-blue-400/70` |
+| Caisse | `bg-emerald-500/30` | `bg-emerald-400/70` |
+| Stagiaire | `bg-pink-500/30` | `bg-pink-400/70` |
+| Heure de table | transparent (rayé) | transparent (rayé) — inchangé |
 
-2. **Remplacement du bouton** (ligne ~751-758) :
-   - Remplacer l'icône `Copy` par `ChevronLeft` (cohérent avec le bouton global "Copier sem. précédente")
-   - Changer le `onClick` pour appeler `copyPreviousWeekForEmployee(emp.id)` au lieu de `copyEmployeeSchedule(emp.id)`
-   - Mettre à jour le `title` en "Copier la semaine précédente pour {nom}"
+Les pastilles de légende (`dot`) restent identiques (nuance 500 pleine).
 
-### Détails techniques
-- La fonction fera un appel Supabase ciblé : `weekly_schedules` filtré par `employee_id` et `week_start` de la semaine N-1
-- Les champs copiés : `lundi_start/end`, `mardi_start/end`, etc. pour les 7 jours
-- Le bouton reste masqué en mode copie (`!isCopyMode`)
-- Pas de mutation, juste mise à jour du state `localEdits` (l'utilisateur sauvegarde ensuite manuellement)
+## Fichier modifié
+- `src/components/team-day/HourlyGrid.tsx` — uniquement la constante `ROLES` (lignes 26-34).
+
+## Note
+Le code couleur des **autres vues** (planning hebdo, congés, badges employés) qui utilisent des bordures 500 + fonds 100 est conservé tel quel — il est déjà plus tranché. Cette modification cible uniquement la grille horaire du jour qui était la plus pâle.
+
+Si après aperçu vous trouvez les couleurs encore trop pâles ou au contraire trop saturées, on pourra ajuster facilement (par ex. passer en `/85` ou repasser à `bg-{color}-500/60`).
 
