@@ -287,7 +287,7 @@ const TeamWeekView = () => {
                                       return (
                                         <>
                                           <div
-                                            className={`absolute h-5 rounded ${colors.bar} opacity-80 flex items-center justify-center text-[9px] font-semibold text-white shadow-sm`}
+                                            className={`absolute h-5 rounded ${colors.bar} flex items-center justify-center text-[9px] font-semibold text-white shadow-sm`}
                                             style={{ left: `${leftPct}%`, width: `${widthPct}%` }}
                                             title={`${formatTimeBE(start)} — ${formatTimeBE(end)}`}
                                           >
