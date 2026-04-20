@@ -24,12 +24,12 @@ function buildHalfHours(startHour: number, endHour: number) {
 }
 
 const ROLES = [
-  { key: "responsable", color: "bg-red-500/30", dot: "bg-red-500" },
-  { key: "technique", color: "bg-orange-500/30", dot: "bg-orange-500" },
-  { key: "editorial", color: "bg-yellow-500/30", dot: "bg-yellow-500" },
-  { key: "stock", color: "bg-blue-500/30", dot: "bg-blue-500" },
-  { key: "caisse", color: "bg-emerald-500/30", dot: "bg-emerald-500" },
-  { key: "stagiaire", color: "bg-pink-500/30", dot: "bg-pink-500" },
+  { key: "responsable", color: "bg-red-400/70", dot: "bg-red-500" },
+  { key: "technique", color: "bg-orange-400/75", dot: "bg-orange-500" },
+  { key: "editorial", color: "bg-yellow-300/80", dot: "bg-yellow-500" },
+  { key: "stock", color: "bg-blue-400/70", dot: "bg-blue-500" },
+  { key: "caisse", color: "bg-emerald-400/70", dot: "bg-emerald-500" },
+  { key: "stagiaire", color: "bg-pink-400/70", dot: "bg-pink-500" },
   { key: "heure_de_table", color: "bg-transparent", dot: "bg-gray-300 border border-gray-400" },
 ];
 
