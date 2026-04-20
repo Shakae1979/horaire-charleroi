@@ -35,6 +35,15 @@ const ROLES = [
 
 const ROLE_BG: Record<string, string> = Object.fromEntries(ROLES.map((r) => [r.key, r.color]));
 
+const ROLE_BORDER_L: Record<string, string> = {
+  responsable: "border-l-red-500",
+  technique: "border-l-orange-500",
+  editorial: "border-l-yellow-500",
+  stock: "border-l-blue-500",
+  caisse: "border-l-emerald-500",
+  stagiaire: "border-l-pink-500",
+};
+
 interface Employee {
   id: string; name: string; role: string; start: string | null; end: string | null; hasShift: boolean; conge: any;
 }
@@ -220,12 +229,15 @@ const HourlyGrid = forwardRef<HourlyGridHandle, { employees: Employee[]; date: s
             </tr>
           </thead>
           <tbody>
-            {active.map((emp) => {
+            {active.map((emp, idx) => {
               const empStart = timeToHours(emp.start);
               const empEnd = timeToHours(emp.end);
+              const prevRole = idx > 0 ? active[idx - 1].role : null;
+              const isFirstOfRole = prevRole !== emp.role;
+              const borderL = ROLE_BORDER_L[emp.role] || "border-l-muted";
               return (
-                <tr key={emp.id} className="border-t">
-                  <td className="sticky left-0 bg-card px-2 py-1 border-r">
+                <tr key={emp.id} className={isFirstOfRole && idx > 0 ? "border-t-4 border-t-foreground/25" : "border-t"}>
+                  <td className={`sticky left-0 bg-card px-2 py-1 border-r border-l-4 ${borderL}`}>
                     <div className="flex items-center gap-1.5">
                       <span className="font-medium truncate max-w-[90px]">{getDisplayName(emp)}</span>
                       <span className="text-[9px] text-muted-foreground">{roleLabels[emp.role] || emp.role}</span>
