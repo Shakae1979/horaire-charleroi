@@ -231,7 +231,7 @@ const TeamWeekView = () => {
                 return (
                   <React.Fragment key={role}>
                     <tr>
-                      <td colSpan={DAY_KEYS.length + 1} className={`px-3 py-1.5 font-bold text-xs ${colors.text} ${colors.headerBg} border-b-2 border-t-4 border-t-foreground/20 border-l-4 ${colors.bar.replace('bg-', 'border-l-')}`}>
+                      <td colSpan={DAY_KEYS.length + 1} className={`px-3 py-1.5 font-bold text-xs ${colors.text} ${colors.headerBg} border-b-2 border-t-4 border-t-foreground/20 border-l-4 ${colors.borderL}`}>
                         {roleLabels(role)} ({emps.length})
                       </td>
                     </tr>
