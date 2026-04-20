@@ -229,12 +229,15 @@ const HourlyGrid = forwardRef<HourlyGridHandle, { employees: Employee[]; date: s
             </tr>
           </thead>
           <tbody>
-            {active.map((emp) => {
+            {active.map((emp, idx) => {
               const empStart = timeToHours(emp.start);
               const empEnd = timeToHours(emp.end);
+              const prevRole = idx > 0 ? active[idx - 1].role : null;
+              const isFirstOfRole = prevRole !== emp.role;
+              const borderL = ROLE_BORDER_L[emp.role] || "border-l-muted";
               return (
-                <tr key={emp.id} className="border-t">
-                  <td className="sticky left-0 bg-card px-2 py-1 border-r">
+                <tr key={emp.id} className={isFirstOfRole && idx > 0 ? "border-t-4 border-t-foreground/25" : "border-t"}>
+                  <td className={`sticky left-0 bg-card px-2 py-1 border-r border-l-4 ${borderL}`}>
                     <div className="flex items-center gap-1.5">
                       <span className="font-medium truncate max-w-[90px]">{getDisplayName(emp)}</span>
                       <span className="text-[9px] text-muted-foreground">{roleLabels[emp.role] || emp.role}</span>
