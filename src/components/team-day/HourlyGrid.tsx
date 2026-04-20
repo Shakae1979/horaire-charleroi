@@ -35,6 +35,15 @@ const ROLES = [
 
 const ROLE_BG: Record<string, string> = Object.fromEntries(ROLES.map((r) => [r.key, r.color]));
 
+const ROLE_BORDER_L: Record<string, string> = {
+  responsable: "border-l-red-500",
+  technique: "border-l-orange-500",
+  editorial: "border-l-yellow-500",
+  stock: "border-l-blue-500",
+  caisse: "border-l-emerald-500",
+  stagiaire: "border-l-pink-500",
+};
+
 interface Employee {
   id: string; name: string; role: string; start: string | null; end: string | null; hasShift: boolean; conge: any;
 }
