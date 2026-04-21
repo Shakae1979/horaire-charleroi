@@ -21,14 +21,10 @@ import { getDisplayName } from "@/lib/format";
 import { EmployeeSheet } from "./EmployeeSheet";
 
 const ROLE_KEYS = ["responsable", "technique", "editorial", "stock", "caisse", "stagiaire"] as const;
-const ROLE_COLORS: Record<string, string> = {
-  responsable: "bg-orange-100 text-orange-800",
-  technique: "bg-blue-100 text-blue-800",
-  editorial: "bg-purple-100 text-purple-800",
-  stock: "bg-amber-100 text-amber-800",
-  caisse: "bg-emerald-100 text-emerald-800",
-  stagiaire: "bg-pink-100 text-pink-800",
-};
+import { ROLE_COLORS as CENTRAL_ROLE_COLORS } from "@/lib/role-colors";
+const ROLE_COLORS: Record<string, string> = Object.fromEntries(
+  ROLE_KEYS.map((k) => [k, CENTRAL_ROLE_COLORS[k].bgChip])
+);
 
 interface AppUser {
   id: string;

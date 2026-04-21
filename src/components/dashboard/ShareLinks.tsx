@@ -6,14 +6,11 @@ import { toast } from "sonner";
 import { useStore } from "@/hooks/useStore";
 import { useI18n } from "@/lib/i18n";
 import { getDisplayName } from "@/lib/format";
+import { ROLE_COLORS as CENTRAL_ROLE_COLORS, ROLE_KEYS } from "@/lib/role-colors";
 
-const ROLE_COLORS: Record<string, string> = {
-  responsable: "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400",
-  technique: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
-  editorial: "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400",
-  stock: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
-  caisse: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400",
-};
+const ROLE_COLORS: Record<string, string> = Object.fromEntries(
+  ROLE_KEYS.map((k) => [k, CENTRAL_ROLE_COLORS[k].bgChipDark])
+);
 
 const AVATAR_COLORS = [
   "bg-blue-500", "bg-emerald-500", "bg-violet-500", "bg-rose-500",
