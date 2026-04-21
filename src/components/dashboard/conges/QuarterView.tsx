@@ -6,14 +6,15 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Button } from "@/components/ui/button";
 import { formatDateBE, getDisplayName } from "@/lib/format";
 import { useI18n, getHolidays2026, getDayNames } from "@/lib/i18n";
+import { ROLE_COLORS as CENTRAL_ROLE_COLORS } from "@/lib/role-colors";
 
-const ROLE_COLUMNS = [
-  { key: "responsable", headerBg: "bg-red-100 dark:bg-red-900/30", borderColor: "border-l-2 border-l-red-300 dark:border-l-red-700" },
-  { key: "technique", headerBg: "bg-orange-100 dark:bg-orange-900/30", borderColor: "border-l-2 border-l-orange-300 dark:border-l-orange-700" },
-  { key: "editorial", headerBg: "bg-yellow-100 dark:bg-yellow-900/30", borderColor: "border-l-2 border-l-yellow-300 dark:border-l-yellow-700" },
-  { key: "stock", headerBg: "bg-blue-100 dark:bg-blue-900/30", borderColor: "border-l-2 border-l-blue-300 dark:border-l-blue-700" },
-  { key: "caisse", headerBg: "bg-green-100 dark:bg-green-900/30", borderColor: "border-l-2 border-l-green-300 dark:border-l-green-700" },
-];
+const ROLE_COLUMNS: { key: string; headerBg: string; borderColor: string }[] = (
+  ["responsable", "technique", "editorial", "stock", "caisse"] as const
+).map((key) => ({
+  key,
+  headerBg: CENTRAL_ROLE_COLORS[key].congesHeaderBg,
+  borderColor: CENTRAL_ROLE_COLORS[key].congesBorderL,
+}));
 
 function getDaysInMonth(year: number, month: number) {
   return new Date(year, month + 1, 0).getDate();

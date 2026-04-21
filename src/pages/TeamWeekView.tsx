@@ -11,17 +11,7 @@ import { useStoreEmployees } from "@/hooks/useStoreEmployees";
 import { useI18n } from "@/lib/i18n";
 import React from "react";
 import { useStoreSettings } from "@/hooks/useStoreSettings";
-
-const ROLE_ORDER = ["responsable", "technique", "editorial", "stock", "caisse", "stagiaire"];
-
-const ROLE_COLORS: Record<string, { bar: string; text: string; bg: string; headerBg: string; borderL: string }> = {
-  responsable: { bar: "bg-red-500",     text: "text-red-800 dark:text-red-200",     bg: "bg-red-50 dark:bg-red-950/20",     headerBg: "bg-red-100 dark:bg-red-900/40",     borderL: "border-l-red-500"     },
-  technique:   { bar: "bg-orange-500",  text: "text-orange-800 dark:text-orange-200",bg: "bg-orange-50 dark:bg-orange-950/20",headerBg: "bg-orange-100 dark:bg-orange-900/40", borderL: "border-l-orange-500" },
-  editorial:   { bar: "bg-yellow-500",  text: "text-yellow-800 dark:text-yellow-200",bg: "bg-yellow-50 dark:bg-yellow-950/20",headerBg: "bg-yellow-100 dark:bg-yellow-900/40", borderL: "border-l-yellow-500" },
-  stock:       { bar: "bg-blue-500",    text: "text-blue-800 dark:text-blue-200",   bg: "bg-blue-50 dark:bg-blue-950/20",   headerBg: "bg-blue-100 dark:bg-blue-900/40",   borderL: "border-l-blue-500"   },
-  caisse:      { bar: "bg-emerald-500", text: "text-emerald-800 dark:text-emerald-200",bg: "bg-emerald-50 dark:bg-emerald-950/20",headerBg: "bg-emerald-100 dark:bg-emerald-900/40", borderL: "border-l-emerald-500" },
-  stagiaire:   { bar: "bg-pink-500",    text: "text-pink-800 dark:text-pink-200",   bg: "bg-pink-50 dark:bg-pink-950/20",   headerBg: "bg-pink-100 dark:bg-pink-900/40",   borderL: "border-l-pink-500"   },
-};
+import { ROLE_ORDER, ROLE_COLORS } from "@/lib/role-colors";
 
 const CONGE_COLORS: Record<string, string> = {
   conge: "bg-lime-500", rtt: "bg-cyan-500", maladie: "bg-rose-600", formation: "bg-violet-500",

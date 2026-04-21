@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { useI18n } from "@/lib/i18n";
 import { getDisplayName } from "@/lib/format";
 import { useStoreSettings } from "@/hooks/useStoreSettings";
+import { ROLE_KEYS, ROLE_COLORS as CENTRAL_ROLE_COLORS } from "@/lib/role-colors";
 
 export interface HourlyGridHandle {
   save: () => Promise<void>;
@@ -23,26 +24,21 @@ function buildHalfHours(startHour: number, endHour: number) {
   return slots;
 }
 
-const ROLES = [
-  { key: "responsable", color: "bg-red-500/80", dot: "bg-red-500" },
-  { key: "technique", color: "bg-orange-500/80", dot: "bg-orange-500" },
-  { key: "editorial", color: "bg-yellow-500/80", dot: "bg-yellow-500" },
-  { key: "stock", color: "bg-blue-500/80", dot: "bg-blue-500" },
-  { key: "caisse", color: "bg-emerald-500/80", dot: "bg-emerald-500" },
-  { key: "stagiaire", color: "bg-pink-500/80", dot: "bg-pink-500" },
+// Roles for the legend & cell coloring. "heure_de_table" is a special case (transparent striped).
+const ROLES: { key: string; color: string; dot: string }[] = [
+  ...ROLE_KEYS.map((key) => ({
+    key,
+    color: CENTRAL_ROLE_COLORS[key].barSoft,
+    dot: CENTRAL_ROLE_COLORS[key].dot,
+  })),
   { key: "heure_de_table", color: "bg-transparent", dot: "bg-gray-300 border border-gray-400" },
 ];
 
 const ROLE_BG: Record<string, string> = Object.fromEntries(ROLES.map((r) => [r.key, r.color]));
 
-const ROLE_BORDER_L: Record<string, string> = {
-  responsable: "border-l-red-500",
-  technique: "border-l-orange-500",
-  editorial: "border-l-yellow-500",
-  stock: "border-l-blue-500",
-  caisse: "border-l-emerald-500",
-  stagiaire: "border-l-pink-500",
-};
+const ROLE_BORDER_L: Record<string, string> = Object.fromEntries(
+  ROLE_KEYS.map((key) => [key, CENTRAL_ROLE_COLORS[key].borderL])
+);
 
 interface Employee {
   id: string; name: string; role: string; start: string | null; end: string | null; hasShift: boolean; conge: any;

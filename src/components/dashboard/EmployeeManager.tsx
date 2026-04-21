@@ -10,14 +10,15 @@ import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { ROLE_COLORS as CENTRAL_ROLE_COLORS } from "@/lib/role-colors";
 
 const ROLES = [
-  { value: "responsable", label: "Responsable", color: "bg-orange-100 text-orange-800" },
-  { value: "technique", label: "Technique", color: "bg-blue-100 text-blue-800" },
-  { value: "editorial", label: "Éditorial", color: "bg-purple-100 text-purple-800" },
-  { value: "stock", label: "Stock", color: "bg-amber-100 text-amber-800" },
-  { value: "caisse", label: "Caisse", color: "bg-emerald-100 text-emerald-800" },
-  { value: "stagiaire", label: "Stagiaire", color: "bg-pink-100 text-pink-800" },
+  { value: "responsable", label: "Responsable", color: CENTRAL_ROLE_COLORS.responsable.bgChip },
+  { value: "technique", label: "Technique", color: CENTRAL_ROLE_COLORS.technique.bgChip },
+  { value: "editorial", label: "Éditorial", color: CENTRAL_ROLE_COLORS.editorial.bgChip },
+  { value: "stock", label: "Stock", color: CENTRAL_ROLE_COLORS.stock.bgChip },
+  { value: "caisse", label: "Caisse", color: CENTRAL_ROLE_COLORS.caisse.bgChip },
+  { value: "stagiaire", label: "Stagiaire", color: CENTRAL_ROLE_COLORS.stagiaire.bgChip },
 ] as const;
 
 export function EmployeeManager() {
