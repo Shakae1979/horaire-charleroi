@@ -310,12 +310,12 @@ const EmployeeView = () => {
                     const isFerie = dayComments?.find(dc => dc.week_start === ws && dc.day_key === day.key)?.is_ferie ?? false;
 
                     if (conge) {
-                      const cc = CONGE_CELL_COLORS[conge.type] || DEFAULT_CONGE_COLOR;
+                      const dot = CONGE_DOT_COLORS[conge.type] || CONGE_DOT_COLORS.autre;
                       return (
-                        <div key={day.key} className={`rounded-md p-2 text-center text-xs border ${cc.bg}`}>
+                        <div key={day.key} className="rounded-md p-2 text-center text-xs border bg-muted/60 border-border">
                           <div className="font-medium text-muted-foreground mb-1">{day.label}</div>
-                          <Palmtree className={`h-3.5 w-3.5 mx-auto mb-0.5 ${cc.icon}`} />
-                          <div className={`font-medium text-[11px] ${cc.text}`}>{congeLabels(conge.type)}</div>
+                          <span className={`inline-block h-3 w-3 rounded-full mx-auto mb-1 ring-2 ring-background ${dot}`} />
+                          <div className="font-medium text-[11px] text-foreground">{congeLabels(conge.type)}</div>
                         </div>
                       );
                     }
