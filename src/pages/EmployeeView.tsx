@@ -310,8 +310,12 @@ const EmployeeView = () => {
                     const colorIdx = shiftKey ? shiftColorMap.get(shiftKey) : undefined;
                     const shiftColor = colorIdx !== undefined ? SHIFT_COLORS[colorIdx] : null;
 
+                    const isRoulement = start === "ROULEMENT";
+                    const isExt = start === "EXT";
+                    const isFerieCell = isFerie || start === "FERIE";
+
                     return (
-                      <div key={day.key} className={`rounded-md p-2 text-center text-xs border relative ${isFerie ? "bg-gray-100 dark:bg-gray-800/50 border-gray-300 dark:border-gray-600" : hasShift && shiftColor ? `${shiftColor.bg}` : hasShift ? "bg-accent/10 border-accent/20" : "bg-muted/50 border-transparent"}`}>
+                      <div key={day.key} className={`rounded-md p-2 text-center text-xs border relative ${isFerieCell ? "bg-amber-100 border-amber-300 dark:bg-amber-900/30 dark:border-amber-700" : isRoulement ? "bg-indigo-100 border-indigo-300 dark:bg-indigo-900/30 dark:border-indigo-700" : isExt ? "bg-slate-100 border-slate-300 dark:bg-slate-800/50 dark:border-slate-600" : hasShift && shiftColor ? `${shiftColor.bg}` : hasShift ? "bg-accent/10 border-accent/20" : "bg-muted/50 border-transparent"}`}>
                         <div className="font-medium text-muted-foreground mb-1">
                           {day.label}
                           {isFerie && <Flag className="h-2.5 w-2.5 inline ml-1 text-muted-foreground" />}
@@ -324,7 +328,9 @@ const EmployeeView = () => {
                             </div>
                           </div>
                         ) : isSpecial ? (
-                          <div className="text-muted-foreground">{start === "ROULEMENT" ? t("schedule.rotation") : start === "EXT" ? t("schedule.exterior") : t("schedule.holiday")}</div>
+                          <div className={`font-semibold ${isRoulement ? "text-indigo-800 dark:text-indigo-200" : isFerieCell ? "text-amber-800 dark:text-amber-200" : "text-slate-700 dark:text-slate-200"}`}>{isRoulement ? t("schedule.rotation") : isExt ? t("schedule.exterior") : t("schedule.holiday")}</div>
+                        ) : isFerieCell ? (
+                          <div className="font-semibold text-amber-800 dark:text-amber-200">{t("schedule.holiday")}</div>
                         ) : (
                           <div className="text-muted-foreground">{t("misc.rest")}</div>
                         )}
