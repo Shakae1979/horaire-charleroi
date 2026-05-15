@@ -62,19 +62,18 @@ const SHIFT_COLORS = [
   { bg: "bg-fuchsia-100 border-fuchsia-300", text: "text-fuchsia-800" },
 ];
 
-const CONGE_CELL_COLORS: Record<string, { bg: string; text: string; icon: string }> = {
-  // Couleurs vives alignées sur la palette CONGE_TYPE_COLORS du planning principal
-  conge:      { bg: "bg-blue-500 border-blue-600",       text: "text-white", icon: "text-white" },
-  rtt:        { bg: "bg-emerald-500 border-emerald-600", text: "text-white", icon: "text-white" },
-  maladie:    { bg: "bg-red-600 border-red-700",         text: "text-white", icon: "text-white" },
-  formation:  { bg: "bg-violet-500 border-violet-600",   text: "text-white", icon: "text-white" },
-  parental:   { bg: "bg-fuchsia-500 border-fuchsia-600", text: "text-white", icon: "text-white" },
-  medical:    { bg: "bg-yellow-500 border-yellow-600",   text: "text-black", icon: "text-black" },
-  fincarriere:{ bg: "bg-teal-500 border-teal-600",       text: "text-white", icon: "text-white" },
-  divers:     { bg: "bg-amber-500 border-amber-600",     text: "text-black", icon: "text-black" },
-  autre:      { bg: "bg-slate-500 border-slate-600",     text: "text-white", icon: "text-white" },
+// Pastille colorée (vivid 500) sur fond neutre — palette identique au planning principal
+const CONGE_DOT_COLORS: Record<string, string> = {
+  conge:       "bg-blue-500",
+  rtt:         "bg-emerald-500",
+  maladie:     "bg-red-600",
+  formation:   "bg-violet-500",
+  parental:    "bg-fuchsia-500",
+  medical:     "bg-yellow-500",
+  fincarriere: "bg-teal-500",
+  divers:      "bg-amber-500",
+  autre:       "bg-slate-500",
 };
-const DEFAULT_CONGE_COLOR = CONGE_CELL_COLORS.divers;
 
 function buildShiftColorMap(schedules: any[] | undefined): Map<string, number> {
   const map = new Map<string, number>(); if (!schedules) return map; let idx = 0;
