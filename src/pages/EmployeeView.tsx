@@ -2,7 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useStore } from "@/hooks/useStore";
-import { Calendar, ChevronLeft, ChevronRight, Clock, User, Palmtree, Flag } from "lucide-react";
+import { Calendar, ChevronLeft, ChevronRight, Clock, User, Palmtree, Flag, Thermometer, GraduationCap, Baby, Stethoscope, Hourglass, MoreHorizontal, HelpCircle, Sun, type LucideIcon } from "lucide-react";
 import { useState, useMemo, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { formatDateLongBE, formatDateMonthBE, formatTimeBE, formatLocalDate, getWeekNumber, getDisplayName } from "@/lib/format";
@@ -73,6 +73,18 @@ const CONGE_DOT_COLORS: Record<string, string> = {
   fincarriere: "bg-teal-500",
   divers:      "bg-amber-500",
   autre:       "bg-slate-500",
+};
+// Icône distincte par type de congé
+const CONGE_ICONS: Record<string, LucideIcon> = {
+  conge:       Palmtree,        // congés payés
+  rtt:         Sun,             // RTT / récup
+  maladie:     Thermometer,     // maladie
+  formation:   GraduationCap,   // formation
+  parental:    Baby,            // parental
+  medical:     Stethoscope,     // rendez-vous médical
+  fincarriere: Hourglass,       // fin de carrière
+  divers:      MoreHorizontal,  // divers
+  autre:       HelpCircle,      // autre
 };
 
 function buildShiftColorMap(schedules: any[] | undefined): Map<string, number> {
