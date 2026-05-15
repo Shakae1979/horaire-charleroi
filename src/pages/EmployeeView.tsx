@@ -62,6 +62,19 @@ const SHIFT_COLORS = [
   { bg: "bg-fuchsia-100 border-fuchsia-300", text: "text-fuchsia-800" },
 ];
 
+const CONGE_CELL_COLORS: Record<string, { bg: string; text: string; icon: string }> = {
+  conge:      { bg: "bg-lime-100 border-lime-300 dark:bg-lime-900/30 dark:border-lime-700",       text: "text-lime-800 dark:text-lime-200",       icon: "text-lime-700 dark:text-lime-300" },
+  rtt:        { bg: "bg-cyan-100 border-cyan-300 dark:bg-cyan-900/30 dark:border-cyan-700",       text: "text-cyan-800 dark:text-cyan-200",       icon: "text-cyan-700 dark:text-cyan-300" },
+  maladie:    { bg: "bg-rose-100 border-rose-300 dark:bg-rose-900/30 dark:border-rose-700",       text: "text-rose-800 dark:text-rose-200",       icon: "text-rose-700 dark:text-rose-300" },
+  formation:  { bg: "bg-violet-100 border-violet-300 dark:bg-violet-900/30 dark:border-violet-700", text: "text-violet-800 dark:text-violet-200", icon: "text-violet-700 dark:text-violet-300" },
+  parental:   { bg: "bg-pink-100 border-pink-300 dark:bg-pink-900/30 dark:border-pink-700",       text: "text-pink-800 dark:text-pink-200",       icon: "text-pink-700 dark:text-pink-300" },
+  medical:    { bg: "bg-fuchsia-100 border-fuchsia-300 dark:bg-fuchsia-900/30 dark:border-fuchsia-700", text: "text-fuchsia-800 dark:text-fuchsia-200", icon: "text-fuchsia-700 dark:text-fuchsia-300" },
+  fincarriere:{ bg: "bg-teal-100 border-teal-300 dark:bg-teal-900/30 dark:border-teal-700",       text: "text-teal-800 dark:text-teal-200",       icon: "text-teal-700 dark:text-teal-300" },
+  divers:     { bg: "bg-yellow-100 border-yellow-300 dark:bg-yellow-900/30 dark:border-yellow-700", text: "text-yellow-800 dark:text-yellow-200", icon: "text-yellow-700 dark:text-yellow-300" },
+  autre:      { bg: "bg-muted border-border", text: "text-muted-foreground", icon: "text-muted-foreground" },
+};
+const DEFAULT_CONGE_COLOR = CONGE_CELL_COLORS.divers;
+
 function buildShiftColorMap(schedules: any[] | undefined): Map<string, number> {
   const map = new Map<string, number>(); if (!schedules) return map; let idx = 0;
   for (const schedule of schedules) {
@@ -297,11 +310,12 @@ const EmployeeView = () => {
                     const isFerie = dayComments?.find(dc => dc.week_start === ws && dc.day_key === day.key)?.is_ferie ?? false;
 
                     if (conge) {
+                      const cc = CONGE_CELL_COLORS[conge.type] || DEFAULT_CONGE_COLOR;
                       return (
-                        <div key={day.key} className="rounded-md p-2 text-center text-xs bg-primary/10 border border-primary/20">
+                        <div key={day.key} className={`rounded-md p-2 text-center text-xs border ${cc.bg}`}>
                           <div className="font-medium text-muted-foreground mb-1">{day.label}</div>
-                          <Palmtree className="h-3.5 w-3.5 mx-auto text-primary mb-0.5" />
-                          <div className="font-medium text-primary text-[11px]">{congeLabels(conge.type)}</div>
+                          <Palmtree className={`h-3.5 w-3.5 mx-auto mb-0.5 ${cc.icon}`} />
+                          <div className={`font-medium text-[11px] ${cc.text}`}>{congeLabels(conge.type)}</div>
                         </div>
                       );
                     }
