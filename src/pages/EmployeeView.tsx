@@ -344,10 +344,10 @@ const EmployeeView = () => {
                     const isFerieCell = isFerie || start === "FERIE";
 
                     return (
-                      <div key={day.key} className={`rounded-md p-2 text-center text-xs border relative ${isFerieCell ? "bg-amber-100 border-amber-300 dark:bg-amber-900/30 dark:border-amber-700" : isRoulement ? "bg-indigo-100 border-indigo-300 dark:bg-indigo-900/30 dark:border-indigo-700" : isExt ? "bg-slate-100 border-slate-300 dark:bg-slate-800/50 dark:border-slate-600" : hasShift && shiftColor ? `${shiftColor.bg}` : hasShift ? "bg-accent/10 border-accent/20" : "bg-muted/50 border-transparent"}`}>
-                        <div className="font-medium text-muted-foreground mb-1">
+                      <div key={day.key} className={`rounded-md p-2 text-center text-xs border relative ${isFerieCell ? "bg-black border-black/40 text-white dark:bg-neutral-900 dark:border-neutral-700" : isRoulement ? "bg-gray-200 border-gray-300 dark:bg-gray-800/50 dark:border-gray-600" : isExt ? "bg-slate-100 border-slate-300 dark:bg-slate-800/50 dark:border-slate-600" : hasShift && shiftColor ? `${shiftColor.bg}` : hasShift ? "bg-accent/10 border-accent/20" : "bg-muted/50 border-transparent"}`}>
+                        <div className={`font-medium mb-1 ${isFerieCell ? "text-white/80" : "text-muted-foreground"}`}>
                           {day.label}
-                          {isFerie && <Flag className="h-2.5 w-2.5 inline ml-1 text-muted-foreground" />}
+                          {isFerie && <Flag className="h-2.5 w-2.5 inline ml-1 text-white/80" />}
                         </div>
                         {hasShift ? (
                           <div className={`font-mono-data font-semibold ${shiftColor ? shiftColor.text : ""}`}>
@@ -358,17 +358,17 @@ const EmployeeView = () => {
                           </div>
                         ) : isSpecial ? (
                           <div className="flex flex-col items-center gap-0.5">
-                            {isRoulement && <RefreshCw className="h-3.5 w-3.5 text-indigo-700 dark:text-indigo-300" />}
-                            {isFerieCell && <Flag className="h-3.5 w-3.5 text-amber-700 dark:text-amber-300" />}
+                            {isRoulement && <RefreshCw className="h-3.5 w-3.5 text-gray-700 dark:text-gray-300" />}
+                            {isFerieCell && <Flag className="h-3.5 w-3.5 text-white" />}
                             {isExt && <MapPin className="h-3.5 w-3.5 text-slate-600 dark:text-slate-400" />}
-                            <div className={`font-semibold ${isRoulement ? "text-indigo-800 dark:text-indigo-200" : isFerieCell ? "text-amber-800 dark:text-amber-200" : "text-slate-700 dark:text-slate-200"}`}>
+                            <div className={`font-semibold ${isRoulement ? "text-gray-800 dark:text-gray-200" : isFerieCell ? "text-white" : "text-slate-700 dark:text-slate-200"}`}>
                               {isRoulement ? t("schedule.rotation") : isExt ? t("schedule.exterior") : t("schedule.holiday")}
                             </div>
                           </div>
                         ) : isFerieCell ? (
                           <div className="flex flex-col items-center gap-0.5">
-                            <Flag className="h-3.5 w-3.5 text-amber-700 dark:text-amber-300" />
-                            <div className="font-semibold text-amber-800 dark:text-amber-200">{t("schedule.holiday")}</div>
+                            <Flag className="h-3.5 w-3.5 text-white" />
+                            <div className="font-semibold text-white">{t("schedule.holiday")}</div>
                           </div>
                         ) : (
                           <div className="text-muted-foreground">{t("misc.rest")}</div>
