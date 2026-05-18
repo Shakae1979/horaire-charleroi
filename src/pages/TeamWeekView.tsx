@@ -1,9 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { ChevronLeft, ChevronRight, Users, Printer, Palmtree, AlertTriangle, Flag, MapPin } from "lucide-react";
+import { Users, Printer, Palmtree, AlertTriangle, Flag, MapPin } from "lucide-react";
 import { FnacHeader } from "@/components/FnacHeader";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { WeekNavigator } from "@/components/WeekNavigator";
 import { toast } from "sonner";
 import { formatDateBE, formatTimeBE, formatLocalDate, getDisplayName } from "@/lib/format";
 import { useStore } from "@/hooks/useStore";
@@ -123,17 +124,7 @@ const TeamWeekView = () => {
     <div className="min-h-screen bg-background">
       <FnacHeader title={t("teamWeek.title")} subtitle={t("teamWeek.subtitle")} icon={Users}>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="icon" className="border-foreground/20 text-foreground hover:bg-foreground/10" onClick={() => setWeekOffset(w => w - 1)}>
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-          <div className="text-center min-w-[200px]">
-            <div className="text-sm font-semibold" style={{ color: "hsl(var(--sidebar-fg))" }}>
-              {formatDateBE(currentMonday)} — {formatDateBE(saturday)}
-            </div>
-          </div>
-          <Button variant="outline" size="icon" className="border-foreground/20 text-foreground hover:bg-foreground/10" onClick={() => setWeekOffset(w => w + 1)}>
-            <ChevronRight className="h-4 w-4" />
-          </Button>
+          <WeekNavigator offset={weekOffset} onChange={setWeekOffset} />
           <Button variant="outline" size="sm" className="ml-2 border-foreground/20 text-foreground hover:bg-foreground/10" onClick={() => window.print()}>
             <Printer className="h-3.5 w-3.5 mr-1" /> {t("action.print")}
           </Button>
