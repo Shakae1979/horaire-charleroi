@@ -51,6 +51,34 @@ export function getWeekNumber(date: Date): number {
   return Math.ceil(((d.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
 }
 
+/** Get the Monday (local) of a given ISO week + year */
+export function getMondayFromISOWeek(week: number, year: number): Date {
+  // ISO: week 1 contains Jan 4
+  const jan4 = new Date(year, 0, 4);
+  const jan4Day = jan4.getDay() || 7; // 1..7 (Mon..Sun)
+  const mondayOfWeek1 = new Date(year, 0, 4 - (jan4Day - 1));
+  const target = new Date(mondayOfWeek1);
+  target.setDate(mondayOfWeek1.getDate() + (week - 1) * 7);
+  target.setHours(0, 0, 0, 0);
+  return target;
+}
+
+/** Get the Monday (local) of the ISO week containing the given date */
+export function getMondayOf(date: Date): Date {
+  const d = new Date(date);
+  const day = d.getDay();
+  const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+  d.setDate(diff);
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+
+/** Number of whole weeks between two Mondays (b - a) */
+export function weeksBetween(a: Date, b: Date): number {
+  const ms = b.getTime() - a.getTime();
+  return Math.round(ms / (7 * 24 * 60 * 60 * 1000));
+}
+
 /** Format a Date to ISO "YYYY-MM-DD" using LOCAL timezone (avoids UTC shift) */
 export function formatLocalDate(date: Date): string {
   const y = date.getFullYear();
