@@ -2,7 +2,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useStore } from "@/hooks/useStore";
-import { Calendar, ChevronLeft, ChevronRight, Clock, User, Palmtree, Flag, Thermometer, GraduationCap, Baby, Stethoscope, Hourglass, MoreHorizontal, HelpCircle, Sun, RefreshCw, MapPin, type LucideIcon } from "lucide-react";
+import { Calendar, Clock, User, Palmtree, Flag, Thermometer, GraduationCap, Baby, Stethoscope, Hourglass, MoreHorizontal, HelpCircle, Sun, RefreshCw, MapPin, type LucideIcon } from "lucide-react";
+import { WeekNavigator } from "@/components/WeekNavigator";
 import { useState, useMemo, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { formatDateLongBE, formatDateMonthBE, formatTimeBE, formatLocalDate, getWeekNumber, getDisplayName } from "@/lib/format";
@@ -258,12 +259,8 @@ const EmployeeView = () => {
 
       <div className="max-w-3xl mx-auto px-6 py-4">
         <div className="flex items-center justify-between mb-6">
-          <Button variant="outline" size="icon" onClick={() => setWeekOffset((w) => w - 1)}><ChevronLeft className="h-4 w-4" /></Button>
-          <div className="text-center">
-            <div className="text-sm font-semibold">S{getWeekNumber(currentMonday)} — {t("schedule.weekOfDate")} {weekLabel}</div>
-            <div className="text-xs text-muted-foreground">{t("empView.4weeks")}</div>
-          </div>
-          <Button variant="outline" size="icon" onClick={() => setWeekOffset((w) => w + 1)}><ChevronRight className="h-4 w-4" /></Button>
+          <WeekNavigator offset={weekOffset} onChange={setWeekOffset} />
+          <div className="text-xs text-muted-foreground">{t("empView.4weeks")}</div>
         </div>
 
         {shiftColorMap.size > 0 && (

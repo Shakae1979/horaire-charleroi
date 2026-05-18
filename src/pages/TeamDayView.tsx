@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { AlertTriangle, ChevronLeft, ChevronRight, Flag, MapPin, MessageSquare, Palmtree, Printer, Save, Users } from "lucide-react";
+import { AlertTriangle, Flag, MapPin, MessageSquare, Palmtree, Printer, Save, Users } from "lucide-react";
+import { WeekNavigator } from "@/components/WeekNavigator";
 import HourlyGrid, { type HourlyGridHandle } from "@/components/team-day/HourlyGrid";
 import { FnacHeader } from "@/components/FnacHeader";
 import { useState, useRef, useCallback } from "react";
@@ -180,17 +181,9 @@ const TeamDayView = () => {
       </FnacHeader>
 
       <div className="max-w-6xl mx-auto px-6 py-4">
-        <div className="flex items-center justify-between mb-6">
-          <Button variant="outline" size="icon" onClick={() => setDayOffset((d) => d - 1)}>
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-          <div className="text-center">
-            <div className="text-sm font-semibold">{dayLabel} {formatDateBE(selectedDate)}</div>
-            {isToday && <span className="text-xs text-accent font-medium">{t("teamDay.today")}</span>}
-          </div>
-          <Button variant="outline" size="icon" onClick={() => setDayOffset((d) => d + 1)}>
-            <ChevronRight className="h-4 w-4" />
-          </Button>
+        <div className="flex items-center justify-center gap-3 mb-6">
+          <WeekNavigator mode="day" offset={dayOffset} onChange={setDayOffset} />
+          <div className="text-xs text-muted-foreground">{dayLabel}{isToday && <span className="ml-2 text-accent font-medium">· {t("teamDay.today")}</span>}</div>
         </div>
 
         <div className="grid grid-cols-3 gap-3 mb-3 print-summary-cards">
